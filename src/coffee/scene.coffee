@@ -10,7 +10,7 @@ class Scene
 
     # create camera
     camera = new THREE.PerspectiveCamera(30, width / height, 1, 1500)
-    camera.position.y = 400
+    camera.position.set(100, 100, 100)
     camera.lookAt(new THREE.Vector3())
     scene.add(camera)
 
@@ -22,22 +22,34 @@ class Scene
     $container.append(renderer.domElement)
 
     # create lights
-    ambientLight = new THREE.AmbientLight(0xffffff, 0.3)
+    ambientLight = new THREE.AmbientLight(0x333333)
     scene.add(ambientLight)
 
-    mainLight = new THREE.DirectionalLight(0xffffff, 1)
+    mainLight = new THREE.DirectionalLight(0xffffff, 0.8)
     mainLight.position.set(1, 2, 4).normalize()
     scene.add(mainLight)
 
-    auxLight = new THREE.DirectionalLight(0xffffff, 1)
+    auxLight = new THREE.DirectionalLight(0xffffff, 0.3)
     auxLight.position.set(-4, -1, -2).normalize()
     scene.add(auxLight)
 
+    controls = new THREE.OrbitalControls(camera)
+
     # set instance variables
-    [@camera, @scene, @renderer] = [camera, scene, renderer]
+    @camera = camera
+    @scene = scene
+    @renderer = renderer
+    @controls = controls
+
+  add: (object) ->
+    @scene.add(object)
+
+  remove: (object) ->
+    @scene.remove(object)
 
   animate: =>
     requestAnimationFrame(@animate)
+    @controls.update()
     @renderer.clear()
     @renderer.render(@scene, @camera)
 
