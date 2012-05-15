@@ -1,4 +1,5 @@
-# based on source of MIDITrail
+# design(specification) of piano key
+# based on MIDITrail(http://en.sourceforge.jp/projects/miditrail/)
 class PianoKeyboardDesign
 
   @KeyType: KeyType =
@@ -94,8 +95,10 @@ class PianoKeyboardDesign
 
     # fix the position of black keys
     prevKeyType = WhiteC
+
     for noteNo in [0...128]
       if keyInfo[noteNo].keyType is Black
+
         # get shift amount of black key
         switch prevKeyType
           when WhiteC then shift = -blackKeyShiftCDE
@@ -104,14 +107,27 @@ class PianoKeyboardDesign
           when WhiteG then shift = 0.0
           when WhiteA then shift = +blackKeyShiftFGAB
           else             shift = 0.0
+
         # set the center position of last black key
         if (noteNo == 126)
           shift = 0.0
+
         # fix the position
         keyInfo[noteNo].keyCenterPosX += shift
+
       prevKeyType = keyInfo[noteNo].keyType
 
 
+# model of a single piano key
+# usage:
+#   key = new PianoKey
+#     design: new PianoKeyboardDesign
+#     keyType: PianoKeyboardDesign.KeyType.Black
+#     position: new THREE.Vector3(0, 0, 0)
+#   # key.model is an instance of THREE.Mesh and can be added into scenes
+#   key.press()
+#   key.release()
+#   setInterval((-> key.update()), 1000 / 60)
 class PianoKey
   constructor: ({@design, keyType, position}) ->
     if keyType is PianoKeyboardDesign.KeyType.Black
@@ -125,27 +141,36 @@ class PianoKey
       length = @design.whiteKeyLength
       color  = @design.whiteKeyColor
 
+    # create key mesh
     geometry = new THREE.CubeGeometry(width, height, length)
     material = new THREE.MeshLambertMaterial(color: color)
-    @mesh = new THREE.Mesh(geometry, material)
-    @mesh.position.copy(position)
+    @model = new THREE.Mesh(geometry, material)
+    @model.position.copy(position)
 
+    # set original and pressed y coordinate
     @originalY = position.y
     @pressedY = @originalY - @design.keyDip
 
   press: ->
-    @mesh.position.y = @pressedY
+    @model.position.y = @pressedY
     @isPressed = true
 
   release: ->
     @isPressed = false
 
   update: ->
-    if @mesh.position.y < @originalY and !@isPressed
-      offset = @originalY - @mesh.position.y
-      @mesh.position.y += Math.min(offset, @design.keyUpSpeed)
+    if @model.position.y < @originalY and !@isPressed
+      offset = @originalY - @model.position.y
+      @model.position.y += Math.min(offset, @design.keyUpSpeed)
 
 
+# model of piano keyboard
+# usage:
+#   keyboard = new PianoKeyboard
+#   scene.add(keyboard.model) # scene is an instance of THREE.Scene
+#   setInterval(keyboard.update, 1000 / 60) 
+#   keyboard.press(30)   # press the key of note 30(G1)
+#   keyboard.release(60) # release the key of note 60(C4)
 class PianoKeyboard
   constructor: ->
     design = new PianoKeyboardDesign
@@ -156,6 +181,7 @@ class PianoKeyboard
     blackKeyY = (design.blackKeyHeight - design.whiteKeyHeight) / 2 + 0.001
     blackKeyZ = (design.blackKeyLength - design.whiteKeyLength) / 2 + 0.001
 
+    # create piano keys
     for {keyType, keyCenterPosX} in design.keyInfo
       if keyType is Black
         pos = new THREE.Vector3(keyCenterPosX, blackKeyY, blackKeyZ)
@@ -166,7 +192,7 @@ class PianoKeyboard
         keyType: keyType
         position: pos
       keys.push(key)
-      model.add(key.mesh)
+      model.add(key.model)
 
     @keys  = keys
     @model = model
@@ -180,4 +206,6 @@ class PianoKeyboard
   update: =>
     key.update() for key in @keys
 
+
+# export to global
 @PianoKeyboard = PianoKeyboard

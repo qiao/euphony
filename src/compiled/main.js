@@ -15,7 +15,9 @@
     return MIDI.loadPlugin(function() {
       var player;
       player = MIDI.Player;
-      player.loadFile(MIDIFiles['014-Bach, JS - Minuet in G'], player.start);
+      player.loadFile(MIDIFiles['014-Bach, JS - Minuet in G'], function() {
+        return player.start();
+      });
       return player.addListener(function(data) {
         var message, note;
         note = data.note, message = data.message;

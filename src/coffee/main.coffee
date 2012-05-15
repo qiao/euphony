@@ -14,7 +14,8 @@ $ ->
 
   MIDI.loadPlugin ->
     player = MIDI.Player
-    player.loadFile(MIDIFiles['014-Bach, JS - Minuet in G'], player.start)
+    player.loadFile MIDIFiles['014-Bach, JS - Minuet in G'], ->
+      player.start()
     player.addListener (data) ->
       {note, message} = data
       if message is NOTE_ON

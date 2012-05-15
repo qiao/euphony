@@ -176,14 +176,14 @@
       material = new THREE.MeshLambertMaterial({
         color: color
       });
-      this.mesh = new THREE.Mesh(geometry, material);
-      this.mesh.position.copy(position);
+      this.model = new THREE.Mesh(geometry, material);
+      this.model.position.copy(position);
       this.originalY = position.y;
       this.pressedY = this.originalY - this.design.keyDip;
     }
 
     PianoKey.prototype.press = function() {
-      this.mesh.position.y = this.pressedY;
+      this.model.position.y = this.pressedY;
       return this.isPressed = true;
     };
 
@@ -193,9 +193,9 @@
 
     PianoKey.prototype.update = function() {
       var offset;
-      if (this.mesh.position.y < this.originalY && !this.isPressed) {
-        offset = this.originalY - this.mesh.position.y;
-        return this.mesh.position.y += Math.min(offset, this.design.keyUpSpeed);
+      if (this.model.position.y < this.originalY && !this.isPressed) {
+        offset = this.originalY - this.model.position.y;
+        return this.model.position.y += Math.min(offset, this.design.keyUpSpeed);
       }
     };
 
@@ -231,7 +231,7 @@
           position: pos
         });
         keys.push(key);
-        model.add(key.mesh);
+        model.add(key.model);
       }
       this.keys = keys;
       this.model = model;
