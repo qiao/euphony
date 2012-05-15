@@ -1,19 +1,8 @@
 # based on source of MIDITrail
 
-# Basic configuration of keyboard coordinate
-#
-#  +y   +z
-#  |    /
-#  |   / +-#-#-+-#-#-#-+------
-#  |  / / # # / # # # / ...
-#  | / / / / / / / / / ...
-#  |/ +-+-+-+-+-+-+-+------
-# 0+------------------------ +x
-
-
 class PianoKeyboardDesign
 
-  KeyType:
+  @KeyType: KeyType =
     WhiteC : 0
     WhiteD : 1
     WhiteE : 2
@@ -42,7 +31,7 @@ class PianoKeyboardDesign
   noteDropPosZ4BlackKey : 1.50
   blackKeyShiftCDE      : 0.0216
   blackKeyShiftFGAB     : 0.0340
-  keyInfo               : []
+  keyInfo               : [] # an array holding each key's type and position
 
   constructor: ->
     @keyInfo[i] = {} for i in [0...128]
@@ -50,37 +39,37 @@ class PianoKeyboardDesign
     @_initKeyPos()
 
   _initKeyType: ->
-    # save reference for instance variables
-    {keyInfo, KeyType} = this
+    {keyInfo} = this
+    {WhiteC, WhiteD, WhiteE, WhiteF, WhiteG, WhiteA, WhiteB, Black} = KeyType
 
     for i in [0...10]
-      noteNo = i * 12                                  #  ________
-      keyInfo[noteNo +  0].keyType = KeyType.WhiteC    # |        |C
-      keyInfo[noteNo +  1].keyType = KeyType.Black     # |----####|
-      keyInfo[noteNo +  2].keyType = KeyType.WhiteD    # |        |D
-      keyInfo[noteNo +  3].keyType = KeyType.Black     # |----####|
-      keyInfo[noteNo +  4].keyType = KeyType.WhiteE    # |________|E
-      keyInfo[noteNo +  5].keyType = KeyType.WhiteF    # |        |F
-      keyInfo[noteNo +  6].keyType = KeyType.Black     # |----####|
-      keyInfo[noteNo +  7].keyType = KeyType.WhiteG    # |        |G
-      keyInfo[noteNo +  8].keyType = KeyType.Black     # |----####|
-      keyInfo[noteNo +  9].keyType = KeyType.WhiteA    # |        |A
-      keyInfo[noteNo + 10].keyType = KeyType.Black     # |----####|
-      keyInfo[noteNo + 11].keyType = KeyType.WhiteB    # |________|B
+      noteNo = i * 12                          #  ________
+      keyInfo[noteNo +  0].keyType = WhiteC    # |        |C
+      keyInfo[noteNo +  1].keyType = Black     # |----####|
+      keyInfo[noteNo +  2].keyType = WhiteD    # |        |D
+      keyInfo[noteNo +  3].keyType = Black     # |----####|
+      keyInfo[noteNo +  4].keyType = WhiteE    # |________|E
+      keyInfo[noteNo +  5].keyType = WhiteF    # |        |F
+      keyInfo[noteNo +  6].keyType = Black     # |----####|
+      keyInfo[noteNo +  7].keyType = WhiteG    # |        |G
+      keyInfo[noteNo +  8].keyType = Black     # |----####|
+      keyInfo[noteNo +  9].keyType = WhiteA    # |        |A
+      keyInfo[noteNo + 10].keyType = Black     # |----####|
+      keyInfo[noteNo + 11].keyType = WhiteB    # |________|B
 
-    noteNo = 120                                       #  ________
-    keyInfo[noteNo + 0].keyType = KeyType.WhiteC       # |        |C
-    keyInfo[noteNo + 1].keyType = KeyType.Black        # |----####|
-    keyInfo[noteNo + 2].keyType = KeyType.WhiteD       # |        |D
-    keyInfo[noteNo + 3].keyType = KeyType.Black        # |----####|
-    keyInfo[noteNo + 4].keyType = KeyType.WhiteE       # |________|E
-    keyInfo[noteNo + 5].keyType = KeyType.WhiteF       # |        |F
-    keyInfo[noteNo + 6].keyType = KeyType.Black        # |----####|
-    keyInfo[noteNo + 7].keyType = KeyType.WhiteB       # |________|G <= shape is B
+    noteNo = 120                               #  ________
+    keyInfo[noteNo + 0].keyType = WhiteC       # |        |C
+    keyInfo[noteNo + 1].keyType = Black        # |----####|
+    keyInfo[noteNo + 2].keyType = WhiteD       # |        |D
+    keyInfo[noteNo + 3].keyType = Black        # |----####|
+    keyInfo[noteNo + 4].keyType = WhiteE       # |________|E
+    keyInfo[noteNo + 5].keyType = WhiteF       # |        |F
+    keyInfo[noteNo + 6].keyType = Black        # |----####|
+    keyInfo[noteNo + 7].keyType = WhiteB       # |________|G <= shape is B
     
   _initKeyPos: ->
-    # save reference for instance variables
-    {KeyType, keyInfo, whiteKeyStep, blackKeyShiftCDE, blackKeyShiftFGAB} = this
+    # save references of instance variables
+    {keyInfo, whiteKeyStep, blackKeyShiftCDE, blackKeyShiftFGAB} = this
     {WhiteC, WhiteD, WhiteE, WhiteF, WhiteG, WhiteA, WhiteB, Black} = KeyType
 
     noteNo = 0
@@ -109,7 +98,6 @@ class PianoKeyboardDesign
       prevKeyType = keyInfo[noteNo].keyType
 
     # fix the position of black keys
-
     prevKeyType = WhiteC
     for noteNo in [0...128]
       if keyInfo[noteNo].keyType is Black
@@ -127,6 +115,8 @@ class PianoKeyboardDesign
         # fix the position
         keyInfo[noteNo].keyCenterPosX += shift
       prevKeyType = keyInfo[noteNo].keyType
+
+@PianoKeyboardDesign = PianoKeyboardDesign
 
 
 class PianoKey
@@ -150,5 +140,6 @@ class PianoKey
       recoverSpeed = 0.02
       @mesh.position.y += Math.min(@originalY - @mesh.position.y, recoverSpeed)
 
+@PianoKey = PianoKey
 
 class PianoKeyboard

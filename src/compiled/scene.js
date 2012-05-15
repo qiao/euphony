@@ -10,13 +10,13 @@
     function Scene(container) {
       this.animate = __bind(this.animate, this);
 
-      var $container, ambientLight, auxLight, camera, height, mainLight, renderer, scene, width, _ref;
+      var $container, ambientLight, auxLight, camera, controls, height, mainLight, renderer, scene, width;
       $container = $(container);
       width = $container.width();
       height = $container.height();
       scene = new THREE.Scene();
-      camera = new THREE.PerspectiveCamera(30, width / height, 1, 1500);
-      camera.position.y = 400;
+      camera = new THREE.PerspectiveCamera(60, width / height, 1, 1500);
+      camera.position.set(10, 5, 10);
       camera.lookAt(new THREE.Vector3());
       scene.add(camera);
       renderer = new THREE.WebGLRenderer({
@@ -26,19 +26,35 @@
       renderer.setClearColor(0x000000, 1);
       renderer.autoClear = false;
       $container.append(renderer.domElement);
-      ambientLight = new THREE.AmbientLight(0xffffff, 0.3);
+      ambientLight = new THREE.AmbientLight(0x333333);
       scene.add(ambientLight);
-      mainLight = new THREE.DirectionalLight(0xffffff, 1);
+      mainLight = new THREE.DirectionalLight(0xffffff, 0.8);
       mainLight.position.set(1, 2, 4).normalize();
       scene.add(mainLight);
-      auxLight = new THREE.DirectionalLight(0xffffff, 1);
+      auxLight = new THREE.DirectionalLight(0xffffff, 0.3);
       auxLight.position.set(-4, -1, -2).normalize();
       scene.add(auxLight);
-      _ref = [camera, scene, renderer], this.camera = _ref[0], this.scene = _ref[1], this.renderer = _ref[2];
+      controls = new THREE.OrbitControls(camera);
+      controls.center.set(8.5, 0, 0);
+      controls.autoRotateSpeed = 1.0;
+      controls.autoRotate = true;
+      this.camera = camera;
+      this.scene = scene;
+      this.renderer = renderer;
+      this.controls = controls;
     }
+
+    Scene.prototype.add = function(object) {
+      return this.scene.add(object);
+    };
+
+    Scene.prototype.remove = function(object) {
+      return this.scene.remove(object);
+    };
 
     Scene.prototype.animate = function() {
       requestAnimationFrame(this.animate);
+      this.controls.update();
       this.renderer.clear();
       return this.renderer.render(this.scene, this.camera);
     };
