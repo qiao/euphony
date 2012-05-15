@@ -9,8 +9,8 @@ class Scene
     scene = new THREE.Scene()
 
     # create camera
-    camera = new THREE.PerspectiveCamera(60, width / height, 1, 1500)
-    camera.position.set(15, 5, 15)
+    camera = new THREE.PerspectiveCamera(60, width / height, 0.001, 1500)
+    camera.position.set(10, 10, 10)
     camera.lookAt(new THREE.Vector3())
     scene.add(camera)
 
