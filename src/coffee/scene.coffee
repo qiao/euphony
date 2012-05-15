@@ -10,7 +10,7 @@ class Scene
 
     # create camera
     camera = new THREE.PerspectiveCamera(60, width / height, 1, 1500)
-    camera.position.set(10, 5, 10)
+    camera.position.set(15, 5, 15)
     camera.lookAt(new THREE.Vector3())
     scene.add(camera)
 
@@ -34,7 +34,7 @@ class Scene
     scene.add(auxLight)
 
     controls = new THREE.OrbitControls(camera)
-    controls.center.set(8.5,0,0)
+    controls.center.set(8.5, 0, 0)
     controls.autoRotateSpeed = 1.0
     controls.autoRotate = true
 
@@ -50,8 +50,9 @@ class Scene
   remove: (object) ->
     @scene.remove(object)
 
-  animate: =>
-    requestAnimationFrame(@animate)
+  animate: (callback) =>
+    requestAnimationFrame => @animate(callback)
+    callback?()
     @controls.update()
     @renderer.clear()
     @renderer.render(@scene, @camera)

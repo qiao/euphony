@@ -1,5 +1,4 @@
 # based on source of MIDITrail
-
 class PianoKeyboardDesign
 
   @KeyType: KeyType =
@@ -17,20 +16,14 @@ class PianoKeyboardDesign
   whiteKeyHeight        : 0.22
   whiteKeyLength        : 1.50
   blackKeyWidth         : 0.10
-  blackKeyHeight        : 0.34
-  blackKeySlopeLength   : 0.08
+  blackKeyHeight        : 0.32
   blackKeyLength        : 1.00
-  keySpaceSize          : 0.01
-  keyRotateAxisXPos     : 2.36
-  keyRotateAngle        : 3.00
-  keyDownDuration       : 40
-  keyUpDuration         : 40
-  keyboardStepY         : 0.34
-  keyboardStepZ         : 1.50
-  noteDropPosZ4WhiteKey : 0.25
-  noteDropPosZ4BlackKey : 1.50
   blackKeyShiftCDE      : 0.0216
   blackKeyShiftFGAB     : 0.0340
+  noteDropPosZ4WhiteKey : 0.25
+  noteDropPosZ4BlackKey : 0.75
+  keyDip                : 0.15
+  keyUpSpeed            : 0.03
   keyInfo               : [] # an array holding each key's type and position
 
   constructor: ->
@@ -116,30 +109,64 @@ class PianoKeyboardDesign
         keyInfo[noteNo].keyCenterPosX += shift
       prevKeyType = keyInfo[noteNo].keyType
 
-@PianoKeyboardDesign = PianoKeyboardDesign
-
 
 class PianoKey
-  constructor: ({ width, length, height, color, position, dip }) ->
+  constructor: ({@design, keyType, position}) ->
+    if keyType is PianoKeyboardDesign.KeyType.Black
+      width  = @design.blackKeyWidth
+      height = @design.blackKeyHeight
+      length = @design.blackKeyLength
+      color  = 0x000000
+    else
+      width  = @design.whiteKeyWidth
+      height = @design.whiteKeyHeight
+      length = @design.whiteKeyLength
+      color  = 0xffffff
+
     geometry = new THREE.CubeGeometry(width, height, length)
     material = new THREE.MeshLambertMaterial(color: color)
     @mesh = new THREE.Mesh(geometry, material)
     @mesh.position.copy(position)
+
     @originalY = position.y
-    @pressedY = position.y - @pressedOffset
+    @pressedY = @originalY - @design.keyDip
 
   press: ->
     @mesh.position.y = @pressedY
-    @isPressed = true
-
-  release: ->
-    @isPressed = false
 
   update: ->
-    if @mesh.position.y < @originalY and !@isPressed
-      recoverSpeed = 0.02
-      @mesh.position.y += Math.min(@originalY - @mesh.position.y, recoverSpeed)
+    if @mesh.position.y < @originalY
+      offset = @originalY - @mesh.position.y
+      @mesh.position.y += Math.min(offset, @design.keyUpSpeed)
 
-@PianoKey = PianoKey
 
 class PianoKeyboard
+  constructor: ->
+    design = new PianoKeyboardDesign
+    {Black} = PianoKeyboardDesign.KeyType
+
+    model = new THREE.Object3D()
+    keys = []
+    blackKeyY = (design.blackKeyHeight - design.whiteKeyHeight) / 2
+    blackKeyZ = (design.blackKeyLength - design.whiteKeyLength) / 2
+    for {keyType, keyCenterPosX} in design.keyInfo
+      if keyType is Black
+        pos = new THREE.Vector3(keyCenterPosX, blackKeyY, blackKeyZ)
+      else
+        pos = new THREE.Vector3(keyCenterPosX, 0, 0)
+      key = new PianoKey
+        design: design
+        keyType: keyType
+        position: pos
+      keys.push(key)
+      model.add(key.mesh)
+    @keys  = keys
+    @model = model
+
+  press: (note) ->
+    @keys[note].press()
+
+  update: =>
+    key.update() for key in @keys
+
+@PianoKeyboard = PianoKeyboard

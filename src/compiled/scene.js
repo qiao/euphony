@@ -16,7 +16,7 @@
       height = $container.height();
       scene = new THREE.Scene();
       camera = new THREE.PerspectiveCamera(60, width / height, 1, 1500);
-      camera.position.set(10, 5, 10);
+      camera.position.set(15, 5, 15);
       camera.lookAt(new THREE.Vector3());
       scene.add(camera);
       renderer = new THREE.WebGLRenderer({
@@ -52,8 +52,14 @@
       return this.scene.remove(object);
     };
 
-    Scene.prototype.animate = function() {
-      requestAnimationFrame(this.animate);
+    Scene.prototype.animate = function(callback) {
+      var _this = this;
+      requestAnimationFrame(function() {
+        return _this.animate(callback);
+      });
+      if (typeof callback === "function") {
+        callback();
+      }
       this.controls.update();
       this.renderer.clear();
       return this.renderer.render(this.scene, this.camera);
