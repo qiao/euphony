@@ -1,4 +1,4 @@
-all:
+all: $(shell find src/coffee -name "*.coffee" -type f)
 	coffee -o src/compiled src/coffee
 
 watch:
@@ -6,3 +6,5 @@ watch:
 
 server:
 	python -m SimpleHTTPServer
+
+.PHONY: watch server
