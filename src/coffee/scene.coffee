@@ -22,7 +22,7 @@ class Scene
     $container.append(renderer.domElement)
 
     # create lights
-    ambientLight = new THREE.AmbientLight(0x333333)
+    ambientLight = new THREE.AmbientLight(0x222222)
     scene.add(ambientLight)
 
     mainLight = new THREE.DirectionalLight(0xffffff, 0.8)
@@ -34,9 +34,9 @@ class Scene
     scene.add(auxLight)
 
     controls = new THREE.OrbitControls(camera)
-    controls.center.set(8.5, 0, 0)
+    controls.center.set(8.73, 0, 0)
     controls.autoRotateSpeed = 1.0
-    controls.autoRotate = false
+    controls.autoRotate = true
 
     # set instance variables
     @camera = camera

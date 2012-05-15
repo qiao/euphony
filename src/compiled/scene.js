@@ -26,7 +26,7 @@
       renderer.setClearColor(0x000000, 1);
       renderer.autoClear = false;
       $container.append(renderer.domElement);
-      ambientLight = new THREE.AmbientLight(0x333333);
+      ambientLight = new THREE.AmbientLight(0x222222);
       scene.add(ambientLight);
       mainLight = new THREE.DirectionalLight(0xffffff, 0.8);
       mainLight.position.set(1, 2, 4).normalize();
@@ -35,9 +35,9 @@
       auxLight.position.set(-4, -1, -2).normalize();
       scene.add(auxLight);
       controls = new THREE.OrbitControls(camera);
-      controls.center.set(8.5, 0, 0);
+      controls.center.set(8.73, 0, 0);
       controls.autoRotateSpeed = 1.0;
-      controls.autoRotate = false;
+      controls.autoRotate = true;
       this.camera = camera;
       this.scene = scene;
       this.renderer = renderer;

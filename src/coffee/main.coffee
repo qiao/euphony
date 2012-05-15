@@ -6,3 +6,5 @@ $ ->
 
   scene.animate ->
     keyboard.update()
+
+  window.keyboard = keyboard

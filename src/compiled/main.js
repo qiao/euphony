@@ -6,9 +6,10 @@
     scene = new Scene('#container');
     keyboard = new PianoKeyboard();
     scene.add(keyboard.model);
-    return scene.animate(function() {
+    scene.animate(function() {
       return keyboard.update();
     });
+    return window.keyboard = keyboard;
   });
 
 }).call(this);

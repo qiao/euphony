@@ -41,7 +41,11 @@
 
     PianoKeyboardDesign.prototype.noteDropPosZ4BlackKey = 0.75;
 
-    PianoKeyboardDesign.prototype.keyDip = 0.15;
+    PianoKeyboardDesign.prototype.whiteKeyColor = 0xffffff;
+
+    PianoKeyboardDesign.prototype.blackKeyColor = 0x111111;
+
+    PianoKeyboardDesign.prototype.keyDip = 0.07;
 
     PianoKeyboardDesign.prototype.keyUpSpeed = 0.03;
 
@@ -161,17 +165,16 @@
         width = this.design.blackKeyWidth;
         height = this.design.blackKeyHeight;
         length = this.design.blackKeyLength;
-        color = 0x111111;
+        color = this.design.blackKeyColor;
       } else {
         width = this.design.whiteKeyWidth;
         height = this.design.whiteKeyHeight;
         length = this.design.whiteKeyLength;
-        color = 0xffffff;
+        color = this.design.whiteKeyColor;
       }
       geometry = new THREE.CubeGeometry(width, height, length);
       material = new THREE.MeshLambertMaterial({
-        color: color,
-        ambient: 0x888888
+        color: color
       });
       this.mesh = new THREE.Mesh(geometry, material);
       this.mesh.position.copy(position);
@@ -180,12 +183,17 @@
     }
 
     PianoKey.prototype.press = function() {
-      return this.mesh.position.y = this.pressedY;
+      this.mesh.position.y = this.pressedY;
+      return this.isPressed = true;
+    };
+
+    PianoKey.prototype.release = function() {
+      return this.isPressed = false;
     };
 
     PianoKey.prototype.update = function() {
       var offset;
-      if (this.mesh.position.y < this.originalY) {
+      if (this.mesh.position.y < this.originalY && !this.isPressed) {
         offset = this.originalY - this.mesh.position.y;
         return this.mesh.position.y += Math.min(offset, this.design.keyUpSpeed);
       }
@@ -231,6 +239,10 @@
 
     PianoKeyboard.prototype.press = function(note) {
       return this.keys[note].press();
+    };
+
+    PianoKeyboard.prototype.release = function(note) {
+      return this.keys[note].release();
     };
 
     PianoKeyboard.prototype.update = function() {

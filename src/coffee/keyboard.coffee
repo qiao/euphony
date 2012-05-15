@@ -22,7 +22,9 @@ class PianoKeyboardDesign
   blackKeyShiftFGAB     : 0.0340
   noteDropPosZ4WhiteKey : 0.25
   noteDropPosZ4BlackKey : 0.75
-  keyDip                : 0.15
+  whiteKeyColor         : 0xffffff
+  blackKeyColor         : 0x111111
+  keyDip                : 0.07
   keyUpSpeed            : 0.03
   keyInfo               : [] # an array holding each key's type and position
 
@@ -116,15 +118,15 @@ class PianoKey
       width  = @design.blackKeyWidth
       height = @design.blackKeyHeight
       length = @design.blackKeyLength
-      color  = 0x111111
+      color  = @design.blackKeyColor
     else
       width  = @design.whiteKeyWidth
       height = @design.whiteKeyHeight
       length = @design.whiteKeyLength
-      color  = 0xffffff
+      color  = @design.whiteKeyColor
 
     geometry = new THREE.CubeGeometry(width, height, length)
-    material = new THREE.MeshLambertMaterial(color: color, ambient: 0x888888)
+    material = new THREE.MeshLambertMaterial(color: color)
     @mesh = new THREE.Mesh(geometry, material)
     @mesh.position.copy(position)
 
@@ -133,9 +135,13 @@ class PianoKey
 
   press: ->
     @mesh.position.y = @pressedY
+    @isPressed = true
+
+  release: ->
+    @isPressed = false
 
   update: ->
-    if @mesh.position.y < @originalY
+    if @mesh.position.y < @originalY and !@isPressed
       offset = @originalY - @mesh.position.y
       @mesh.position.y += Math.min(offset, @design.keyUpSpeed)
 
@@ -167,6 +173,9 @@ class PianoKeyboard
 
   press: (note) ->
     @keys[note].press()
+
+  release: (note) ->
+    @keys[note].release()
 
   update: =>
     key.update() for key in @keys
