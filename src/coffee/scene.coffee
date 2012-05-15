@@ -10,7 +10,6 @@ class Scene
 
     # create camera
     camera = new THREE.PerspectiveCamera(60, width / height, 0.001, 1500)
-    camera.position.set(10, 10, 10)
     camera.lookAt(new THREE.Vector3())
     scene.add(camera)
 
@@ -36,7 +35,8 @@ class Scene
     controls = new THREE.OrbitControls(camera)
     controls.center.set(8.73, 0, 0)
     controls.autoRotateSpeed = 1.0
-    controls.autoRotate = true
+    controls.autoRotate = false
+    camera.position.copy(controls.center).addSelf(new THREE.Vector3(2, 6, 9))
 
     # set instance variables
     @camera = camera

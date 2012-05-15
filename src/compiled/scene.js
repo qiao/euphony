@@ -15,8 +15,7 @@
       width = $container.width();
       height = $container.height();
       scene = new THREE.Scene();
-      camera = new THREE.PerspectiveCamera(60, width / height, 1, 1500);
-      camera.position.set(15, 5, 15);
+      camera = new THREE.PerspectiveCamera(60, width / height, 0.001, 1500);
       camera.lookAt(new THREE.Vector3());
       scene.add(camera);
       renderer = new THREE.WebGLRenderer({
@@ -37,7 +36,8 @@
       controls = new THREE.OrbitControls(camera);
       controls.center.set(8.73, 0, 0);
       controls.autoRotateSpeed = 1.0;
-      controls.autoRotate = true;
+      controls.autoRotate = false;
+      camera.position.copy(controls.center).addSelf(new THREE.Vector3(2, 6, 9));
       this.camera = camera;
       this.scene = scene;
       this.renderer = renderer;

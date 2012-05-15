@@ -2,14 +2,30 @@
 (function() {
 
   $(function() {
-    var keyboard, scene;
+    var NOTE_OFF, NOTE_ON, keyboard, scene;
     scene = new Scene('#container');
     keyboard = new PianoKeyboard();
     scene.add(keyboard.model);
     scene.animate(function() {
       return keyboard.update();
     });
-    return window.keyboard = keyboard;
+    window.keyboard = keyboard;
+    NOTE_OFF = 128;
+    NOTE_ON = 144;
+    return MIDI.loadPlugin(function() {
+      var player;
+      player = MIDI.Player;
+      player.loadFile(MIDIFiles['014-Bach, JS - Minuet in G'], player.start);
+      return player.addListener(function(data) {
+        var message, note;
+        note = data.note, message = data.message;
+        if (message === NOTE_ON) {
+          return keyboard.press(note);
+        } else if (message === NOTE_OFF) {
+          return keyboard.release(note);
+        }
+      });
+    });
   });
 
 }).call(this);
