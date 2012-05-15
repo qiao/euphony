@@ -116,7 +116,7 @@ class PianoKey
       width  = @design.blackKeyWidth
       height = @design.blackKeyHeight
       length = @design.blackKeyLength
-      color  = 0x000000
+      color  = 0x111111
     else
       width  = @design.whiteKeyWidth
       height = @design.whiteKeyHeight
@@ -124,7 +124,7 @@ class PianoKey
       color  = 0xffffff
 
     geometry = new THREE.CubeGeometry(width, height, length)
-    material = new THREE.MeshLambertMaterial(color: color)
+    material = new THREE.MeshLambertMaterial(color: color, ambient: 0x888888)
     @mesh = new THREE.Mesh(geometry, material)
     @mesh.position.copy(position)
 
@@ -147,8 +147,9 @@ class PianoKeyboard
 
     model = new THREE.Object3D()
     keys = []
-    blackKeyY = (design.blackKeyHeight - design.whiteKeyHeight) / 2
-    blackKeyZ = (design.blackKeyLength - design.whiteKeyLength) / 2
+    blackKeyY = (design.blackKeyHeight - design.whiteKeyHeight) / 2 + 0.001
+    blackKeyZ = (design.blackKeyLength - design.whiteKeyLength) / 2 + 0.001
+
     for {keyType, keyCenterPosX} in design.keyInfo
       if keyType is Black
         pos = new THREE.Vector3(keyCenterPosX, blackKeyY, blackKeyZ)
@@ -160,6 +161,7 @@ class PianoKeyboard
         position: pos
       keys.push(key)
       model.add(key.mesh)
+
     @keys  = keys
     @model = model
 

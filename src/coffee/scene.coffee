@@ -36,7 +36,7 @@ class Scene
     controls = new THREE.OrbitControls(camera)
     controls.center.set(8.5, 0, 0)
     controls.autoRotateSpeed = 1.0
-    controls.autoRotate = true
+    controls.autoRotate = false
 
     # set instance variables
     @camera = camera

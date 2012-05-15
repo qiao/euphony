@@ -161,7 +161,7 @@
         width = this.design.blackKeyWidth;
         height = this.design.blackKeyHeight;
         length = this.design.blackKeyLength;
-        color = 0x000000;
+        color = 0x111111;
       } else {
         width = this.design.whiteKeyWidth;
         height = this.design.whiteKeyHeight;
@@ -170,7 +170,8 @@
       }
       geometry = new THREE.CubeGeometry(width, height, length);
       material = new THREE.MeshLambertMaterial({
-        color: color
+        color: color,
+        ambient: 0x888888
       });
       this.mesh = new THREE.Mesh(geometry, material);
       this.mesh.position.copy(position);
@@ -206,8 +207,8 @@
       Black = PianoKeyboardDesign.KeyType.Black;
       model = new THREE.Object3D();
       keys = [];
-      blackKeyY = (design.blackKeyHeight - design.whiteKeyHeight) / 2;
-      blackKeyZ = (design.blackKeyLength - design.whiteKeyLength) / 2;
+      blackKeyY = (design.blackKeyHeight - design.whiteKeyHeight) / 2 + 0.001;
+      blackKeyZ = (design.blackKeyLength - design.whiteKeyLength) / 2 + 0.001;
       _ref = design.keyInfo;
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         _ref1 = _ref[_i], keyType = _ref1.keyType, keyCenterPosX = _ref1.keyCenterPosX;
