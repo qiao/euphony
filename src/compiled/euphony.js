@@ -37,6 +37,8 @@
       });
     }
 
+    Euphony.prototype.play = function(midiFile) {};
+
     Euphony.prototype.start = function() {
       var _this = this;
       this.scene.animate(function() {

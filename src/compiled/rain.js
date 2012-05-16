@@ -24,14 +24,19 @@
     }
 
     NoteRain.prototype.setMidiData = function(midiData) {
-      var Black, KeyType, blackKeyHeight, blackKeyWidth, color, currentTime, duration, event, geometry, interval, keyInfo, length, material, mesh, noteNumber, notes, startTime, subtype, x, y, z, _i, _len, _ref, _ref1, _ref2, _results;
-      _ref = this.pianoDesign, blackKeyWidth = _ref.blackKeyWidth, blackKeyHeight = _ref.blackKeyHeight, keyInfo = _ref.keyInfo, KeyType = _ref.KeyType;
+      var Black, KeyType, blackKeyHeight, blackKeyWidth, child, color, currentTime, duration, event, geometry, interval, keyInfo, length, material, mesh, noteNumber, notes, startTime, subtype, x, y, z, _i, _j, _len, _len1, _ref, _ref1, _ref2, _ref3, _results;
+      _ref = this.model.children;
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        child = _ref[_i];
+        this.model.remove(child);
+      }
+      _ref1 = this.pianoDesign, blackKeyWidth = _ref1.blackKeyWidth, blackKeyHeight = _ref1.blackKeyHeight, keyInfo = _ref1.keyInfo, KeyType = _ref1.KeyType;
       Black = KeyType.Black;
       notes = [];
       currentTime = 0;
       _results = [];
-      for (_i = 0, _len = midiData.length; _i < _len; _i++) {
-        _ref1 = midiData[_i], (_ref2 = _ref1[0], event = _ref2.event), interval = _ref1[1];
+      for (_j = 0, _len1 = midiData.length; _j < _len1; _j++) {
+        _ref2 = midiData[_j], (_ref3 = _ref2[0], event = _ref3.event), interval = _ref2[1];
         currentTime += interval;
         subtype = event.subtype, noteNumber = event.noteNumber;
         if (subtype === 'noteOn') {

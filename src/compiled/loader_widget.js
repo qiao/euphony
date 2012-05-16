@@ -53,8 +53,11 @@
     };
 
     LoaderWidget.prototype.stop = function() {
+      var _ref;
       this.overlay.fadeOut('slow');
-      this.spin.stop();
+      if ((_ref = this.spin) != null) {
+        _ref.stop();
+      }
       return this.isActive = false;
     };
 

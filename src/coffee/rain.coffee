@@ -12,6 +12,10 @@ class NoteRain
         parseInt(map[note - MIDI.pianoKeyOffset].hex, 16)
 
   setMidiData: (midiData) ->
+    # clear notes
+    for child in @model.children
+      @model.remove(child)
+
     {blackKeyWidth, blackKeyHeight, keyInfo, KeyType} = @pianoDesign
     {Black} = KeyType
 

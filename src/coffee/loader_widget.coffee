@@ -53,7 +53,7 @@ class LoaderWidget
   
   stop: ->
     @overlay.fadeOut('slow')
-    @spin.stop()
+    @spin?.stop()
     @isActive = false
 
 @LoaderWidget = LoaderWidget

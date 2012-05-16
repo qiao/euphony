@@ -21,6 +21,8 @@ class Euphony
       delay: 30
       callback: (data) => @rain.update(data.now * 1000)
 
+  play: (midiFile) ->
+
   start: =>
     @scene.animate =>
       @keyboard.update()
