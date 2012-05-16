@@ -158,23 +158,21 @@
     PianoKey.name = 'PianoKey';
 
     function PianoKey(_arg) {
-      var color, design, geometry, height, keyType, length, material, position, width;
+      var blackKeyColor, blackKeyHeight, blackKeyLength, blackKeyWidth, design, geometry, keyType, material, position, whiteKeyColor, whiteKeyHeight, whiteKeyLength, whiteKeyWidth;
       design = _arg.design, keyType = _arg.keyType, position = _arg.position;
       if (keyType === design.KeyType.Black) {
-        width = design.blackKeyWidth;
-        height = design.blackKeyHeight;
-        length = design.blackKeyLength;
-        color = design.blackKeyColor;
+        blackKeyWidth = design.blackKeyWidth, blackKeyHeight = design.blackKeyHeight, blackKeyLength = design.blackKeyLength, blackKeyColor = design.blackKeyColor;
+        geometry = new THREE.CubeGeometry(blackKeyWidth, blackKeyHeight, blackKeyLength);
+        material = new THREE.MeshLambertMaterial({
+          color: blackKeyColor
+        });
       } else {
-        width = design.whiteKeyWidth;
-        height = design.whiteKeyHeight;
-        length = design.whiteKeyLength;
-        color = design.whiteKeyColor;
+        whiteKeyWidth = design.whiteKeyWidth, whiteKeyHeight = design.whiteKeyHeight, whiteKeyLength = design.whiteKeyLength, whiteKeyColor = design.whiteKeyColor;
+        geometry = new THREE.CubeGeometry(whiteKeyWidth, whiteKeyHeight, whiteKeyLength);
+        material = new THREE.MeshLambertMaterial({
+          color: whiteKeyColor
+        });
       }
-      geometry = new THREE.CubeGeometry(width, height, length);
-      material = new THREE.MeshLambertMaterial({
-        color: color
-      });
       this.model = new THREE.Mesh(geometry, material);
       this.model.position.copy(position);
       this.keyUpSpeed = design.keyUpSpeed;

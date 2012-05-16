@@ -49,7 +49,9 @@
     Euphony.prototype.init = function(callback) {
       return MIDI.loadPlugin(function() {
         loader.stop();
-        return setTimeout(callback, 1000);
+        if (callback) {
+          return setTimeout(callback, 1000);
+        }
       });
     };
 

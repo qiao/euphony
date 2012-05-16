@@ -10,4 +10,3 @@ $(document).ready ->
     trackNames = Object.keys(MIDIFiles)
     midiFile = MIDIFiles[trackNames[11]]
     app.setMidiFile midiFile, ->
-      console.log 'ready'

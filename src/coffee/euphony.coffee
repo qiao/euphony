@@ -26,7 +26,7 @@ class Euphony
   init: (callback) ->
     MIDI.loadPlugin ->
       loader.stop()
-      setTimeout(callback, 1000)
+      setTimeout(callback, 1000) if callback
 
   setMidiFile: (midiFile, callback) ->
     # load tracks

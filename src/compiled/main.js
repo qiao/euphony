@@ -9,9 +9,7 @@
       var midiFile, trackNames;
       trackNames = Object.keys(MIDIFiles);
       midiFile = MIDIFiles[trackNames[11]];
-      return app.setMidiFile(midiFile, function() {
-        return console.log('ready');
-      });
+      return app.setMidiFile(midiFile, function() {});
     });
   });
 

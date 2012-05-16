@@ -131,19 +131,14 @@ class PianoKeyboardDesign
 class PianoKey
   constructor: ({design, keyType, position}) ->
     if keyType is design.KeyType.Black
-      width  = design.blackKeyWidth
-      height = design.blackKeyHeight
-      length = design.blackKeyLength
-      color  = design.blackKeyColor
+      {blackKeyWidth, blackKeyHeight, blackKeyLength, blackKeyColor} = design
+      geometry = new THREE.CubeGeometry(blackKeyWidth, blackKeyHeight, blackKeyLength)
+      material = new THREE.MeshLambertMaterial(color: blackKeyColor)
     else
-      width  = design.whiteKeyWidth
-      height = design.whiteKeyHeight
-      length = design.whiteKeyLength
-      color  = design.whiteKeyColor
-
+      {whiteKeyWidth, whiteKeyHeight, whiteKeyLength, whiteKeyColor} = design
+      geometry = new THREE.CubeGeometry(whiteKeyWidth, whiteKeyHeight, whiteKeyLength)
+      material = new THREE.MeshLambertMaterial(color: whiteKeyColor)
     # create key mesh
-    geometry = new THREE.CubeGeometry(width, height, length)
-    material = new THREE.MeshLambertMaterial(color: color)
     @model = new THREE.Mesh(geometry, material)
     @model.position.copy(position)
 
