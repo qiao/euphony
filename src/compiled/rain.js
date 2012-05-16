@@ -30,7 +30,7 @@
           length = duration * this.noteScale;
           x = keyInfo[noteNumber].keyCenterPosX;
           y = startTime * this.noteScale + (length / 2);
-          z = -0.3;
+          z = -0.2;
           color = noteToColor(noteNumber);
           geometry = new THREE.CubeGeometry(blackKeyWidth, length, blackKeyWidth);
           material = new THREE.MeshPhongMaterial({

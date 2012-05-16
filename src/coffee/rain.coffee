@@ -30,7 +30,7 @@ class NoteRain
 
         x = keyInfo[noteNumber].keyCenterPosX
         y = startTime * @noteScale + (length / 2)
-        z = -0.3
+        z = -0.2
 
         # build model
         color = noteToColor(noteNumber)
