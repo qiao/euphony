@@ -6,7 +6,7 @@ noteToColor = do ->
 
 $(document).ready ->
   # global loader to show progress of MIDI.js
-  window.loader = new Loader()
+  window.loader = new LoaderWidget()
 
   # create scene
   scene = new Scene('#container')

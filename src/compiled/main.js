@@ -12,7 +12,7 @@
 
   $(document).ready(function() {
     var design, keyboard, rain, scene;
-    window.loader = new Loader();
+    window.loader = new LoaderWidget();
     scene = new Scene('#container');
     design = new PianoKeyboardDesign();
     keyboard = new PianoKeyboard(design);
