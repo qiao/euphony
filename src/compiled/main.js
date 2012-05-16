@@ -2,10 +2,17 @@
 (function() {
 
   $(document).ready(function() {
-    var app;
     window.loader = new LoaderWidget();
-    app = new Euphony('#container');
-    return app.start();
+    loader.message('Loading');
+    window.app = new Euphony('#container');
+    return app.init(function() {
+      var midiFile, trackNames;
+      trackNames = Object.keys(MIDIFiles);
+      midiFile = MIDIFiles[trackNames[11]];
+      return app.setMidiFile(midiFile, function() {
+        return console.log('ready');
+      });
+    });
   });
 
 }).call(this);

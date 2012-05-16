@@ -8,6 +8,12 @@
     Euphony.name = 'Euphony';
 
     function Euphony(container) {
+      this.resume = __bind(this.resume, this);
+
+      this.pause = __bind(this.pause, this);
+
+      this.stop = __bind(this.stop, this);
+
       this.start = __bind(this.start, this);
 
       var _this = this;
@@ -17,6 +23,9 @@
       this.scene = new Scene(container);
       this.scene.add(this.keyboard.model);
       this.scene.add(this.rain.model);
+      this.scene.animate(function() {
+        return _this.keyboard.update();
+      });
       this.player = MIDI.Player;
       this.player.addListener(function(data) {
         var NOTE_OFF, NOTE_ON, message, note;
@@ -37,22 +46,35 @@
       });
     }
 
-    Euphony.prototype.start = function() {
-      var _this = this;
-      this.scene.animate(function() {
-        return _this.keyboard.update();
-      });
+    Euphony.prototype.init = function(callback) {
       return MIDI.loadPlugin(function() {
         loader.stop();
-        return setTimeout((function() {
-          var trackNames;
-          trackNames = Object.keys(MIDIFiles);
-          return _this.player.loadFile(MIDIFiles[trackNames[12]], function() {
-            _this.rain.setMidiData(_this.player.data);
-            return _this.player.start();
-          });
-        }), 700);
+        return setTimeout(callback, 1000);
       });
+    };
+
+    Euphony.prototype.setMidiFile = function(midiFile, callback) {
+      var _this = this;
+      return this.player.loadFile(midiFile, function() {
+        _this.rain.setMidiData(_this.player.data);
+        return typeof callback === "function" ? callback() : void 0;
+      });
+    };
+
+    Euphony.prototype.start = function() {
+      return this.player.start();
+    };
+
+    Euphony.prototype.stop = function() {
+      return this.player.stop();
+    };
+
+    Euphony.prototype.pause = function() {
+      return this.player.pause();
+    };
+
+    Euphony.prototype.resume = function() {
+      return this.player.resume();
     };
 
     return Euphony;
