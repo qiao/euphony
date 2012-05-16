@@ -9,22 +9,33 @@
 
     NoteRain.prototype.noteScale = 0.001;
 
-    function NoteRain(_arg) {
-      var Black, KeyType, blackKeyHeight, blackKeyWidth, color, currentTime, duration, event, geometry, interval, keyInfo, length, material, mesh, midiData, noteNumber, noteToColor, notes, pianoDesign, startTime, subtype, x, y, z, _i, _len, _ref, _ref1;
-      midiData = _arg.midiData, pianoDesign = _arg.pianoDesign, noteToColor = _arg.noteToColor;
+    function NoteRain(pianoDesign) {
+      this.pianoDesign = pianoDesign;
       this.update = __bind(this.update, this);
 
-      blackKeyWidth = pianoDesign.blackKeyWidth, blackKeyHeight = pianoDesign.blackKeyHeight, keyInfo = pianoDesign.keyInfo, KeyType = pianoDesign.KeyType;
-      Black = KeyType.Black;
       this.model = new THREE.Object3D();
+      this.noteToColor = (function() {
+        var map;
+        map = MusicTheory.Synesthesia.map('August Aeppli (1940)');
+        return function(note) {
+          return parseInt(map[note - MIDI.pianoKeyOffset].hex, 16);
+        };
+      })();
+    }
+
+    NoteRain.prototype.setMidiData = function(midiData) {
+      var Black, KeyType, blackKeyHeight, blackKeyWidth, color, currentTime, duration, event, geometry, interval, keyInfo, length, material, mesh, noteNumber, notes, startTime, subtype, x, y, z, _i, _len, _ref, _ref1, _ref2, _results;
+      _ref = this.pianoDesign, blackKeyWidth = _ref.blackKeyWidth, blackKeyHeight = _ref.blackKeyHeight, keyInfo = _ref.keyInfo, KeyType = _ref.KeyType;
+      Black = KeyType.Black;
       notes = [];
       currentTime = 0;
+      _results = [];
       for (_i = 0, _len = midiData.length; _i < _len; _i++) {
-        _ref = midiData[_i], (_ref1 = _ref[0], event = _ref1.event), interval = _ref[1];
+        _ref1 = midiData[_i], (_ref2 = _ref1[0], event = _ref2.event), interval = _ref1[1];
         currentTime += interval;
         subtype = event.subtype, noteNumber = event.noteNumber;
         if (subtype === 'noteOn') {
-          notes[noteNumber] = currentTime;
+          _results.push(notes[noteNumber] = currentTime);
         } else if (subtype === 'noteOff') {
           startTime = notes[noteNumber];
           duration = currentTime - startTime;
@@ -35,7 +46,7 @@
           if (keyInfo[noteNumber].keyType === Black) {
             y += blackKeyHeight / 2;
           }
-          color = noteToColor(noteNumber);
+          color = this.noteToColor(noteNumber);
           geometry = new THREE.CubeGeometry(blackKeyWidth, length, blackKeyWidth);
           material = new THREE.MeshPhongMaterial({
             color: color,
@@ -45,10 +56,13 @@
           });
           mesh = new THREE.Mesh(geometry, material);
           mesh.position.set(x, y, z);
-          this.model.add(mesh);
+          _results.push(this.model.add(mesh));
+        } else {
+          _results.push(void 0);
         }
       }
-    }
+      return _results;
+    };
 
     NoteRain.prototype.update = function(playerCurrentTime) {
       return this.model.position.y = -playerCurrentTime * this.noteScale;

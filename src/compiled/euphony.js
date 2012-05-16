@@ -7,15 +7,16 @@
 
     Euphony.name = 'Euphony';
 
-    function Euphony() {
+    function Euphony(container) {
       this.start = __bind(this.start, this);
 
       var _this = this;
-      this.scene = new Scene('#container');
       this.design = new PianoKeyboardDesign();
       this.keyboard = new PianoKeyboard(this.design);
+      this.rain = new NoteRain(this.design);
+      this.scene = new Scene(container);
       this.scene.add(this.keyboard.model);
-      this.rain = null;
+      this.scene.add(this.rain.model);
       this.player = MIDI.Player;
       this.player.addListener(function(data) {
         var NOTE_OFF, NOTE_ON, message, note;
@@ -34,13 +35,6 @@
           return _this.rain.update(data.now * 1000);
         }
       });
-      this.noteToColor = (function() {
-        var map;
-        map = MusicTheory.Synesthesia.map('August Aeppli (1940)');
-        return function(note) {
-          return parseInt(map[note - MIDI.pianoKeyOffset].hex, 16);
-        };
-      })();
     }
 
     Euphony.prototype.start = function() {
@@ -50,18 +44,10 @@
       });
       return MIDI.loadPlugin(function() {
         var trackNames;
-        window.loader.stop();
+        loader.stop();
         trackNames = Object.keys(MIDIFiles);
-        return _this.player.loadFile(MIDIFiles[trackNames[12]], function(midifile) {
-          if (_this.rain) {
-            _this.scene.remove(_this.rain.model);
-          }
-          _this.rain = new NoteRain({
-            midiData: _this.player.data,
-            pianoDesign: _this.design,
-            noteToColor: _this.noteToColor
-          });
-          _this.scene.add(_this.rain.model);
+        return _this.player.loadFile(MIDIFiles[trackNames[12]], function() {
+          _this.rain.setMidiData(_this.player.data);
           return _this.player.start();
         });
       });

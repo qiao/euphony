@@ -4,5 +4,5 @@ $(document).ready ->
   window.loader = new LoaderWidget()
 
   # start app
-  app = new Euphony()
+  app = new Euphony('#container')
   app.start()

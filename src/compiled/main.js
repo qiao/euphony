@@ -4,7 +4,7 @@
   $(document).ready(function() {
     var app;
     window.loader = new LoaderWidget();
-    app = new Euphony();
+    app = new Euphony('#container');
     return app.start();
   });
 

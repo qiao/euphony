@@ -3,14 +3,21 @@ class NoteRain
   noteScale: 0.001
 
   # midiData is acquired from MIDI.Player.data
-  constructor: ({midiData, pianoDesign, noteToColor}) ->
-    {blackKeyWidth, blackKeyHeight, keyInfo, KeyType} = pianoDesign
+  constructor: (@pianoDesign) ->
+    @model = new THREE.Object3D()
+    # function to convert a note to the corresponding color(synesthesia)
+    @noteToColor = do ->
+      map = MusicTheory.Synesthesia.map('August Aeppli (1940)')
+      (note) ->
+        parseInt(map[note - MIDI.pianoKeyOffset].hex, 16)
+
+  setMidiData: (midiData) ->
+    {blackKeyWidth, blackKeyHeight, keyInfo, KeyType} = @pianoDesign
     {Black} = KeyType
 
     # the raw midiData uses delta time between events to represent the flow
     # and it's quite unintuitive
     # here we calculates the start and end time of each notebox
-    @model = new THREE.Object3D()
     notes = []
     currentTime = 0
 
@@ -37,7 +44,7 @@ class NoteRain
           y += blackKeyHeight / 2
 
         # build model
-        color = noteToColor(noteNumber)
+        color = @noteToColor(noteNumber)
         geometry = new THREE.CubeGeometry(blackKeyWidth, length, blackKeyWidth)
         material = new THREE.MeshPhongMaterial
           color: color

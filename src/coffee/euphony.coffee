@@ -1,17 +1,13 @@
 class Euphony
-  constructor: ->
-    # create scene
-    @scene = new Scene('#container')
-
-    # the keyboard design is used by both the keyboard and rain
+  constructor: (container)->
     @design = new PianoKeyboardDesign()
-
-    # create keyboard
     @keyboard = new PianoKeyboard(@design)
-    @scene.add(@keyboard.model)
+    @rain = new NoteRain(@design)
 
-    @rain = null
-    
+    @scene = new Scene(container)
+    @scene.add(@keyboard.model)
+    @scene.add(@rain.model)
+
     @player = MIDI.Player
     @player.addListener (data) =>
       NOTE_OFF = 128
@@ -25,33 +21,18 @@ class Euphony
       delay: 30
       callback: (data) => @rain.update(data.now * 1000)
 
-    # function to convert a note to the corresponding color(synesthesia)
-    @noteToColor = do ->
-      map = MusicTheory.Synesthesia.map('August Aeppli (1940)')
-      (note) ->
-        parseInt(map[note - MIDI.pianoKeyOffset].hex, 16)
-
   start: =>
     @scene.animate =>
       @keyboard.update()
 
     # initialize MIDI
     MIDI.loadPlugin =>
-      window.loader.stop()
+      loader.stop()
 
       # load tracks
       trackNames = Object.keys(MIDIFiles)
-      @player.loadFile MIDIFiles[trackNames[12]], (midifile) =>
-
-        # create rain
-        if @rain
-          @scene.remove(@rain.model)
-        @rain = new NoteRain
-          midiData: @player.data
-          pianoDesign: @design
-          noteToColor: @noteToColor
-        @scene.add(@rain.model)
-
+      @player.loadFile MIDIFiles[trackNames[12]], =>
+        @rain.setMidiData(@player.data)
         # start player
         @player.start()
 
