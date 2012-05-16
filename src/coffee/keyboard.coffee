@@ -2,7 +2,7 @@
 # based on MIDITrail(http://en.sourceforge.jp/projects/miditrail/)
 class PianoKeyboardDesign
 
-  @KeyType: KeyType =
+  KeyType:
     WhiteC : 0
     WhiteD : 1
     WhiteE : 2
@@ -35,7 +35,7 @@ class PianoKeyboardDesign
     @_initKeyPos()
 
   _initKeyType: ->
-    {keyInfo} = this
+    {keyInfo, KeyType} = this
     {WhiteC, WhiteD, WhiteE, WhiteF, WhiteG, WhiteA, WhiteB, Black} = KeyType
 
     for i in [0...10]
@@ -65,7 +65,7 @@ class PianoKeyboardDesign
     
   _initKeyPos: ->
     # save references of instance variables
-    {keyInfo, whiteKeyStep, blackKeyShiftCDE, blackKeyShiftFGAB} = this
+    {KeyType, keyInfo, whiteKeyStep, blackKeyShiftCDE, blackKeyShiftFGAB} = this
     {WhiteC, WhiteD, WhiteE, WhiteF, WhiteG, WhiteA, WhiteB, Black} = KeyType
 
     noteNo = 0
@@ -129,17 +129,17 @@ class PianoKeyboardDesign
 #   key.release()
 #   setInterval((-> key.update()), 1000 / 60)
 class PianoKey
-  constructor: ({@design, keyType, position}) ->
-    if keyType is PianoKeyboardDesign.KeyType.Black
-      width  = @design.blackKeyWidth
-      height = @design.blackKeyHeight
-      length = @design.blackKeyLength
-      color  = @design.blackKeyColor
+  constructor: ({design, keyType, position}) ->
+    if keyType is design.KeyType.Black
+      width  = design.blackKeyWidth
+      height = design.blackKeyHeight
+      length = design.blackKeyLength
+      color  = design.blackKeyColor
     else
-      width  = @design.whiteKeyWidth
-      height = @design.whiteKeyHeight
-      length = @design.whiteKeyLength
-      color  = @design.whiteKeyColor
+      width  = design.whiteKeyWidth
+      height = design.whiteKeyHeight
+      length = design.whiteKeyLength
+      color  = design.whiteKeyColor
 
     # create key mesh
     geometry = new THREE.CubeGeometry(width, height, length)
@@ -147,9 +147,11 @@ class PianoKey
     @model = new THREE.Mesh(geometry, material)
     @model.position.copy(position)
 
+    @keyUpSpeed = design.keyUpSpeed
+
     # set original and pressed y coordinate
     @originalY = position.y
-    @pressedY = @originalY - @design.keyDip
+    @pressedY = @originalY - design.keyDip
 
   press: ->
     @model.position.y = @pressedY
@@ -161,7 +163,7 @@ class PianoKey
   update: ->
     if @model.position.y < @originalY and !@isPressed
       offset = @originalY - @model.position.y
-      @model.position.y += Math.min(offset, @design.keyUpSpeed)
+      @model.position.y += Math.min(offset, @keyUpSpeed)
 
 
 # model of piano keyboard
@@ -172,9 +174,8 @@ class PianoKey
 #   keyboard.press(30)   # press the key of note 30(G1)
 #   keyboard.release(60) # release the key of note 60(C4)
 class PianoKeyboard
-  constructor: ->
-    design = new PianoKeyboardDesign
-    {Black} = PianoKeyboardDesign.KeyType
+  constructor: (design) ->
+    {Black} = design.KeyType
 
     model = new THREE.Object3D()
     keys = []
@@ -208,4 +209,5 @@ class PianoKeyboard
 
 
 # export to global
+@PianoKeyboardDesign = PianoKeyboardDesign
 @PianoKeyboard = PianoKeyboard
