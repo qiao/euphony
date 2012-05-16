@@ -33,10 +33,13 @@ class NoteRain
         z = -0.3
 
         # build model
+        color = noteToColor(noteNumber)
         geometry = new THREE.CubeGeometry(blackKeyWidth, length, blackKeyWidth)
-        material = new THREE.MeshLambertMaterial
-          color: noteToColor(noteNumber)
-          reflectivity: 6.0
+        material = new THREE.MeshPhongMaterial
+          color: color
+          emissive: color
+          opacity: 0.7
+          transparent: true
         mesh = new THREE.Mesh(geometry, material)
         mesh.position.set(x, y, z)
         @model.add(mesh)
