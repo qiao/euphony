@@ -168,7 +168,7 @@ class PianoKey
 
 # model of piano keyboard
 # usage:
-#   keyboard = new PianoKeyboard
+#   keyboard = new PianoKeyboard(new PianoKeyboardDesign)
 #   scene.add(keyboard.model) # scene is an instance of THREE.Scene
 #   setInterval(keyboard.update, 1000 / 60) 
 #   keyboard.press(30)   # press the key of note 30(G1)
