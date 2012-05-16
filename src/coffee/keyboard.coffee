@@ -25,7 +25,7 @@ class PianoKeyboardDesign
   noteDropPosZ4BlackKey : 0.75
   whiteKeyColor         : 0xffffff
   blackKeyColor         : 0x111111
-  keyDip                : 0.07
+  keyDip                : 0.08
   keyUpSpeed            : 0.03
   keyInfo               : [] # an array holding each key's type and position
 

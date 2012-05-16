@@ -44,7 +44,7 @@
 
     PianoKeyboardDesign.prototype.blackKeyColor = 0x111111;
 
-    PianoKeyboardDesign.prototype.keyDip = 0.07;
+    PianoKeyboardDesign.prototype.keyDip = 0.08;
 
     PianoKeyboardDesign.prototype.keyUpSpeed = 0.03;
 
