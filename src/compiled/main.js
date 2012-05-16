@@ -11,19 +11,19 @@
   })();
 
   $(document).ready(function() {
-    var design, keyboard, particleSystem, rain, scene;
+    var design, keyboard, rain, scene;
+    window.loader = new Loader();
     scene = new Scene('#container');
     design = new PianoKeyboardDesign();
     keyboard = new PianoKeyboard(design);
     scene.add(keyboard.model);
-    particleSystem = new ParticleSystem(scene);
     rain = null;
     scene.animate(function() {
-      keyboard.update();
-      return particleSystem.update();
+      return keyboard.update();
     });
     return MIDI.loadPlugin(function() {
       var NOTE_OFF, NOTE_ON, player, trackNames;
+      loader.stop();
       player = MIDI.Player;
       NOTE_OFF = 128;
       NOTE_ON = 144;

@@ -5,6 +5,9 @@ noteToColor = do ->
     parseInt(map[note - MIDI.pianoKeyOffset].hex, 16)
 
 $(document).ready ->
+  # global loader to show progress of MIDI.js
+  window.loader = new Loader()
+
   # create scene
   scene = new Scene('#container')
 
@@ -15,17 +18,14 @@ $(document).ready ->
   keyboard = new PianoKeyboard(design)
   scene.add(keyboard.model)
 
-  # create particle system
-  particleSystem = new ParticleSystem(scene)
-
   rain = null
 
   scene.animate ->
     keyboard.update()
-    particleSystem.update()
 
   # initialize MIDI
   MIDI.loadPlugin ->
+    loader.stop()
     player = MIDI.Player
 
     # synchronize piano keyboard with note events
@@ -35,13 +35,6 @@ $(document).ready ->
       {note, message} = data
       if message is NOTE_ON
         keyboard.press(note)
-        #particleSystem.createParticles
-          #position: new THREE.Vector3(
-            #design.keyInfo[note].keyCenterPosX
-            #0.1
-            #-0.2
-          #)
-          #color: noteToColor(note)
       else if message is NOTE_OFF
         keyboard.release(note)
 
