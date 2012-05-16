@@ -183,7 +183,7 @@ class PianoKeyboard
     blackKeyZ = (design.blackKeyLength - design.whiteKeyLength) / 2 + 0.001
 
     # create piano keys
-    for {keyType, keyCenterPosX} in design.keyInfo
+    for {keyType, keyCenterPosX}, i in design.keyInfo
       if keyType is Black
         pos = new THREE.Vector3(keyCenterPosX, blackKeyY, blackKeyZ)
       else
@@ -193,7 +193,11 @@ class PianoKeyboard
         keyType: keyType
         position: pos
       keys.push(key)
-      model.add(key.model)
+
+      if 20 < i < 109 # strip to 88 keys
+        model.add(key.model)
+
+    model.y -= design.whiteKeyHeight / 2
 
     @keys  = keys
     @model = model
