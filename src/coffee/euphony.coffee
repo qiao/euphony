@@ -1,5 +1,5 @@
 class Euphony
-  constructor: (container)->
+  constructor: (container) ->
     @design = new PianoKeyboardDesign()
     @keyboard = new PianoKeyboard(@design)
     @rain = new NoteRain(@design)

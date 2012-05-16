@@ -18,6 +18,7 @@ class LoaderWidget
         background: 'rgba(0, 0, 0, 0.7)'
         'text-align': 'center'
       .appendTo(document.body)
+      .on('selectstart', (-> false))
 
     @box = $('<div>')
       .width(300)

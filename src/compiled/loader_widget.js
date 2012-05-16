@@ -21,7 +21,9 @@
         'z-index': 10000,
         background: 'rgba(0, 0, 0, 0.7)',
         'text-align': 'center'
-      }).appendTo(document.body);
+      }).appendTo(document.body).on('selectstart', (function() {
+        return false;
+      }));
       this.box = $('<div>').width(300).height(200).css({
         position: 'absolute',
         top: ($window.height() - 200) / 2,
