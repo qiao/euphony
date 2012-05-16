@@ -210,15 +210,15 @@
     function PianoKeyboard(design) {
       this.update = __bind(this.update, this);
 
-      var Black, blackKeyY, blackKeyZ, key, keyCenterPosX, keyType, keys, model, pos, _i, _len, _ref, _ref1;
+      var Black, blackKeyY, blackKeyZ, i, key, keyCenterPosX, keyType, keys, model, pos, _i, _len, _ref, _ref1;
       Black = design.KeyType.Black;
       model = new THREE.Object3D();
       keys = [];
       blackKeyY = (design.blackKeyHeight - design.whiteKeyHeight) / 2 + 0.001;
       blackKeyZ = (design.blackKeyLength - design.whiteKeyLength) / 2 + 0.001;
       _ref = design.keyInfo;
-      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-        _ref1 = _ref[_i], keyType = _ref1.keyType, keyCenterPosX = _ref1.keyCenterPosX;
+      for (i = _i = 0, _len = _ref.length; _i < _len; i = ++_i) {
+        _ref1 = _ref[i], keyType = _ref1.keyType, keyCenterPosX = _ref1.keyCenterPosX;
         if (keyType === Black) {
           pos = new THREE.Vector3(keyCenterPosX, blackKeyY, blackKeyZ);
         } else {
@@ -230,8 +230,11 @@
           position: pos
         });
         keys.push(key);
-        model.add(key.model);
+        if ((20 < i && i < 109)) {
+          model.add(key.model);
+        }
       }
+      model.y -= design.whiteKeyHeight / 2;
       this.keys = keys;
       this.model = model;
     }

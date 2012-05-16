@@ -15,7 +15,7 @@
       width = $container.width();
       height = $container.height();
       scene = new THREE.Scene();
-      camera = new THREE.PerspectiveCamera(60, width / height, 0.001, 1500);
+      camera = new THREE.PerspectiveCamera(60, width / height, 0.001, 100000);
       camera.lookAt(new THREE.Vector3());
       scene.add(camera);
       renderer = new THREE.WebGLRenderer({

@@ -15,6 +15,11 @@ $ ->
   # place holder for rain
   rain = null
 
+  noteToColor = do ->
+    map = MusicTheory.Synesthesia.map('August Aeppli (1940)')
+    (note) ->
+      parseInt(map[note - MIDI.pianoKeyOffset].hex, 16)
+
   # initialize MIDI
   MIDI.loadPlugin ->
     player = MIDI.Player
@@ -31,7 +36,7 @@ $ ->
 
     # load tracks
     trackNames = Object.keys(MIDIFiles)
-    player.loadFile MIDIFiles[trackNames[0]], (midifile) ->
+    player.loadFile MIDIFiles[trackNames[13]], (midifile) ->
 
       # create rain
       if rain
@@ -39,6 +44,7 @@ $ ->
       rain = new NoteRain
         midiData: MIDI.Player.data
         pianoDesign: design
+        noteToColor: noteToColor
       scene.add(rain.model)
 
       # start player

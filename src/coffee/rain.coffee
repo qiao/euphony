@@ -3,7 +3,7 @@ class NoteRain
   noteScale: 0.001
 
   # midiData is acquired from MIDI.Player.data
-  constructor: ({midiData, pianoDesign}) ->
+  constructor: ({midiData, pianoDesign, noteToColor}) ->
     {blackKeyWidth, keyInfo} = pianoDesign
 
     # the raw midiData uses delta time between events to represent the flow
@@ -20,6 +20,7 @@ class NoteRain
       if subtype is 'noteOn'
         # if note is on, record its start time
         notes[noteNumber] = currentTime
+
       else if subtype is 'noteOff'
         # if note if off, calculate its duration and build the modle
         startTime = notes[noteNumber]
@@ -33,7 +34,9 @@ class NoteRain
 
         # build model
         geometry = new THREE.CubeGeometry(blackKeyWidth, length, blackKeyWidth)
-        material = new THREE.MeshLambertMaterial(color: 0x00f0f0)
+        material = new THREE.MeshLambertMaterial
+          color: noteToColor(noteNumber)
+          reflectivity: 6.0
         mesh = new THREE.Mesh(geometry, material)
         mesh.position.set(x, y, z)
         @model.add(mesh)

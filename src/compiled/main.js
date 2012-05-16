@@ -2,7 +2,7 @@
 (function() {
 
   $(function() {
-    var NOTE_OFF, NOTE_ON, design, keyboard, scene;
+    var design, keyboard, noteToColor, rain, scene;
     scene = new Scene('#container');
     design = new PianoKeyboardDesign();
     keyboard = new PianoKeyboard(design);
@@ -10,28 +10,20 @@
     scene.animate(function() {
       return keyboard.update();
     });
-    window.keyboard = keyboard;
-    NOTE_OFF = 128;
-    NOTE_ON = 144;
+    rain = null;
+    noteToColor = (function() {
+      var map;
+      map = MusicTheory.Synesthesia.map('August Aeppli (1940)');
+      return function(note) {
+        return parseInt(map[note - MIDI.pianoKeyOffset].hex, 16);
+      };
+    })();
     return MIDI.loadPlugin(function() {
-      var player;
+      var NOTE_OFF, NOTE_ON, player, trackNames;
       player = MIDI.Player;
-      player.loadFile(MIDIFiles['014-Bach, JS - Minuet in G'], function(midifile) {
-        var rain;
-        player.start();
-        rain = new NoteRain({
-          midiData: MIDI.Player.data,
-          pianoDesign: design
-        });
-        player.setAnimation({
-          delay: 30,
-          callback: function(data) {
-            return rain.update(data.now * 1000);
-          }
-        });
-        return scene.add(rain.model);
-      });
-      return player.addListener(function(data) {
+      NOTE_OFF = 128;
+      NOTE_ON = 144;
+      player.addListener(function(data) {
         var message, note;
         note = data.note, message = data.message;
         if (message === NOTE_ON) {
@@ -39,6 +31,25 @@
         } else if (message === NOTE_OFF) {
           return keyboard.release(note);
         }
+      });
+      trackNames = Object.keys(MIDIFiles);
+      return player.loadFile(MIDIFiles[trackNames[13]], function(midifile) {
+        if (rain) {
+          scene.remove(rain.model);
+        }
+        rain = new NoteRain({
+          midiData: MIDI.Player.data,
+          pianoDesign: design,
+          noteToColor: noteToColor
+        });
+        scene.add(rain.model);
+        player.start();
+        return player.setAnimation({
+          delay: 30,
+          callback: function(data) {
+            return rain.update(data.now * 1000);
+          }
+        });
       });
     });
   });
