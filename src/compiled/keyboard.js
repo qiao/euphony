@@ -4,11 +4,10 @@
     __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 
   PianoKeyboardDesign = (function() {
-    var KeyType;
 
     PianoKeyboardDesign.name = 'PianoKeyboardDesign';
 
-    PianoKeyboardDesign.KeyType = KeyType = {
+    PianoKeyboardDesign.prototype.KeyType = {
       WhiteC: 0,
       WhiteD: 1,
       WhiteE: 2,
@@ -61,8 +60,8 @@
     }
 
     PianoKeyboardDesign.prototype._initKeyType = function() {
-      var Black, WhiteA, WhiteB, WhiteC, WhiteD, WhiteE, WhiteF, WhiteG, i, keyInfo, noteNo, _i;
-      keyInfo = this.keyInfo;
+      var Black, KeyType, WhiteA, WhiteB, WhiteC, WhiteD, WhiteE, WhiteF, WhiteG, i, keyInfo, noteNo, _i;
+      keyInfo = this.keyInfo, KeyType = this.KeyType;
       WhiteC = KeyType.WhiteC, WhiteD = KeyType.WhiteD, WhiteE = KeyType.WhiteE, WhiteF = KeyType.WhiteF, WhiteG = KeyType.WhiteG, WhiteA = KeyType.WhiteA, WhiteB = KeyType.WhiteB, Black = KeyType.Black;
       for (i = _i = 0; _i < 10; i = ++_i) {
         noteNo = i * 12;
@@ -91,8 +90,8 @@
     };
 
     PianoKeyboardDesign.prototype._initKeyPos = function() {
-      var Black, WhiteA, WhiteB, WhiteC, WhiteD, WhiteE, WhiteF, WhiteG, blackKeyShiftCDE, blackKeyShiftFGAB, keyInfo, noteNo, posX, prevKeyType, shift, whiteKeyStep, _i, _j, _results;
-      keyInfo = this.keyInfo, whiteKeyStep = this.whiteKeyStep, blackKeyShiftCDE = this.blackKeyShiftCDE, blackKeyShiftFGAB = this.blackKeyShiftFGAB;
+      var Black, KeyType, WhiteA, WhiteB, WhiteC, WhiteD, WhiteE, WhiteF, WhiteG, blackKeyShiftCDE, blackKeyShiftFGAB, keyInfo, noteNo, posX, prevKeyType, shift, whiteKeyStep, _i, _j, _results;
+      KeyType = this.KeyType, keyInfo = this.keyInfo, whiteKeyStep = this.whiteKeyStep, blackKeyShiftCDE = this.blackKeyShiftCDE, blackKeyShiftFGAB = this.blackKeyShiftFGAB;
       WhiteC = KeyType.WhiteC, WhiteD = KeyType.WhiteD, WhiteE = KeyType.WhiteE, WhiteF = KeyType.WhiteF, WhiteG = KeyType.WhiteG, WhiteA = KeyType.WhiteA, WhiteB = KeyType.WhiteB, Black = KeyType.Black;
       noteNo = 0;
       prevKeyType = WhiteB;
@@ -159,18 +158,18 @@
     PianoKey.name = 'PianoKey';
 
     function PianoKey(_arg) {
-      var color, geometry, height, keyType, length, material, position, width;
-      this.design = _arg.design, keyType = _arg.keyType, position = _arg.position;
-      if (keyType === PianoKeyboardDesign.KeyType.Black) {
-        width = this.design.blackKeyWidth;
-        height = this.design.blackKeyHeight;
-        length = this.design.blackKeyLength;
-        color = this.design.blackKeyColor;
+      var color, design, geometry, height, keyType, length, material, position, width;
+      design = _arg.design, keyType = _arg.keyType, position = _arg.position;
+      if (keyType === design.KeyType.Black) {
+        width = design.blackKeyWidth;
+        height = design.blackKeyHeight;
+        length = design.blackKeyLength;
+        color = design.blackKeyColor;
       } else {
-        width = this.design.whiteKeyWidth;
-        height = this.design.whiteKeyHeight;
-        length = this.design.whiteKeyLength;
-        color = this.design.whiteKeyColor;
+        width = design.whiteKeyWidth;
+        height = design.whiteKeyHeight;
+        length = design.whiteKeyLength;
+        color = design.whiteKeyColor;
       }
       geometry = new THREE.CubeGeometry(width, height, length);
       material = new THREE.MeshLambertMaterial({
@@ -178,8 +177,9 @@
       });
       this.model = new THREE.Mesh(geometry, material);
       this.model.position.copy(position);
+      this.keyUpSpeed = design.keyUpSpeed;
       this.originalY = position.y;
-      this.pressedY = this.originalY - this.design.keyDip;
+      this.pressedY = this.originalY - design.keyDip;
     }
 
     PianoKey.prototype.press = function() {
@@ -195,7 +195,7 @@
       var offset;
       if (this.model.position.y < this.originalY && !this.isPressed) {
         offset = this.originalY - this.model.position.y;
-        return this.model.position.y += Math.min(offset, this.design.keyUpSpeed);
+        return this.model.position.y += Math.min(offset, this.keyUpSpeed);
       }
     };
 
@@ -207,12 +207,11 @@
 
     PianoKeyboard.name = 'PianoKeyboard';
 
-    function PianoKeyboard() {
+    function PianoKeyboard(design) {
       this.update = __bind(this.update, this);
 
-      var Black, blackKeyY, blackKeyZ, design, key, keyCenterPosX, keyType, keys, model, pos, _i, _len, _ref, _ref1;
-      design = new PianoKeyboardDesign;
-      Black = PianoKeyboardDesign.KeyType.Black;
+      var Black, blackKeyY, blackKeyZ, key, keyCenterPosX, keyType, keys, model, pos, _i, _len, _ref, _ref1;
+      Black = design.KeyType.Black;
       model = new THREE.Object3D();
       keys = [];
       blackKeyY = (design.blackKeyHeight - design.whiteKeyHeight) / 2 + 0.001;
@@ -259,6 +258,8 @@
     return PianoKeyboard;
 
   })();
+
+  this.PianoKeyboardDesign = PianoKeyboardDesign;
 
   this.PianoKeyboard = PianoKeyboard;
 

@@ -2,9 +2,10 @@
 (function() {
 
   $(function() {
-    var NOTE_OFF, NOTE_ON, keyboard, scene;
+    var NOTE_OFF, NOTE_ON, design, keyboard, scene;
     scene = new Scene('#container');
-    keyboard = new PianoKeyboard();
+    design = new PianoKeyboardDesign();
+    keyboard = new PianoKeyboard(design);
     scene.add(keyboard.model);
     scene.animate(function() {
       return keyboard.update();
@@ -15,8 +16,20 @@
     return MIDI.loadPlugin(function() {
       var player;
       player = MIDI.Player;
-      player.loadFile(MIDIFiles['014-Bach, JS - Minuet in G'], function() {
-        return player.start();
+      player.loadFile(MIDIFiles['014-Bach, JS - Minuet in G'], function(midifile) {
+        var rain;
+        player.start();
+        rain = new NoteRain({
+          midiData: MIDI.Player.data,
+          pianoDesign: design
+        });
+        player.setAnimation({
+          delay: 30,
+          callback: function(data) {
+            return rain.update(data.now * 1000);
+          }
+        });
+        return scene.add(rain.model);
       });
       return player.addListener(function(data) {
         var message, note;
