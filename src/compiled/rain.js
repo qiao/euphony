@@ -10,11 +10,12 @@
     NoteRain.prototype.noteScale = 0.001;
 
     function NoteRain(_arg) {
-      var blackKeyWidth, color, currentTime, duration, event, geometry, interval, keyInfo, length, material, mesh, midiData, noteNumber, noteToColor, notes, pianoDesign, startTime, subtype, x, y, z, _i, _len, _ref, _ref1;
+      var Black, KeyType, blackKeyHeight, blackKeyWidth, color, currentTime, duration, event, geometry, interval, keyInfo, length, material, mesh, midiData, noteNumber, noteToColor, notes, pianoDesign, startTime, subtype, x, y, z, _i, _len, _ref, _ref1;
       midiData = _arg.midiData, pianoDesign = _arg.pianoDesign, noteToColor = _arg.noteToColor;
       this.update = __bind(this.update, this);
 
-      blackKeyWidth = pianoDesign.blackKeyWidth, keyInfo = pianoDesign.keyInfo;
+      blackKeyWidth = pianoDesign.blackKeyWidth, blackKeyHeight = pianoDesign.blackKeyHeight, keyInfo = pianoDesign.keyInfo, KeyType = pianoDesign.KeyType;
+      Black = KeyType.Black;
       this.model = new THREE.Object3D();
       notes = [];
       currentTime = 0;
@@ -31,6 +32,9 @@
           x = keyInfo[noteNumber].keyCenterPosX;
           y = startTime * this.noteScale + (length / 2);
           z = -0.2;
+          if (keyInfo[noteNumber].keyType === Black) {
+            y += blackKeyHeight / 2;
+          }
           color = noteToColor(noteNumber);
           geometry = new THREE.CubeGeometry(blackKeyWidth, length, blackKeyWidth);
           material = new THREE.MeshPhongMaterial({

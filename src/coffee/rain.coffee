@@ -4,7 +4,8 @@ class NoteRain
 
   # midiData is acquired from MIDI.Player.data
   constructor: ({midiData, pianoDesign, noteToColor}) ->
-    {blackKeyWidth, keyInfo} = pianoDesign
+    {blackKeyWidth, blackKeyHeight, keyInfo, KeyType} = pianoDesign
+    {Black} = KeyType
 
     # the raw midiData uses delta time between events to represent the flow
     # and it's quite unintuitive
@@ -31,6 +32,9 @@ class NoteRain
         x = keyInfo[noteNumber].keyCenterPosX
         y = startTime * @noteScale + (length / 2)
         z = -0.2
+
+        if keyInfo[noteNumber].keyType is Black
+          y += blackKeyHeight / 2
 
         # build model
         color = noteToColor(noteNumber)
