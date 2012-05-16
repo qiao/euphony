@@ -37,6 +37,7 @@ class LoaderWidget
       .css
         color: '#ddd'
         'font-size': '0.9em'
+        cursor: 'default'
       .appendTo(@box)
 
   message: (msg) ->
