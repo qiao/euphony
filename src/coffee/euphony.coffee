@@ -21,8 +21,6 @@ class Euphony
       delay: 30
       callback: (data) => @rain.update(data.now * 1000)
 
-  play: (midiFile) ->
-
   start: =>
     @scene.animate =>
       @keyboard.update()
@@ -30,12 +28,13 @@ class Euphony
     # initialize MIDI
     MIDI.loadPlugin =>
       loader.stop()
-
-      # load tracks
-      trackNames = Object.keys(MIDIFiles)
-      @player.loadFile MIDIFiles[trackNames[12]], =>
-        @rain.setMidiData(@player.data)
-        # start player
-        @player.start()
+      setTimeout (=>
+        # load tracks
+        trackNames = Object.keys(MIDIFiles)
+        @player.loadFile MIDIFiles[trackNames[12]], =>
+          @rain.setMidiData(@player.data)
+          # start player
+          @player.start()
+      ), 700
 
 @Euphony = Euphony

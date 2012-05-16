@@ -37,21 +37,21 @@
       });
     }
 
-    Euphony.prototype.play = function(midiFile) {};
-
     Euphony.prototype.start = function() {
       var _this = this;
       this.scene.animate(function() {
         return _this.keyboard.update();
       });
       return MIDI.loadPlugin(function() {
-        var trackNames;
         loader.stop();
-        trackNames = Object.keys(MIDIFiles);
-        return _this.player.loadFile(MIDIFiles[trackNames[12]], function() {
-          _this.rain.setMidiData(_this.player.data);
-          return _this.player.start();
-        });
+        return setTimeout((function() {
+          var trackNames;
+          trackNames = Object.keys(MIDIFiles);
+          return _this.player.loadFile(MIDIFiles[trackNames[12]], function() {
+            _this.rain.setMidiData(_this.player.data);
+            return _this.player.start();
+          });
+        }), 700);
       });
     };
 
