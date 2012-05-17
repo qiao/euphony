@@ -3,12 +3,52 @@ body, html {
   margin: 0px;
   height: 100%;
   width: 100%;
-  background: #ddd;
+  background: #000000;
   color: #333;
   overflow: hidden;
 }
 
-#container {
+#canvas {
   width: 100%;
   height: 100%;
+}
+
+#player {
+  position: absolute;
+  background: rgba(100, 100, 100, 0.2);
+  top: 15%;
+  left: -250px;
+  width: 250px;
+  text-align: center;
+  padding: 10px 0;
+}
+
+#controls {
+  margin: 0px;
+  padding: 0px;
+  list-style: none;
+  color: #ddd;
+  cursor: pointer;
+  line-height: 30px;
+  font-size: 16px;
+  line-height: 16px;
+}
+
+#controls:after {
+  content: ".";
+  visibility: hidden;
+  display: block;
+  height: 0;
+  clear: both;
+}
+
+#controls > li {
+  display: inline-block;
+  text-align: center;
+  width: 21%;
+}
+
+#controls > li:hover {
+  color: #f3f3f3;
+  text-shadow: 0px 0px 20px rgba(255, 255, 255, 0.8);
 }
