@@ -22,9 +22,9 @@ class Euphony
       else if message is NOTE_OFF
         @keyboard.release(note)
     @player.setAnimation
-      delay: 30
+      delay: 20
       callback: (data) =>
-        if @playing
+        if @player.playing
           @rain.update(data.now * 1000)
 
   initMidi: (callback) ->
@@ -46,7 +46,6 @@ class Euphony
 
   setMidiFile: (midiFile, callback) ->
     # load tracks
-    @started = false
     @player.loadFile midiFile, =>
       loader.stop()
       @rain.setMidiData(@player.data, callback)
@@ -60,21 +59,15 @@ class Euphony
 
   start: =>
     @player.start()
-    @playing = true
-    @started = true
 
   resume: =>
+    console.log(123)
     @player.start()
-    setTimeout (=>
-      @playing = true
-    ), 500
 
   stop: =>
     @player.stop()
-    @playing = false
 
   pause: =>
     @player.pause()
-    @playing = false
 
 @Euphony = Euphony

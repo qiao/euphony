@@ -8,27 +8,44 @@
     PlayerWidget.name = 'PlayerWidget';
 
     function PlayerWidget() {
-      this.next = __bind(this.next, this);
+      this.onnext = __bind(this.onnext, this);
 
-      this.prev = __bind(this.prev, this);
+      this.onprev = __bind(this.onprev, this);
 
-      this.stop = __bind(this.stop, this);
+      this.onstop = __bind(this.onstop, this);
 
-      this.resume = __bind(this.resume, this);
+      this.onresume = __bind(this.onresume, this);
 
-      this.pause = __bind(this.pause, this);
+      this.onpause = __bind(this.onpause, this);
 
-      this.play = __bind(this.play, this);
+      this.onplay = __bind(this.onplay, this);
 
-      this.init = __bind(this.init, this);
+      this.oninit = __bind(this.oninit, this);
+
+      var _this = this;
       this.container = $('#player');
-      this.prevBtn = $('#control-prev').click(this.prev);
-      this.playBtn = $('#control-play').toggle(this.play, this.pause);
-      this.stopBtn = $('#control-stop').click(this.stop);
-      this.nextBtn = $('#control-next').click(this.next);
+      this.prevBtn = $('#control-prev').click(function() {
+        return _this.prev();
+      });
+      this.stopBtn = $('#control-stop').click(function() {
+        return _this.stop();
+      });
+      this.nextBtn = $('#control-next').click(function() {
+        return _this.next();
+      });
+      this.pauseBtn = $('#control-pause').click(function() {
+        return _this.pause();
+      });
+      this.playBtn = $('#control-play').click(function() {
+        if (_this.current === 'paused') {
+          return _this.resume();
+        } else {
+          return _this.play();
+        }
+      });
     }
 
-    PlayerWidget.prototype.init = function() {
+    PlayerWidget.prototype.oninit = function() {
       return this.container.animate({
         left: '0px'
       }, {
@@ -38,40 +55,71 @@
     };
 
     PlayerWidget.prototype.bind = function(eventName, callback) {
-      return this["on" + eventName] = callback;
+      return this["" + eventName + "Callback"] = callback;
     };
 
-    PlayerWidget.prototype.play = function() {
-      this.playBtn.removeClass('icon-play').addClass('icon-pause');
-      return typeof this.onplay === "function" ? this.onplay() : void 0;
+    PlayerWidget.prototype.onplay = function() {
+      this.playBtn.hide();
+      this.pauseBtn.show();
+      return typeof this.playCallback === "function" ? this.playCallback() : void 0;
     };
 
-    PlayerWidget.prototype.pause = function() {
-      this.playBtn.removeClass('icon-pause').addClass('icon-play');
-      return typeof this.onpause === "function" ? this.onpause() : void 0;
+    PlayerWidget.prototype.onpause = function() {
+      this.pauseBtn.hide();
+      this.playBtn.show();
+      return typeof this.pauseCallback === "function" ? this.pauseCallback() : void 0;
     };
 
-    PlayerWidget.prototype.resume = function() {
-      this.playBtn.removeClass('icon-play').addClass('icon-pause');
-      return typeof this.onresume === "function" ? this.onresume() : void 0;
+    PlayerWidget.prototype.onresume = function() {
+      this.playBtn.hide();
+      this.pauseBtn.show();
+      return typeof this.resumeCallback === "function" ? this.resumeCallback() : void 0;
     };
 
-    PlayerWidget.prototype.stop = function() {
-      this.playBtn.removeClass('icon-pause').addClass('icon-play');
-      return typeof this.onstop === "function" ? this.onstop() : void 0;
+    PlayerWidget.prototype.onstop = function() {
+      this.pauseBtn.hide();
+      this.playBtn.show();
+      return typeof this.stopCallback === "function" ? this.stopCallback() : void 0;
     };
 
-    PlayerWidget.prototype.prev = function() {
-      return typeof this.onprev === "function" ? this.onprev() : void 0;
+    PlayerWidget.prototype.onprev = function() {
+      return typeof this.prevCallback === "function" ? this.prevCallback() : void 0;
     };
 
-    PlayerWidget.prototype.next = function() {
-      return typeof this.onnext === "function" ? this.onnext() : void 0;
+    PlayerWidget.prototype.onnext = function() {
+      return typeof this.nextCallback === "function" ? this.nextCallback() : void 0;
     };
 
     return PlayerWidget;
 
   })();
+
+  StateMachine.create({
+    target: PlayerWidget.prototype,
+    events: [
+      {
+        name: 'init',
+        from: 'none',
+        to: 'ready'
+      }, {
+        name: 'play',
+        from: 'ready',
+        to: 'playing'
+      }, {
+        name: 'pause',
+        from: 'playing',
+        to: 'paused'
+      }, {
+        name: 'resume',
+        from: 'paused',
+        to: 'playing'
+      }, {
+        name: 'stop',
+        from: '*',
+        to: 'ready'
+      }
+    ]
+  });
 
   this.PlayerWidget = PlayerWidget;
 

@@ -8,8 +8,7 @@
     return app.initMidi(function() {
       return app.getBuiltinMidiIndex(function(index) {
         return app.setBuiltinMidi(index[13], function() {
-          var player;
-          player = new PlayerWidget();
+          window.player = new PlayerWidget();
           player.init();
           player.bind('play', app.play);
           player.bind('pause', app.pause);

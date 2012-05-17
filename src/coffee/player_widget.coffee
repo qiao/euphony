@@ -1,12 +1,14 @@
 class PlayerWidget
   constructor: ->
     @container = $('#player')
-    @prevBtn = $('#control-prev').click(@prev)
-    @playBtn = $('#control-play').toggle(@play, @pause)
-    @stopBtn = $('#control-stop').click(@stop)
-    @nextBtn = $('#control-next').click(@next)
+    @prevBtn   = $('#control-prev').click => @prev()
+    @stopBtn   = $('#control-stop').click => @stop()
+    @nextBtn   = $('#control-next').click => @next()
+    @pauseBtn  = $('#control-pause').click => @pause()
+    @playBtn   = $('#control-play').click =>
+      if @current is 'paused' then @resume() else @play()
 
-  init: =>
+  oninit: =>
     @container
       .animate {
         left: '0px'
@@ -16,36 +18,42 @@ class PlayerWidget
       }
 
   bind: (eventName, callback) ->
-    @["on#{eventName}"] = callback
+    @["#{eventName}Callback"] = callback
 
-  play: =>
-    @playBtn
-      .removeClass('icon-play')
-      .addClass('icon-pause')
-    @onplay?()
+  onplay: =>
+    @playBtn.hide()
+    @pauseBtn.show()
+    @playCallback?()
 
-  pause: =>
-    @playBtn
-      .removeClass('icon-pause')
-      .addClass('icon-play')
-    @onpause?()
+  onpause: =>
+    @pauseBtn.hide()
+    @playBtn.show()
+    @pauseCallback?()
 
-  resume: =>
-    @playBtn
-      .removeClass('icon-play')
-      .addClass('icon-pause')
-    @onresume?()
+  onresume: =>
+    @playBtn.hide()
+    @pauseBtn.show()
+    @resumeCallback?()
 
-  stop: =>
-    @playBtn
-      .removeClass('icon-pause')
-      .addClass('icon-play')
-    @onstop?()
+  onstop: =>
+    @pauseBtn.hide()
+    @playBtn.show()
+    @stopCallback?()
 
-  prev: =>
-    @onprev?()
+  onprev: =>
+    @prevCallback?()
 
-  next: =>
-    @onnext?()
+  onnext: =>
+    @nextCallback?()
+
+StateMachine.create
+  target: PlayerWidget.prototype
+  events: [
+    { name: 'init'  , from: 'none'    , to: 'ready'   }
+    { name: 'play'  , from: 'ready'   , to: 'playing' }
+    { name: 'pause' , from: 'playing' , to: 'paused'  }
+    { name: 'resume', from: 'paused'  , to: 'playing' }
+    { name: 'stop'  , from: '*'       , to: 'ready'   }
+  ]
 
 @PlayerWidget = PlayerWidget

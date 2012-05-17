@@ -10,7 +10,7 @@ $(document).ready ->
     app.getBuiltinMidiIndex (index) ->
       app.setBuiltinMidi index[13], ->
 
-        player = new PlayerWidget()
+        window.player = new PlayerWidget()
         player.init()
         player.bind('play', app.play)
         player.bind('pause', app.pause)

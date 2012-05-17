@@ -44,9 +44,9 @@
         }
       });
       return this.player.setAnimation({
-        delay: 30,
+        delay: 20,
         callback: function(data) {
-          if (_this.playing) {
+          if (_this.player.playing) {
             return _this.rain.update(data.now * 1000);
           }
         }
@@ -83,7 +83,6 @@
 
     Euphony.prototype.setMidiFile = function(midiFile, callback) {
       var _this = this;
-      this.started = false;
       return this.player.loadFile(midiFile, function() {
         loader.stop();
         return _this.rain.setMidiData(_this.player.data, callback);
@@ -106,27 +105,20 @@
     };
 
     Euphony.prototype.start = function() {
-      this.player.start();
-      this.playing = true;
-      return this.started = true;
+      return this.player.start();
     };
 
     Euphony.prototype.resume = function() {
-      var _this = this;
-      this.player.start();
-      return setTimeout((function() {
-        return _this.playing = true;
-      }), 500);
+      console.log(123);
+      return this.player.start();
     };
 
     Euphony.prototype.stop = function() {
-      this.player.stop();
-      return this.playing = false;
+      return this.player.stop();
     };
 
     Euphony.prototype.pause = function() {
-      this.player.pause();
-      return this.playing = false;
+      return this.player.pause();
     };
 
     return Euphony;
