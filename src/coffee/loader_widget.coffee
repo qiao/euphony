@@ -40,11 +40,11 @@ class LoaderWidget
         cursor: 'default'
       .appendTo(@box)
 
-  message: (msg) ->
+  message: (msg) =>
     @start() unless @isActive
-    @text.html(msg)
+    @text.html(msg) if msg?
 
-  start: ->
+  start: =>
     @overlay.fadeIn()
     if @spin
       @spin.spin(@canvas[0])
@@ -53,7 +53,7 @@ class LoaderWidget
       @spin.spin(@canvas[0])
     @isActive = true
   
-  stop: (callback) ->
+  stop: (callback) =>
     @overlay.fadeOut('slow', callback)
     @spin?.stop()
     @isActive = false
