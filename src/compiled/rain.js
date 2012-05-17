@@ -24,50 +24,50 @@
       })();
     }
 
-    NoteRain.prototype.setMidiData = function(midiData) {
-      var Black, KeyType, blackKeyHeight, blackKeyWidth, child, color, currentTime, duration, event, geometry, interval, keyInfo, length, material, mesh, noteNumber, notes, startTime, subtype, x, y, z, _i, _j, _len, _len1, _ref, _ref1, _ref2, _ref3, _results;
-      _ref = this.model.children;
-      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-        child = _ref[_i];
-        this.model.remove(child);
-      }
-      _ref1 = this.pianoDesign, blackKeyWidth = _ref1.blackKeyWidth, blackKeyHeight = _ref1.blackKeyHeight, keyInfo = _ref1.keyInfo, KeyType = _ref1.KeyType;
-      Black = KeyType.Black;
-      notes = [];
-      currentTime = 0;
-      _results = [];
-      for (_j = 0, _len1 = midiData.length; _j < _len1; _j++) {
-        _ref2 = midiData[_j], (_ref3 = _ref2[0], event = _ref3.event), interval = _ref2[1];
-        currentTime += interval;
-        subtype = event.subtype, noteNumber = event.noteNumber;
-        if (subtype === 'noteOn') {
-          _results.push(notes[noteNumber] = currentTime);
-        } else if (subtype === 'noteOff') {
-          startTime = notes[noteNumber];
-          duration = currentTime - startTime;
-          length = duration * this.noteScale;
-          x = keyInfo[noteNumber].keyCenterPosX;
-          y = startTime * this.noteScale + (length / 2);
-          z = -0.2;
-          if (keyInfo[noteNumber].keyType === Black) {
-            y += blackKeyHeight / 2;
-          }
-          color = this.noteToColor(noteNumber);
-          geometry = new THREE.CubeGeometry(blackKeyWidth, length, blackKeyWidth);
-          material = new THREE.MeshPhongMaterial({
-            color: color,
-            emissive: color,
-            opacity: 0.7,
-            transparent: true
-          });
-          mesh = new THREE.Mesh(geometry, material);
-          mesh.position.set(x, y, z);
-          _results.push(this.model.add(mesh));
-        } else {
-          _results.push(void 0);
+    NoteRain.prototype.setMidiData = function(midiData, callback) {
+      var _this = this;
+      return setTimeout((function() {
+        var Black, KeyType, blackKeyHeight, blackKeyWidth, child, color, currentTime, duration, event, geometry, interval, keyInfo, length, material, mesh, noteNumber, notes, startTime, subtype, x, y, z, _i, _j, _len, _len1, _ref, _ref1, _ref2, _ref3;
+        _ref = _this.model.children.slice(0);
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+          child = _ref[_i];
+          _this.model.remove(child);
         }
-      }
-      return _results;
+        _ref1 = _this.pianoDesign, blackKeyWidth = _ref1.blackKeyWidth, blackKeyHeight = _ref1.blackKeyHeight, keyInfo = _ref1.keyInfo, KeyType = _ref1.KeyType;
+        Black = KeyType.Black;
+        notes = [];
+        currentTime = 0;
+        for (_j = 0, _len1 = midiData.length; _j < _len1; _j++) {
+          _ref2 = midiData[_j], (_ref3 = _ref2[0], event = _ref3.event), interval = _ref2[1];
+          currentTime += interval;
+          subtype = event.subtype, noteNumber = event.noteNumber;
+          if (subtype === 'noteOn') {
+            notes[noteNumber] = currentTime;
+          } else if (subtype === 'noteOff') {
+            startTime = notes[noteNumber];
+            duration = currentTime - startTime;
+            length = duration * _this.noteScale;
+            x = keyInfo[noteNumber].keyCenterPosX;
+            y = startTime * _this.noteScale + (length / 2);
+            z = -0.2;
+            if (keyInfo[noteNumber].keyType === Black) {
+              y += blackKeyHeight / 2;
+            }
+            color = _this.noteToColor(noteNumber);
+            geometry = new THREE.CubeGeometry(blackKeyWidth, length, blackKeyWidth);
+            material = new THREE.MeshPhongMaterial({
+              color: color,
+              emissive: color,
+              opacity: 0.7,
+              transparent: true
+            });
+            mesh = new THREE.Mesh(geometry, material);
+            mesh.position.set(x, y, z);
+            _this.model.add(mesh);
+          }
+        }
+        return typeof callback === "function" ? callback() : void 0;
+      }), 0);
     };
 
     NoteRain.prototype.update = function(playerCurrentTime) {

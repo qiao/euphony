@@ -8,13 +8,15 @@
     Euphony.name = 'Euphony';
 
     function Euphony(container) {
-      this.resume = __bind(this.resume, this);
-
       this.pause = __bind(this.pause, this);
 
       this.stop = __bind(this.stop, this);
 
+      this.resume = __bind(this.resume, this);
+
       this.start = __bind(this.start, this);
+
+      this.play = __bind(this.play, this);
 
       var _this = this;
       this.design = new PianoKeyboardDesign();
@@ -41,7 +43,9 @@
       this.player.setAnimation({
         delay: 30,
         callback: function(data) {
-          return _this.rain.update(data.now * 1000);
+          if (_this.playing) {
+            return _this.rain.update(data.now * 1000);
+          }
         }
       });
     }
@@ -54,27 +58,50 @@
 
     Euphony.prototype.setMidiFile = function(midiFile, callback) {
       var _this = this;
+      this.started = false;
       return this.player.loadFile(midiFile, function() {
         loader.stop();
-        _this.rain.setMidiData(_this.player.data);
-        return typeof callback === "function" ? callback() : void 0;
+        return _this.rain.setMidiData(_this.player.data, callback);
       });
     };
 
+    Euphony.prototype.playTrack = function(id) {
+      var _this = this;
+      return this.setMidiFile(MIDIFiles[Object.keys(MIDIFiles)[id]], function() {
+        return _this.play();
+      });
+    };
+
+    Euphony.prototype.play = function() {
+      if (this.started) {
+        return this.resume();
+      } else {
+        return this.start();
+      }
+    };
+
     Euphony.prototype.start = function() {
-      return this.player.start();
-    };
-
-    Euphony.prototype.stop = function() {
-      return this.player.stop();
-    };
-
-    Euphony.prototype.pause = function() {
-      return this.player.pause();
+      this.player.start();
+      this.playing = true;
+      return this.started = true;
     };
 
     Euphony.prototype.resume = function() {
-      return this.player.resume();
+      var _this = this;
+      this.player.start();
+      return setTimeout((function() {
+        return _this.playing = true;
+      }), 500);
+    };
+
+    Euphony.prototype.stop = function() {
+      this.player.stop();
+      return this.playing = false;
+    };
+
+    Euphony.prototype.pause = function() {
+      this.player.pause();
+      return this.playing = false;
     };
 
     return Euphony;

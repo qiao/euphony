@@ -4,13 +4,26 @@
   $(document).ready(function() {
     window.loader = new LoaderWidget();
     loader.message('Loading');
-    window.app = new Euphony('#container');
+    window.app = new Euphony('#canvas');
     return app.init(function() {
       var midiFile, trackNames;
       trackNames = Object.keys(MIDIFiles);
-      midiFile = MIDIFiles[trackNames[15]];
+      midiFile = MIDIFiles[trackNames[13]];
       return app.setMidiFile(midiFile, function() {
-        return app.start();
+        $('#player').animate({
+          left: '0px'
+        }, {
+          duration: 1000,
+          easing: 'easeInQuad'
+        });
+        $('#control-play').toggle((function() {
+          app.play();
+          return $(this).removeClass('icon-play').addClass('icon-pause');
+        }), (function() {
+          app.pause();
+          return $(this).removeClass('icon-pause').addClass('icon-play');
+        }));
+        return $('#control-pause').on('click', function() {});
       });
     });
   });

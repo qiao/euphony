@@ -21,7 +21,9 @@ class Euphony
         @keyboard.release(note)
     @player.setAnimation
       delay: 30
-      callback: (data) => @rain.update(data.now * 1000)
+      callback: (data) =>
+        if @playing
+          @rain.update(data.now * 1000)
 
   init: (callback) ->
     MIDI.loadPlugin ->
@@ -29,21 +31,35 @@ class Euphony
 
   setMidiFile: (midiFile, callback) ->
     # load tracks
+    @started = false
     @player.loadFile midiFile, =>
       loader.stop()
-      @rain.setMidiData(@player.data)
-      callback?()
+      @rain.setMidiData(@player.data, callback)
+
+  playTrack: (id) ->
+    @setMidiFile MIDIFiles[Object.keys(MIDIFiles)[id]], =>
+      @play()
+
+  play: =>
+    if @started then @resume() else @start()
 
   start: =>
     @player.start()
+    @playing = true
+    @started = true
+
+  resume: =>
+    @player.start()
+    setTimeout (=>
+      @playing = true
+    ), 500
 
   stop: =>
     @player.stop()
+    @playing = false
 
   pause: =>
     @player.pause()
-
-  resume: =>
-    @player.resume()
+    @playing = false
 
 @Euphony = Euphony
