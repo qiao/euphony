@@ -1,10 +1,12 @@
 class Euphony
-  constructor: (container) ->
+  constructor: ->
+
+  initScene: ->
     @design = new PianoKeyboardDesign()
     @keyboard = new PianoKeyboard(@design)
     @rain = new NoteRain(@design)
 
-    @scene = new Scene(container)
+    @scene = new Scene('#canvas')
     @scene.add(@keyboard.model)
     @scene.add(@rain.model)
     @scene.animate =>
@@ -25,9 +27,22 @@ class Euphony
         if @playing
           @rain.update(data.now * 1000)
 
-  init: (callback) ->
-    MIDI.loadPlugin ->
-      loader.stop(callback)
+  initMidi: (callback) ->
+    MIDI.loadPlugin(callback)
+
+  getBuiltinMidiIndex: (callback) ->
+    return callback(@midiIndex) if @midiIndex
+    $.getJSON 'tracks/index.json', (index) =>
+      @midiIndex = index
+      callback(@midiIndex)
+
+  setBuiltinMidi: (filename, callback) ->
+    DOMLoader.sendRequest
+      url: "tracks/#{filename}"
+      progress: (event) ->
+        loader.message('loading MIDI ' + Math.round(event.loaded / event.total * 100) + '%')
+      callback: (response) =>
+        @setMidiFile(response.responseText,callback)
 
   setMidiFile: (midiFile, callback) ->
     # load tracks

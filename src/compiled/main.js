@@ -3,27 +3,19 @@
 
   $(document).ready(function() {
     window.loader = new LoaderWidget();
-    loader.message('Loading');
-    window.app = new Euphony('#canvas');
-    return app.init(function() {
-      var midiFile, trackNames;
-      trackNames = Object.keys(MIDIFiles);
-      midiFile = MIDIFiles[trackNames[13]];
-      return app.setMidiFile(midiFile, function() {
-        $('#player').animate({
-          left: '0px'
-        }, {
-          duration: 1000,
-          easing: 'easeInQuad'
+    window.app = new Euphony();
+    app.initScene();
+    return app.initMidi(function() {
+      return app.getBuiltinMidiIndex(function(index) {
+        return app.setBuiltinMidi(index[13], function() {
+          var player;
+          player = new PlayerWidget();
+          player.init();
+          player.bind('play', app.play);
+          player.bind('pause', app.pause);
+          player.bind('resume', app.resume);
+          return player.bind('stop', app.stop);
         });
-        $('#control-play').toggle((function() {
-          app.play();
-          return $(this).removeClass('icon-play').addClass('icon-pause');
-        }), (function() {
-          app.pause();
-          return $(this).removeClass('icon-pause').addClass('icon-play');
-        }));
-        return $('#control-pause').on('click', function() {});
       });
     });
   });

@@ -7,7 +7,7 @@
 
     Euphony.name = 'Euphony';
 
-    function Euphony(container) {
+    function Euphony() {
       this.pause = __bind(this.pause, this);
 
       this.stop = __bind(this.stop, this);
@@ -18,11 +18,14 @@
 
       this.play = __bind(this.play, this);
 
+    }
+
+    Euphony.prototype.initScene = function() {
       var _this = this;
       this.design = new PianoKeyboardDesign();
       this.keyboard = new PianoKeyboard(this.design);
       this.rain = new NoteRain(this.design);
-      this.scene = new Scene(container);
+      this.scene = new Scene('#canvas');
       this.scene.add(this.keyboard.model);
       this.scene.add(this.rain.model);
       this.scene.animate(function() {
@@ -40,7 +43,7 @@
           return _this.keyboard.release(note);
         }
       });
-      this.player.setAnimation({
+      return this.player.setAnimation({
         delay: 30,
         callback: function(data) {
           if (_this.playing) {
@@ -48,11 +51,33 @@
           }
         }
       });
-    }
+    };
 
-    Euphony.prototype.init = function(callback) {
-      return MIDI.loadPlugin(function() {
-        return loader.stop(callback);
+    Euphony.prototype.initMidi = function(callback) {
+      return MIDI.loadPlugin(callback);
+    };
+
+    Euphony.prototype.getBuiltinMidiIndex = function(callback) {
+      var _this = this;
+      if (this.midiIndex) {
+        return callback(this.midiIndex);
+      }
+      return $.getJSON('tracks/index.json', function(index) {
+        _this.midiIndex = index;
+        return callback(_this.midiIndex);
+      });
+    };
+
+    Euphony.prototype.setBuiltinMidi = function(filename, callback) {
+      var _this = this;
+      return DOMLoader.sendRequest({
+        url: "tracks/" + filename,
+        progress: function(event) {
+          return loader.message('loading MIDI ' + Math.round(event.loaded / event.total * 100) + '%');
+        },
+        callback: function(response) {
+          return _this.setMidiFile(response.responseText, callback);
+        }
       });
     };
 

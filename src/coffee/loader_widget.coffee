@@ -54,8 +54,9 @@ class LoaderWidget
     @isActive = true
   
   stop: (callback) =>
-    @overlay.fadeOut('slow', callback)
-    @spin?.stop()
-    @isActive = false
+    @overlay.fadeOut 'slow', =>
+      @spin?.stop()
+      @isActive = false
+      callback?()
 
 @LoaderWidget = LoaderWidget
