@@ -8,5 +8,6 @@ $(document).ready ->
   window.app = new Euphony('#container')
   app.init ->
     trackNames = Object.keys(MIDIFiles)
-    midiFile = MIDIFiles[trackNames[11]]
+    midiFile = MIDIFiles[trackNames[15]]
     app.setMidiFile midiFile, ->
+      app.start()

@@ -55,9 +55,9 @@
       return this.isActive = true;
     };
 
-    LoaderWidget.prototype.stop = function() {
+    LoaderWidget.prototype.stop = function(callback) {
       var _ref;
-      this.overlay.fadeOut('slow');
+      this.overlay.fadeOut('slow', callback);
       if ((_ref = this.spin) != null) {
         _ref.stop();
       }

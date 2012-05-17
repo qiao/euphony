@@ -2,15 +2,16 @@ class NoteRain
 
   noteScale: 0.001
 
-  # midiData is acquired from MIDI.Player.data
   constructor: (@pianoDesign) ->
     @model = new THREE.Object3D()
     # function to convert a note to the corresponding color(synesthesia)
     @noteToColor = do ->
       map = MusicTheory.Synesthesia.map('August Aeppli (1940)')
+      offset = MIDI.pianoKeyOffset
       (note) ->
-        parseInt(map[note - MIDI.pianoKeyOffset].hex, 16)
+        parseInt(map[note - offset].hex, 16)
 
+  # midiData is acquired from MIDI.Player.data
   setMidiData: (midiData) ->
     # clear notes
     for child in @model.children

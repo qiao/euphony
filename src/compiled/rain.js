@@ -15,10 +15,11 @@
 
       this.model = new THREE.Object3D();
       this.noteToColor = (function() {
-        var map;
+        var map, offset;
         map = MusicTheory.Synesthesia.map('August Aeppli (1940)');
+        offset = MIDI.pianoKeyOffset;
         return function(note) {
-          return parseInt(map[note - MIDI.pianoKeyOffset].hex, 16);
+          return parseInt(map[note - offset].hex, 16);
         };
       })();
     }

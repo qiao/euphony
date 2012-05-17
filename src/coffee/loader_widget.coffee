@@ -53,8 +53,8 @@ class LoaderWidget
       @spin.spin(@canvas[0])
     @isActive = true
   
-  stop: ->
-    @overlay.fadeOut('slow')
+  stop: (callback) ->
+    @overlay.fadeOut('slow', callback)
     @spin?.stop()
     @isActive = false
 

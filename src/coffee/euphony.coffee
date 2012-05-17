@@ -25,12 +25,12 @@ class Euphony
 
   init: (callback) ->
     MIDI.loadPlugin ->
-      loader.stop()
-      setTimeout(callback, 1000) if callback
+      loader.stop(callback)
 
   setMidiFile: (midiFile, callback) ->
     # load tracks
     @player.loadFile midiFile, =>
+      loader.stop()
       @rain.setMidiData(@player.data)
       callback?()
 

@@ -8,8 +8,10 @@
     return app.init(function() {
       var midiFile, trackNames;
       trackNames = Object.keys(MIDIFiles);
-      midiFile = MIDIFiles[trackNames[11]];
-      return app.setMidiFile(midiFile, function() {});
+      midiFile = MIDIFiles[trackNames[15]];
+      return app.setMidiFile(midiFile, function() {
+        return app.start();
+      });
     });
   });
 

@@ -48,16 +48,14 @@
 
     Euphony.prototype.init = function(callback) {
       return MIDI.loadPlugin(function() {
-        loader.stop();
-        if (callback) {
-          return setTimeout(callback, 1000);
-        }
+        return loader.stop(callback);
       });
     };
 
     Euphony.prototype.setMidiFile = function(midiFile, callback) {
       var _this = this;
       return this.player.loadFile(midiFile, function() {
+        loader.stop();
         _this.rain.setMidiData(_this.player.data);
         return typeof callback === "function" ? callback() : void 0;
       });
