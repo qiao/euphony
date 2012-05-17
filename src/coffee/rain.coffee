@@ -14,7 +14,7 @@ class NoteRain
   # midiData is acquired from MIDI.Player.data
   setMidiData: (midiData) ->
     # clear notes
-    for child in @model.children
+    for child in @model.children.slice(0)
       @model.remove(child)
 
     {blackKeyWidth, blackKeyHeight, keyInfo, KeyType} = @pianoDesign
