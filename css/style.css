@@ -4,8 +4,14 @@ body, html {
   height: 100%;
   width: 100%;
   background: #000000;
-  color: #333;
+  color: #ccc;
   overflow: hidden;
+}
+
+ul, ol {
+  list-style: none;
+  margin: 0px;
+  padding: 0px;
 }
 
 #canvas {
@@ -13,12 +19,17 @@ body, html {
   height: 100%;
 }
 
-#player {
+#panel {
   position: absolute;
+  top: 50px;
+  bottom: 50px;
+  left: -300px;
+  width: 300px;
+  overflow: hidden;
+}
+
+#player {
   background: rgba(100, 100, 100, 0.2);
-  top: 15%;
-  left: -250px;
-  width: 250px;
   text-align: center;
   padding: 10px 0;
 }
@@ -26,7 +37,6 @@ body, html {
 #controls {
   margin: 0px;
   padding: 0px;
-  list-style: none;
   color: #ddd;
   cursor: pointer;
   line-height: 30px;
@@ -51,4 +61,25 @@ body, html {
 #controls>li:hover {
   color: #f3f3f3;
   text-shadow: 0px 0px 15px rgba(255, 255, 255, 0.8);
+}
+
+#playlist {
+  margin-top: 10px;
+  background: rgba(100, 100, 100, 0.2);
+  line-height: 21px;
+  text-indent: 10px;
+  font-size: 11px;
+  overflow: hidden;
+  height: auto;
+}
+
+#playlist>li {
+  cursor: pointer;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.4);
+}
+
+#playlist>li:hover {
+  color: #fff;
+  text-shadow: 0px 0px 6px rgba(255, 255, 255, 0.5);
+  background-color: rgba(0, 0, 0, 0.3);
 }

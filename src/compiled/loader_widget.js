@@ -53,8 +53,11 @@
       }
     };
 
-    LoaderWidget.prototype.start = function() {
-      this.overlay.fadeIn();
+    LoaderWidget.prototype.start = function(callback) {
+      var _this = this;
+      this.overlay.fadeIn(function() {
+        return typeof callback === "function" ? callback() : void 0;
+      });
       if (this.spin) {
         this.spin.spin(this.canvas[0]);
       } else {

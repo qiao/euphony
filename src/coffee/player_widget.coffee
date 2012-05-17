@@ -1,6 +1,6 @@
 class PlayerWidget
   constructor: ->
-    @container = $('#player')
+    @container = $('#panel')
     @prevBtn   = $('#control-prev').click => @prev()
     @stopBtn   = $('#control-stop').click => @stop()
     @nextBtn   = $('#control-next').click => @next()

@@ -44,8 +44,9 @@ class LoaderWidget
     @start() unless @isActive
     @text.html(msg) if msg?
 
-  start: =>
-    @overlay.fadeIn()
+  start: (callback) =>
+    @overlay.fadeIn =>
+      callback?()
     if @spin
       @spin.spin(@canvas[0])
     else

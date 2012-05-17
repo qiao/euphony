@@ -1,16 +1,8 @@
 class Euphony
   constructor: ->
-
-  initScene: ->
     @design = new PianoKeyboardDesign()
     @keyboard = new PianoKeyboard(@design)
     @rain = new NoteRain(@design)
-
-    @scene = new Scene('#canvas')
-    @scene.add(@keyboard.model)
-    @scene.add(@rain.model)
-    @scene.animate =>
-      @keyboard.update()
 
     @player = MIDI.Player
     @player.addListener (data) =>
@@ -27,6 +19,13 @@ class Euphony
         if @player.playing
           @rain.update(data.now * 1000)
 
+  initScene: ->
+    @scene = new Scene('#canvas')
+    @scene.add(@keyboard.model)
+    @scene.add(@rain.model)
+    @scene.animate =>
+      @keyboard.update()
+
   initMidi: (callback) ->
     MIDI.loadPlugin(callback)
 
@@ -37,12 +36,20 @@ class Euphony
       callback(@midiIndex)
 
   setBuiltinMidi: (filename, callback) ->
-    DOMLoader.sendRequest
-      url: "tracks/#{filename}"
-      progress: (event) ->
-        loader.message('loading MIDI ' + Math.round(event.loaded / event.total * 100) + '%')
-      callback: (response) =>
-        @setMidiFile(response.responseText,callback)
+    if localStorage[filename]
+      return @setMidiFile(localStorage[filename], callback)
+    loader.start =>
+      setTimeout (=>
+        DOMLoader.sendRequest
+          url: "tracks/#{filename}"
+          progress: (event) ->
+            #loader.message('Loading MIDI File ' + Math.round(event.loaded / event.total * 100) + '%')
+            loader.message('Loading MIDI File')
+          callback: (response) =>
+            midiData = response.responseText
+            @setMidiFile(response.responseText,callback)
+            localStorage[filename] = midiData
+      ), 0
 
   setMidiFile: (midiFile, callback) ->
     # load tracks

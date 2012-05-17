@@ -23,7 +23,7 @@
       this.oninit = __bind(this.oninit, this);
 
       var _this = this;
-      this.container = $('#player');
+      this.container = $('#panel');
       this.prevBtn = $('#control-prev').click(function() {
         return _this.prev();
       });

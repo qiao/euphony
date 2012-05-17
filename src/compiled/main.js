@@ -7,13 +7,25 @@
     app.initScene();
     return app.initMidi(function() {
       return app.getBuiltinMidiIndex(function(index) {
-        return app.setBuiltinMidi(index[13], function() {
+        var $playlist, filename, _i, _len;
+        app.setBuiltinMidi(index[13], function() {
           window.player = new PlayerWidget();
           player.init();
           player.bind('play', app.play);
           player.bind('pause', app.pause);
           player.bind('resume', app.resume);
           return player.bind('stop', app.stop);
+        });
+        $playlist = $('#playlist');
+        for (_i = 0, _len = index.length; _i < _len; _i++) {
+          filename = index[_i];
+          $playlist.append($('<li>').text(filename));
+        }
+        return $playlist.on('click', function(event) {
+          player.stop();
+          return app.setBuiltinMidi($(event.target).text(), function() {
+            return player.play();
+          });
         });
       });
     });

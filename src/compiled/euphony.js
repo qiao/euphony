@@ -18,19 +18,10 @@
 
       this.play = __bind(this.play, this);
 
-    }
-
-    Euphony.prototype.initScene = function() {
       var _this = this;
       this.design = new PianoKeyboardDesign();
       this.keyboard = new PianoKeyboard(this.design);
       this.rain = new NoteRain(this.design);
-      this.scene = new Scene('#canvas');
-      this.scene.add(this.keyboard.model);
-      this.scene.add(this.rain.model);
-      this.scene.animate(function() {
-        return _this.keyboard.update();
-      });
       this.player = MIDI.Player;
       this.player.addListener(function(data) {
         var NOTE_OFF, NOTE_ON, message, note;
@@ -43,13 +34,23 @@
           return _this.keyboard.release(note);
         }
       });
-      return this.player.setAnimation({
+      this.player.setAnimation({
         delay: 20,
         callback: function(data) {
           if (_this.player.playing) {
             return _this.rain.update(data.now * 1000);
           }
         }
+      });
+    }
+
+    Euphony.prototype.initScene = function() {
+      var _this = this;
+      this.scene = new Scene('#canvas');
+      this.scene.add(this.keyboard.model);
+      this.scene.add(this.rain.model);
+      return this.scene.animate(function() {
+        return _this.keyboard.update();
       });
     };
 
@@ -70,14 +71,24 @@
 
     Euphony.prototype.setBuiltinMidi = function(filename, callback) {
       var _this = this;
-      return DOMLoader.sendRequest({
-        url: "tracks/" + filename,
-        progress: function(event) {
-          return loader.message('loading MIDI ' + Math.round(event.loaded / event.total * 100) + '%');
-        },
-        callback: function(response) {
-          return _this.setMidiFile(response.responseText, callback);
-        }
+      if (localStorage[filename]) {
+        return this.setMidiFile(localStorage[filename], callback);
+      }
+      return loader.start(function() {
+        return setTimeout((function() {
+          return DOMLoader.sendRequest({
+            url: "tracks/" + filename,
+            progress: function(event) {
+              return loader.message('Loading MIDI File');
+            },
+            callback: function(response) {
+              var midiData;
+              midiData = response.responseText;
+              _this.setMidiFile(response.responseText, callback);
+              return localStorage[filename] = midiData;
+            }
+          });
+        }), 0);
       });
     };
 
