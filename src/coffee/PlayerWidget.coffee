@@ -28,7 +28,8 @@ class PlayerWidget
       if target.is('li')
         @changeTrack(target.text())
 
-    @container.on 'mousewheel', (-> false)
+    @container.on 'mousewheel', (event) ->
+      event.stopPropagation()
 
   oninit: =>
     @container

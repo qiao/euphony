@@ -61,9 +61,9 @@
           return _this.changeTrack(target.text());
         }
       });
-      this.container.on('mousewheel', (function() {
-        return false;
-      }));
+      this.container.on('mousewheel', function(event) {
+        return event.stopPropagation();
+      });
     }
 
     PlayerWidget.prototype.oninit = function() {

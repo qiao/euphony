@@ -18,7 +18,6 @@
         player.bind('play', app.play);
         player.bind('changetrack', function(filename) {
           player.stop();
-          console.log(filename);
           return app.setBuiltinMidi(filename, function() {
             return player.play();
           });

@@ -20,7 +20,6 @@ $(document)
         player.bind('play', app.play)
         player.bind 'changetrack', (filename) ->
           player.stop()
-          console.log(filename)
           app.setBuiltinMidi filename, ->
             player.play()
         player.changeTrack(index[10])

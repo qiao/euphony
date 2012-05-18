@@ -39,18 +39,16 @@ class Euphony
     if localStorage[filename]
       return @setMidiFile(localStorage[filename], callback)
     loader.start =>
-      setTimeout (=>
-        DOMLoader.sendRequest
-          url: "tracks/#{filename}"
-          progress: (event) ->
-            #loader.message('Loading MIDI File ' + Math.round(event.loaded / event.total * 100) + '%')
-            loader.message('Loading MIDI File')
-          callback: (response) =>
-            loader.stop()
-            midiData = response.responseText
-            @setMidiFile(response.responseText,callback)
-            localStorage[filename] = midiData
-      ), 0
+      DOMLoader.sendRequest
+        url: "tracks/#{filename}"
+        progress: (event) ->
+          #loader.message('Loading MIDI File ' + Math.round(event.loaded / event.total * 100) + '%')
+          loader.message('Loading MIDI File')
+        callback: (response) =>
+          loader.stop()
+          midiData = response.responseText
+          @setMidiFile(response.responseText,callback)
+          localStorage[filename] = midiData
 
   setMidiFile: (midiFile, callback) ->
     # load tracks
@@ -65,7 +63,6 @@ class Euphony
     @player.start()
 
   resume: =>
-    console.log(123)
     @player.start()
 
   stop: =>
