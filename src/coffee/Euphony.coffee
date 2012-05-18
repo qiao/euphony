@@ -46,6 +46,7 @@ class Euphony
             #loader.message('Loading MIDI File ' + Math.round(event.loaded / event.total * 100) + '%')
             loader.message('Loading MIDI File')
           callback: (response) =>
+            loader.stop()
             midiData = response.responseText
             @setMidiFile(response.responseText,callback)
             localStorage[filename] = midiData
@@ -56,10 +57,6 @@ class Euphony
     @player.loadFile midiFile, =>
       loader.stop()
       @rain.setMidiData(@player.data, callback)
-
-  playTrack: (id) ->
-    @setMidiFile MIDIFiles[Object.keys(MIDIFiles)[id]], =>
-      @play()
 
   play: =>
     if @started then @resume() else @start()

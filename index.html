@@ -7,7 +7,7 @@
     <!-- css -->
     <link href="./css/style.css" rel="stylesheet" />
     <link href="./css/font-awesome.css" rel="stylesheet" />
-    <link href="./css/stroll.min.css" rel="stylesheet" />
+    <link href="./css/nanoscroller.css" rel="stylesheet" />
 
     <!-- base64 packages -->
     <script src="./lib/MIDI.js/VersionControl.Base64.js" type="text/javascript"></script>
@@ -31,11 +31,11 @@
 
     <script src="./lib/jquery-1.7.1.min.js" type="text/javascript"></script>
     <script src="./lib/jquery.easing.js" type="text/javascript"></script>
+    <script src="./lib/jquery.nanoscroller.min.js" type="text/javascript"></script>
     <script src="./lib/Three.js" type="text/javascript"></script>
     <script src="./lib/state-machine.min.js" type="text/javascript"></script>
     <script src="./lib/spin.min.js" type="text/javascript"></script>
     <script src="./lib/spin.min.js" type="text/javascript"></script>
-    <script src="./lib/stroll.min.js" type="text/javascript"></script>
 
     <!-- main -->
     <script src="./src/compiled/PianoKeyboard.js" type="text/javascript"></script>
@@ -52,17 +52,20 @@
 
     <div id="canvas"></div>
 
-    <div id="panel">
-      <div id="player">
-        <ul id="controls">
-          <li id="control-prev" ><i class="icon-step-backward"></i></li>
-          <li id="control-play" ><i class="icon-play"></i></li>
-          <li id="control-pause" style="display:none;"><i class="icon-pause"></i></li>
-          <li id="control-stop" ><i class="icon-stop"></i></li>
-          <li id="control-next" ><i class="icon-step-forward"></i></li>
-        </ul>
-      </div>
-      <ul id="playlist" class="fade"></ul>
+    <div id="player">
+      <ul class="player-controls">
+        <li class="player-prev" ><i class="icon-step-backward"></i></li>
+        <li class="player-play" ><i class="icon-play"></i></li>
+        <li class="player-pause" style="display:none;"><i class="icon-pause"></i></li>
+        <li class="player-stop" ><i class="icon-stop"></i></li>
+        <li class="player-next" ><i class="icon-step-forward"></i></li>
+      </ul>
+
+      <ul class="player-playlist-container nano">
+        <div class="content">
+          <ul class="player-playlist"></ul>
+        </div>
+      </ul>
     </div>
 
   </body>

@@ -1,12 +1,34 @@
 class PlayerWidget
-  constructor: ->
-    @container = $('#panel')
-    @prevBtn   = $('#control-prev').click => @prev()
-    @stopBtn   = $('#control-stop').click => @stop()
-    @nextBtn   = $('#control-next').click => @next()
-    @pauseBtn  = $('#control-pause').click => @pause()
-    @playBtn   = $('#control-play').click =>
+  constructor: (container) ->
+    @container = $(container)
+
+    @controlsContainer  = $('.player-controls', @container)
+    @playlistContainer  = $('.player-playlist-container', @container)
+    @playlist           = $('.player-playlist', @container)
+
+    @playlistContainer
+      .height(@container.innerHeight() - @controlsContainer.outerHeight())
+      .nanoScroller()
+
+    @prevBtn  = $('.player-prev', @container)
+    @nextBtn  = $('.player-next', @container)
+    @playBtn  = $('.player-play', @container)
+    @stopBtn  = $('.player-stop', @container)
+    @pauseBtn = $('.player-pause', @container)
+
+    @prevBtn.click  => @prev()
+    @nextBtn.click  => @next()
+    @stopBtn.click  => @stop()
+    @pauseBtn.click => @pause()
+    @playBtn.click =>
       if @current is 'paused' then @resume() else @play()
+
+    @playlist.click (event) =>
+      target = $(event.target)
+      if target.is('li')
+        @changeTrack(target.text())
+
+    @container.on 'mousewheel', (-> false)
 
   oninit: =>
     @container
@@ -16,6 +38,12 @@ class PlayerWidget
         duration: 1000
         easing: 'easeInOutCubic'
       }
+
+  setPlaylist: (playlist) ->
+    @playlist.html('')
+    for trackName in playlist
+      @playlist.append($('<li>').text(trackName))
+    @playlistContainer.nanoScroller()
 
   bind: (eventName, callback) ->
     @["#{eventName}Callback"] = callback
@@ -45,6 +73,13 @@ class PlayerWidget
 
   onnext: =>
     @nextCallback?()
+
+  onchangetrack: (trackName) =>
+    @changetrackCallback?(trackName)
+
+  changeTrack: @::onchangetrack
+    
+    
 
 StateMachine.create
   target: PlayerWidget.prototype

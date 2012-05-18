@@ -7,7 +7,9 @@
 
     PlayerWidget.name = 'PlayerWidget';
 
-    function PlayerWidget() {
+    function PlayerWidget(container) {
+      this.onchangetrack = __bind(this.onchangetrack, this);
+
       this.onnext = __bind(this.onnext, this);
 
       this.onprev = __bind(this.onprev, this);
@@ -23,26 +25,45 @@
       this.oninit = __bind(this.oninit, this);
 
       var _this = this;
-      this.container = $('#panel');
-      this.prevBtn = $('#control-prev').click(function() {
+      this.container = $(container);
+      this.controlsContainer = $('.player-controls', this.container);
+      this.playlistContainer = $('.player-playlist-container', this.container);
+      this.playlist = $('.player-playlist', this.container);
+      this.playlistContainer.height(this.container.innerHeight() - this.controlsContainer.outerHeight()).nanoScroller();
+      this.prevBtn = $('.player-prev', this.container);
+      this.nextBtn = $('.player-next', this.container);
+      this.playBtn = $('.player-play', this.container);
+      this.stopBtn = $('.player-stop', this.container);
+      this.pauseBtn = $('.player-pause', this.container);
+      this.prevBtn.click(function() {
         return _this.prev();
       });
-      this.stopBtn = $('#control-stop').click(function() {
-        return _this.stop();
-      });
-      this.nextBtn = $('#control-next').click(function() {
+      this.nextBtn.click(function() {
         return _this.next();
       });
-      this.pauseBtn = $('#control-pause').click(function() {
+      this.stopBtn.click(function() {
+        return _this.stop();
+      });
+      this.pauseBtn.click(function() {
         return _this.pause();
       });
-      this.playBtn = $('#control-play').click(function() {
+      this.playBtn.click(function() {
         if (_this.current === 'paused') {
           return _this.resume();
         } else {
           return _this.play();
         }
       });
+      this.playlist.click(function(event) {
+        var target;
+        target = $(event.target);
+        if (target.is('li')) {
+          return _this.changeTrack(target.text());
+        }
+      });
+      this.container.on('mousewheel', (function() {
+        return false;
+      }));
     }
 
     PlayerWidget.prototype.oninit = function() {
@@ -52,6 +73,16 @@
         duration: 1000,
         easing: 'easeInOutCubic'
       });
+    };
+
+    PlayerWidget.prototype.setPlaylist = function(playlist) {
+      var trackName, _i, _len;
+      this.playlist.html('');
+      for (_i = 0, _len = playlist.length; _i < _len; _i++) {
+        trackName = playlist[_i];
+        this.playlist.append($('<li>').text(trackName));
+      }
+      return this.playlistContainer.nanoScroller();
     };
 
     PlayerWidget.prototype.bind = function(eventName, callback) {
@@ -89,6 +120,12 @@
     PlayerWidget.prototype.onnext = function() {
       return typeof this.nextCallback === "function" ? this.nextCallback() : void 0;
     };
+
+    PlayerWidget.prototype.onchangetrack = function(trackName) {
+      return typeof this.changetrackCallback === "function" ? this.changetrackCallback(trackName) : void 0;
+    };
+
+    PlayerWidget.prototype.changeTrack = PlayerWidget.prototype.onchangetrack;
 
     return PlayerWidget;
 

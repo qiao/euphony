@@ -83,6 +83,7 @@
             },
             callback: function(response) {
               var midiData;
+              loader.stop();
               midiData = response.responseText;
               _this.setMidiFile(response.responseText, callback);
               return localStorage[filename] = midiData;
@@ -97,13 +98,6 @@
       return this.player.loadFile(midiFile, function() {
         loader.stop();
         return _this.rain.setMidiData(_this.player.data, callback);
-      });
-    };
-
-    Euphony.prototype.playTrack = function(id) {
-      var _this = this;
-      return this.setMidiFile(MIDIFiles[Object.keys(MIDIFiles)[id]], function() {
-        return _this.play();
       });
     };
 
