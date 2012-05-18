@@ -10,6 +10,8 @@
     function Scene(container) {
       this.animate = __bind(this.animate, this);
 
+      this.onresize = __bind(this.onresize, this);
+
       var $container, ambientLight, auxLight, camera, controls, height, mainLight, renderer, scene, width;
       $container = $(container);
       width = $container.width();
@@ -38,11 +40,20 @@
       controls.autoRotateSpeed = 1.0;
       controls.autoRotate = false;
       camera.position.copy(controls.center).addSelf(new THREE.Vector3(2, 6, 9));
+      $(window).resize(this.onresize);
       this.camera = camera;
       this.scene = scene;
       this.renderer = renderer;
       this.controls = controls;
     }
+
+    Scene.prototype.onresize = function() {
+      var height, width, _ref;
+      _ref = [$(window).width(), $(window).height()], width = _ref[0], height = _ref[1];
+      this.camera.aspect = width / height;
+      this.camera.updateProjectionMatrix();
+      return this.renderer.setSize(width, height);
+    };
 
     Scene.prototype.add = function(object) {
       return this.scene.add(object);

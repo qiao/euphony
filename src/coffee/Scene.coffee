@@ -38,11 +38,19 @@ class Scene
     controls.autoRotate = false
     camera.position.copy(controls.center).addSelf(new THREE.Vector3(2, 6, 9))
 
+    $(window).resize(@onresize)
+
     # set instance variables
     @camera = camera
     @scene = scene
     @renderer = renderer
     @controls = controls
+
+  onresize: =>
+    [width, height] = [$(window).width(), $(window).height()]
+    @camera.aspect = width / height
+    @camera.updateProjectionMatrix()
+    @renderer.setSize(width, height)
 
   add: (object) ->
     @scene.add(object)

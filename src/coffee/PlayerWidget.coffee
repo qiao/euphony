@@ -6,10 +6,6 @@ class PlayerWidget
     @playlistContainer  = $('.player-playlist-container', @container)
     @playlist           = $('.player-playlist', @container)
 
-    @playlistContainer
-      .height(@container.innerHeight() - @controlsContainer.outerHeight())
-      .nanoScroller()
-
     @prevBtn  = $('.player-prev', @container)
     @nextBtn  = $('.player-next', @container)
     @playBtn  = $('.player-play', @container)
@@ -30,6 +26,14 @@ class PlayerWidget
 
     @container.on 'mousewheel', (event) ->
       event.stopPropagation()
+
+    @onresize()
+    $(window).resize(@onresize)
+
+  onresize: =>
+    @playlistContainer
+      .height(@container.innerHeight() - @controlsContainer.outerHeight())
+      .nanoScroller()
 
   oninit: =>
     @container
@@ -79,7 +83,6 @@ class PlayerWidget
     @changetrackCallback?(trackName)
 
   changeTrack: @::onchangetrack
-    
     
 
 StateMachine.create

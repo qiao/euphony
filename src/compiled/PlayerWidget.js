@@ -24,12 +24,13 @@
 
       this.oninit = __bind(this.oninit, this);
 
+      this.onresize = __bind(this.onresize, this);
+
       var _this = this;
       this.container = $(container);
       this.controlsContainer = $('.player-controls', this.container);
       this.playlistContainer = $('.player-playlist-container', this.container);
       this.playlist = $('.player-playlist', this.container);
-      this.playlistContainer.height(this.container.innerHeight() - this.controlsContainer.outerHeight()).nanoScroller();
       this.prevBtn = $('.player-prev', this.container);
       this.nextBtn = $('.player-next', this.container);
       this.playBtn = $('.player-play', this.container);
@@ -64,7 +65,13 @@
       this.container.on('mousewheel', function(event) {
         return event.stopPropagation();
       });
+      this.onresize();
+      $(window).resize(this.onresize);
     }
+
+    PlayerWidget.prototype.onresize = function() {
+      return this.playlistContainer.height(this.container.innerHeight() - this.controlsContainer.outerHeight()).nanoScroller();
+    };
 
     PlayerWidget.prototype.oninit = function() {
       return this.container.animate({
