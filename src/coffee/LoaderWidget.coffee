@@ -4,11 +4,11 @@ class LoaderWidget
     width: 4
 
   constructor: ->
-    $window = $(window)
+    @window = $(window)
 
     @overlay = $('<div>')
-      .width($window.width())
-      .height($window.height())
+      .width(@window.width())
+      .height(@window.height())
       .hide()
       .css
         position: 'absolute'
@@ -23,10 +23,6 @@ class LoaderWidget
     @box = $('<div>')
       .width(300)
       .height(200)
-      .css
-        position: 'absolute'
-        top: ($window.height() - 200) / 2
-        left: ($window.width() - 300) / 2
       .appendTo(@overlay)
     
     @canvas = $('<div>')
@@ -39,6 +35,21 @@ class LoaderWidget
         'font-size': '0.9em'
         cursor: 'default'
       .appendTo(@box)
+
+    @onresize()
+    @window.resize(@onresize)
+
+  onresize: =>
+    [width, height] = [@window.width(), @window.height()]
+    @box
+      .css
+        position: 'absolute'
+        top: (height - 200) / 2
+        left: (width - 300) / 2
+    @overlay
+      .width(width)
+      .height(height)
+
 
   message: (msg) =>
     @start() unless @isActive
