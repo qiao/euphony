@@ -58,6 +58,9 @@ ul, ol {
   cursor: pointer;
   margin-top: 1px;
   background: rgba(100, 100, 100, 0.2);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .player-playlist>li:hover {
