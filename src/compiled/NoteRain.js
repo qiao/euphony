@@ -24,11 +24,15 @@
       })();
     }
 
+    NoteRain.prototype.bind = function(eventName, callback) {
+      return this["on" + eventName] = callback;
+    };
+
     NoteRain.prototype.setMidiData = function(midiData, callback) {
       var noteInfos;
       this.clear();
       noteInfos = this._getNoteInfos(midiData);
-      return this._buildNoteMeshes(noteInfos);
+      return this._buildNoteMeshes(noteInfos, callback);
     };
 
     NoteRain.prototype.clear = function() {
@@ -42,7 +46,7 @@
       return _results;
     };
 
-    NoteRain.prototype._getNoteInfos = function() {
+    NoteRain.prototype._getNoteInfos = function(midiData) {
       var currentTime, duration, event, interval, noteInfos, noteNumber, noteTimes, startTime, subtype, _i, _len, _ref, _ref1;
       currentTime = 0;
       noteInfos = [];
@@ -66,8 +70,8 @@
       return noteInfos;
     };
 
-    NoteRain.prototype._buildMeshes = function(noteInfos, callback) {
-      var Black, KeyType, SIZE_OF_EACH_GROUP, blackKeyHeight, blackKeyWidth, group, keyInfo, sleepTask, splitToGroups, tasks, _i, _len, _ref, _ref1,
+    NoteRain.prototype._buildNoteMeshes = function(noteInfos, callback) {
+      var Black, KeyType, SIZE_OF_EACH_GROUP, blackKeyHeight, blackKeyWidth, group, groups, keyInfo, sleepTask, splitToGroups, tasks, _i, _len, _ref,
         _this = this;
       _ref = this.pianoDesign, blackKeyWidth = _ref.blackKeyWidth, blackKeyHeight = _ref.blackKeyHeight, keyInfo = _ref.keyInfo, KeyType = _ref.KeyType;
       Black = KeyType.Black;
@@ -87,9 +91,9 @@
       };
       tasks = [];
       SIZE_OF_EACH_GROUP = 100;
-      _ref1 = splitToGroups(noteInfos, SIZE_OF_EACH_GROUP);
-      for (_i = 0, _len = _ref1.length; _i < _len; _i++) {
-        group = _ref1[_i];
+      groups = splitToGroups(noteInfos, SIZE_OF_EACH_GROUP);
+      for (_i = 0, _len = groups.length; _i < _len; _i++) {
+        group = groups[_i];
         tasks.push(sleepTask);
         tasks.push((function(group) {
           return function(done) {

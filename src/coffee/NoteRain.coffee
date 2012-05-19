@@ -11,11 +11,17 @@ class NoteRain
       (note) ->
         parseInt(map[note - offset].hex, 16)
 
+  # bind the callback of an event
+  # only supported event is `progress`, the callback will be called with
+  # the progress of the mesh-building procedure.
+  bind: (eventName, callback) ->
+    @["on#{eventName}"] = callback
+
   # midiData is acquired from MIDI.Player.data
   setMidiData: (midiData, callback) ->
     @clear()
     noteInfos = @_getNoteInfos(midiData)
-    @_buildNoteMeshes(noteInfos)
+    @_buildNoteMeshes(noteInfos, callback)
 
   # clear all existing note rains
   clear: ->
@@ -25,7 +31,7 @@ class NoteRain
   # the raw midiData uses delta time between events to represent the flow
   # and it's quite unintuitive
   # here we calculates the start and end time of each notebox
-  _getNoteInfos: ->
+  _getNoteInfos: (midiData) ->
     currentTime = 0
     noteInfos = []
     noteTimes = []
@@ -39,7 +45,7 @@ class NoteRain
         noteTimes[noteNumber] = currentTime
 
       else if subtype is 'noteOff'
-        # if note if off, calculate its duration and build the modle
+        # if note if off, calculate its duration and build the model
         startTime = noteTimes[noteNumber]
         duration = currentTime - startTime
         noteInfos.push {
@@ -52,10 +58,9 @@ class NoteRain
 
   # given a list of note info, build their meshes
   # the callback is called on finishing this task
-  _buildMeshes: (noteInfos, callback) ->
+  _buildNoteMeshes: (noteInfos, callback) ->
     {blackKeyWidth, blackKeyHeight, keyInfo, KeyType} = @pianoDesign
     {Black} = KeyType
-
 
     # function to split an array into groups
     splitToGroups = (items, sizeOfEachGroup) ->
@@ -79,7 +84,8 @@ class NoteRain
     # split the note infos into groups
     # for each group, generate a task that will build the notes' meshes
     SIZE_OF_EACH_GROUP = 100
-    for group in splitToGroups(noteInfos, SIZE_OF_EACH_GROUP)
+    groups = splitToGroups(noteInfos, SIZE_OF_EACH_GROUP)
+    for group in groups
       # insert an sleep task between every two mesh-building tasks
       tasks.push(sleepTask)
 
