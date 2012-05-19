@@ -8,11 +8,11 @@
     PlayerWidget.name = 'PlayerWidget';
 
     function PlayerWidget(container) {
-      this.setProgress = __bind(this.setProgress, this);
+      this.displayProgress = __bind(this.displayProgress, this);
 
       this.getRandomTrack = __bind(this.getRandomTrack, this);
 
-      this.onchangetrack = __bind(this.onchangetrack, this);
+      this.onsettrack = __bind(this.onsettrack, this);
 
       this.onnext = __bind(this.onnext, this);
 
@@ -36,6 +36,7 @@
       this.$playlistContainer = $('.player-playlist-container', this.$container);
       this.$progressContainer = $('.player-progress-container', this.$container);
       this.$progressBar = $('.player-progress-bar', this.$container);
+      this.$progressText = $('.player-progress-text', this.$container);
       this.$playlist = $('.player-playlist', this.$container);
       this.$prevBtn = $('.player-prev', this.$container);
       this.$nextBtn = $('.player-next', this.$container);
@@ -61,11 +62,16 @@
           return _this.play();
         }
       });
+      this.$progressContainer.click(function(event) {
+        var progress;
+        progress = event.clientX / _this.$progressContainer.width();
+        return typeof _this.setprogressCallback === "function" ? _this.setprogressCallback(progress) : void 0;
+      });
       this.$playlist.click(function(event) {
         var target;
         target = $(event.target);
         if (target.is('li')) {
-          return _this.changeTrack(target.text());
+          return _this.setTrack(target.text());
         }
       });
       this.$container.on('mousewheel', function(event) {
@@ -136,19 +142,36 @@
       return typeof this.nextCallback === "function" ? this.nextCallback() : void 0;
     };
 
-    PlayerWidget.prototype.onchangetrack = function(trackName) {
+    PlayerWidget.prototype.onsettrack = function(trackName) {
       this.stop();
-      return typeof this.changetrackCallback === "function" ? this.changetrackCallback(trackName) : void 0;
+      return typeof this.settrackCallback === "function" ? this.settrackCallback(trackName) : void 0;
     };
 
-    PlayerWidget.prototype.changeTrack = PlayerWidget.prototype.onchangetrack;
+    PlayerWidget.prototype.setTrack = PlayerWidget.prototype.onsettrack;
 
     PlayerWidget.prototype.getRandomTrack = function() {
       return this.playlist[Math.floor(Math.random() * this.playlist.length)];
     };
 
-    PlayerWidget.prototype.setProgress = function(progress) {
-      return this.$progressBar.width(this.$progressContainer.width() * progress);
+    PlayerWidget.prototype.displayProgress = function(event) {
+      var curTime, current, progress, totTime, total;
+      current = event.current, total = event.total;
+      current = Math.min(current, total);
+      progress = current / total;
+      this.$progressBar.width(this.$progressContainer.width() * progress);
+      curTime = this._formatTime(current);
+      totTime = this._formatTime(total);
+      return this.$progressText.text("" + curTime + " / " + totTime);
+    };
+
+    PlayerWidget.prototype._formatTime = function(time) {
+      var minutes, seconds;
+      minutes = time / 60 >> 0;
+      seconds = String(time - (minutes * 60) >> 0);
+      if (seconds.length === 1) {
+        seconds = "0" + seconds;
+      }
+      return "" + minutes + ":" + seconds;
     };
 
     return PlayerWidget;

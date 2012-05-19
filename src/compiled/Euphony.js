@@ -8,7 +8,11 @@
     Euphony.name = 'Euphony';
 
     function Euphony() {
+      this.setProgress = __bind(this.setProgress, this);
+
       this.setCurrentTime = __bind(this.setCurrentTime, this);
+
+      this.getEndTime = __bind(this.getEndTime, this);
 
       this.pause = __bind(this.pause, this);
 
@@ -42,7 +46,10 @@
           var end, now;
           now = data.now, end = data.end;
           if (typeof _this.onprogress === "function") {
-            _this.onprogress(now / end);
+            _this.onprogress({
+              current: now,
+              total: end
+            });
           }
           return _this.rain.update(now * 1000);
         }
@@ -121,10 +128,20 @@
       return this.player.pause();
     };
 
+    Euphony.prototype.getEndTime = function() {
+      return this.player.endTime;
+    };
+
     Euphony.prototype.setCurrentTime = function(currentTime) {
       this.player.pause();
       this.player.currentTime = currentTime;
       return this.player.resume();
+    };
+
+    Euphony.prototype.setProgress = function(progress) {
+      var currentTime;
+      currentTime = this.player.endTime * progress;
+      return this.setCurrentTime(currentTime);
     };
 
     Euphony.prototype.on = function(eventName, callback) {

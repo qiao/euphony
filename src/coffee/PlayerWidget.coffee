@@ -7,6 +7,7 @@ class PlayerWidget
     @$progressContainer  = $('.player-progress-container', @$container)
 
     @$progressBar        = $('.player-progress-bar', @$container)
+    @$progressText       = $('.player-progress-text', @$container)
     @$playlist           = $('.player-playlist', @$container)
 
     @$prevBtn  = $('.player-prev', @$container)
@@ -22,10 +23,14 @@ class PlayerWidget
     @$playBtn.click =>
       if @current is 'paused' then @resume() else @play()
 
+    @$progressContainer.click (event) =>
+      progress = event.clientX / @$progressContainer.width()
+      @setprogressCallback?(progress)
+
     @$playlist.click (event) =>
       target = $(event.target)
       if target.is('li')
-        @changeTrack(target.text())
+        @setTrack(target.text())
 
     @$container.on 'mousewheel', (event) ->
       event.stopPropagation()
@@ -87,18 +92,30 @@ class PlayerWidget
   onnext: =>
     @nextCallback?()
 
-  onchangetrack: (trackName) =>
+  onsettrack: (trackName) =>
     @stop()
-    @changetrackCallback?(trackName)
+    @settrackCallback?(trackName)
 
-  changeTrack: @::onchangetrack
+  setTrack: @::onsettrack
 
   getRandomTrack: =>
     @playlist[Math.floor(Math.random() * @playlist.length)]
 
-  setProgress: (progress) =>
+  displayProgress: (event) =>
+    {current, total} = event
+    current = Math.min(current, total)
+    progress = current / total
     @$progressBar.width(@$progressContainer.width() * progress)
+    curTime = @_formatTime(current)
+    totTime = @_formatTime(total)
+    @$progressText.text("#{curTime} / #{totTime}")
 
+  _formatTime: (time) ->
+    minutes = time / 60 >> 0
+    seconds = String(time - (minutes * 60) >> 0)
+    if seconds.length is 1
+      seconds = "0#{seconds}"
+    "#{minutes}:#{seconds}"
 
 StateMachine.create
   target: PlayerWidget.prototype

@@ -65,11 +65,12 @@ ul, ol {
   background: rgba(200, 200, 200, 0.15);
 }
 
-.player-progress-time {
+.player-progress-text {
   color: #ddd;
   position: absolute;
   right: 5px;
   font-size: 10px;
+  cursor: default;
 }
 
 

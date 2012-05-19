@@ -15,7 +15,8 @@
         player.on('resume', app.resume);
         player.on('stop', app.stop);
         player.on('play', app.play);
-        player.on('changetrack', function(filename) {
+        player.on('setprogress', app.setProgress);
+        player.on('settrack', function(filename) {
           return loader.message('Loading MIDI', function() {
             return app.setBuiltinMidi(filename, function() {
               return loader.stop(function() {
@@ -24,10 +25,10 @@
             });
           });
         });
-        player.show(function() {
-          return player.changeTrack(player.getRandomTrack());
+        app.on('progress', player.displayProgress);
+        return player.show(function() {
+          return player.setTrack(player.getRandomTrack());
         });
-        return app.on('progress', player.setProgress);
       });
     });
   });

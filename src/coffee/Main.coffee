@@ -17,11 +17,13 @@ $(document)
         player.on('resume', app.resume)
         player.on('stop', app.stop)
         player.on('play', app.play)
-        player.on 'changetrack', (filename) ->
+        player.on('setprogress', app.setProgress)
+        player.on 'settrack', (filename) ->
           loader.message 'Loading MIDI', ->
             app.setBuiltinMidi filename, ->
               loader.stop ->
                 player.play()
+        app.on('progress', player.displayProgress)
+
         player.show ->
-          player.changeTrack(player.getRandomTrack())
-        app.on('progress', player.setProgress)
+          player.setTrack(player.getRandomTrack())
