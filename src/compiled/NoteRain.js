@@ -7,7 +7,7 @@
 
     NoteRain.name = 'NoteRain';
 
-    NoteRain.prototype.noteScale = 0.001;
+    NoteRain.prototype.lengthScale = 0.001;
 
     function NoteRain(pianoDesign) {
       this.pianoDesign = pianoDesign;
@@ -25,53 +25,108 @@
     }
 
     NoteRain.prototype.setMidiData = function(midiData, callback) {
-      var _this = this;
-      return setTimeout((function() {
-        var Black, KeyType, blackKeyHeight, blackKeyWidth, child, color, currentTime, duration, event, geometry, interval, keyInfo, length, material, mesh, noteNumber, notes, startTime, subtype, x, y, z, _i, _j, _len, _len1, _ref, _ref1, _ref2, _ref3;
-        _ref = _this.model.children.slice(0);
-        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-          child = _ref[_i];
-          _this.model.remove(child);
+      var noteInfos;
+      this.clear();
+      noteInfos = this._getNoteInfos(midiData);
+      return this._buildNoteMeshes(noteInfos);
+    };
+
+    NoteRain.prototype.clear = function() {
+      var child, _i, _len, _ref, _results;
+      _ref = this.model.children.slice(0);
+      _results = [];
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        child = _ref[_i];
+        _results.push(this.model.remove(child));
+      }
+      return _results;
+    };
+
+    NoteRain.prototype._getNoteInfos = function() {
+      var currentTime, duration, event, interval, noteInfos, noteNumber, noteTimes, startTime, subtype, _i, _len, _ref, _ref1;
+      currentTime = 0;
+      noteInfos = [];
+      noteTimes = [];
+      for (_i = 0, _len = midiData.length; _i < _len; _i++) {
+        _ref = midiData[_i], (_ref1 = _ref[0], event = _ref1.event), interval = _ref[1];
+        currentTime += interval;
+        subtype = event.subtype, noteNumber = event.noteNumber;
+        if (subtype === 'noteOn') {
+          noteTimes[noteNumber] = currentTime;
+        } else if (subtype === 'noteOff') {
+          startTime = noteTimes[noteNumber];
+          duration = currentTime - startTime;
+          noteInfos.push({
+            noteNumber: noteNumber,
+            startTime: startTime,
+            duration: duration
+          });
         }
-        _ref1 = _this.pianoDesign, blackKeyWidth = _ref1.blackKeyWidth, blackKeyHeight = _ref1.blackKeyHeight, keyInfo = _ref1.keyInfo, KeyType = _ref1.KeyType;
-        Black = KeyType.Black;
-        notes = [];
-        currentTime = 0;
-        for (_j = 0, _len1 = midiData.length; _j < _len1; _j++) {
-          _ref2 = midiData[_j], (_ref3 = _ref2[0], event = _ref3.event), interval = _ref2[1];
-          currentTime += interval;
-          subtype = event.subtype, noteNumber = event.noteNumber;
-          if (subtype === 'noteOn') {
-            notes[noteNumber] = currentTime;
-          } else if (subtype === 'noteOff') {
-            startTime = notes[noteNumber];
-            duration = currentTime - startTime;
-            length = duration * _this.noteScale;
-            x = keyInfo[noteNumber].keyCenterPosX;
-            y = startTime * _this.noteScale + (length / 2);
-            z = -0.2;
-            if (keyInfo[noteNumber].keyType === Black) {
-              y += blackKeyHeight / 2;
+      }
+      return noteInfos;
+    };
+
+    NoteRain.prototype._buildMeshes = function(noteInfos, callback) {
+      var Black, KeyType, SIZE_OF_EACH_GROUP, blackKeyHeight, blackKeyWidth, group, keyInfo, sleepTask, splitToGroups, tasks, _i, _len, _ref, _ref1,
+        _this = this;
+      _ref = this.pianoDesign, blackKeyWidth = _ref.blackKeyWidth, blackKeyHeight = _ref.blackKeyHeight, keyInfo = _ref.keyInfo, KeyType = _ref.KeyType;
+      Black = KeyType.Black;
+      splitToGroups = function(items, sizeOfEachGroup) {
+        var groups, i, numGroups, start, _i;
+        groups = [];
+        numGroups = Math.floor(items.length / sizeOfEachGroup);
+        start = 0;
+        for (i = _i = 0; 0 <= numGroups ? _i < numGroups : _i > numGroups; i = 0 <= numGroups ? ++_i : --_i) {
+          groups[i] = items.slice(start, start + sizeOfEachGroup);
+          start += sizeOfEachGroup;
+        }
+        return groups;
+      };
+      sleepTask = function(done) {
+        return setTimeout(done, 0);
+      };
+      tasks = [];
+      SIZE_OF_EACH_GROUP = 100;
+      _ref1 = splitToGroups(noteInfos, SIZE_OF_EACH_GROUP);
+      for (_i = 0, _len = _ref1.length; _i < _len; _i++) {
+        group = _ref1[_i];
+        tasks.push(sleepTask);
+        tasks.push((function(group) {
+          return function(done) {
+            var color, duration, geometry, length, material, mesh, noteInfo, noteNumber, startTime, x, y, z, _j, _len1;
+            for (_j = 0, _len1 = group.length; _j < _len1; _j++) {
+              noteInfo = group[_j];
+              noteNumber = noteInfo.noteNumber, startTime = noteInfo.startTime, duration = noteInfo.duration;
+              length = duration * _this.lengthScale;
+              x = keyInfo[noteNumber].keyCenterPosX;
+              y = startTime * _this.lengthScale + (length / 2);
+              z = -0.2;
+              if (keyInfo[noteNumber].keyType === Black) {
+                y += blackKeyHeight / 2;
+              }
+              color = _this.noteToColor(noteNumber);
+              geometry = new THREE.CubeGeometry(blackKeyWidth, length, blackKeyWidth);
+              material = new THREE.MeshPhongMaterial({
+                color: color,
+                emissive: color,
+                opacity: 0.7,
+                transparent: true
+              });
+              mesh = new THREE.Mesh(geometry, material);
+              mesh.position.set(x, y, z);
+              _this.model.add(mesh);
             }
-            color = _this.noteToColor(noteNumber);
-            geometry = new THREE.CubeGeometry(blackKeyWidth, length, blackKeyWidth);
-            material = new THREE.MeshPhongMaterial({
-              color: color,
-              emissive: color,
-              opacity: 0.7,
-              transparent: true
-            });
-            mesh = new THREE.Mesh(geometry, material);
-            mesh.position.set(x, y, z);
-            _this.model.add(mesh);
-          }
-        }
+            return done();
+          };
+        })(group));
+      }
+      return async.series(tasks, function() {
         return typeof callback === "function" ? callback() : void 0;
-      }), 0);
+      });
     };
 
     NoteRain.prototype.update = function(playerCurrentTime) {
-      return this.model.position.y = -playerCurrentTime * this.noteScale;
+      return this.model.position.y = -playerCurrentTime * this.lengthScale;
     };
 
     return NoteRain;
