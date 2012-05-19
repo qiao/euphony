@@ -37,8 +37,13 @@
       this.player.setAnimation({
         delay: 20,
         callback: function(data) {
+          var end, now;
+          now = data.now, end = data.end;
+          if (typeof _this.onprogess === "function") {
+            _this.onprogess(now / end);
+          }
           if (_this.player.playing) {
-            return _this.rain.update(data.now * 1000);
+            return _this.rain.update(now * 1000);
           }
         }
       });
@@ -113,6 +118,10 @@
 
     Euphony.prototype.pause = function() {
       return this.player.pause();
+    };
+
+    Euphony.prototype.on = function(eventName, callback) {
+      return this["on" + eventName] = callback;
     };
 
     return Euphony;

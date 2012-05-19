@@ -16,8 +16,10 @@ class Euphony
     @player.setAnimation
       delay: 20
       callback: (data) =>
+        {now, end} = data
+        @onprogess?(now / end)
         if @player.playing
-          @rain.update(data.now * 1000)
+          @rain.update(now * 1000)
 
   initScene: ->
     @scene = new Scene('#canvas')
@@ -64,5 +66,8 @@ class Euphony
 
   pause: =>
     @player.pause()
+
+  on: (eventName, callback) ->
+    @["on#{eventName}"] = callback
 
 @Euphony = Euphony
