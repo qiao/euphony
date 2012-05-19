@@ -78,7 +78,7 @@
       splitToGroups = function(items, sizeOfEachGroup) {
         var groups, i, numGroups, start, _i;
         groups = [];
-        numGroups = Math.floor(items.length / sizeOfEachGroup);
+        numGroups = Math.ceil(items.length / sizeOfEachGroup);
         start = 0;
         for (i = _i = 0; 0 <= numGroups ? _i < numGroups : _i > numGroups; i = 0 <= numGroups ? ++_i : --_i) {
           groups[i] = items.slice(start, start + sizeOfEachGroup);

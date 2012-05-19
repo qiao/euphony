@@ -65,7 +65,7 @@ class NoteRain
     # function to split an array into groups
     splitToGroups = (items, sizeOfEachGroup) ->
       groups = []
-      numGroups = Math.floor(items.length / sizeOfEachGroup)
+      numGroups = Math.ceil(items.length / sizeOfEachGroup)
       start = 0
       for i in [0...numGroups]
         groups[i] = items[start...(start + sizeOfEachGroup)]
