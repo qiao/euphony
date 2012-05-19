@@ -41,11 +41,16 @@ ul, ol {
   display: inline-block;
   width: 22%;
   cursor: pointer;
+  -webkit-transition: text-shadow 0.5s, color 0.2s;
+  -moz-transition:    text-shadow 0.5s, color 0.2s;
+  -o-transition:      text-shadow 0.5s, color 0.2s;
+  -ms-transition:     text-shadow 0.5s, color 0.2s;
+  transition:         text-shadow 0.5s, color 0.2s;
 }
 
 .player-controls>li:hover {
   color: #f3f3f3;
-  text-shadow: 0px 0px 15px rgba(255, 255, 255, 0.8);
+  text-shadow: 0px 0px 20px rgba(255, 255, 255, 0.8);
 }
 
 .player-playlist-container {
@@ -61,10 +66,15 @@ ul, ol {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  -webkit-transition: text-shadow 0.5s, background 0.2s;
+  -moz-transition:    text-shadow 0.5s, background 0.2s;
+  -o-transition:      text-shadow 0.5s, background 0.2s;
+  -ms-transition:     text-shadow 0.5s, background 0.2s;
+  transition:         text-shadow 0.5s, background 0.2s;
 }
 
 .player-playlist>li:hover {
   color: #fff;
-  text-shadow: 0px 0px 6px rgba(255, 255, 255, 0.5);
-  background-color: rgba(0, 0, 0, 0.3);
+  text-shadow: 0px 0px 10px rgba(255, 255, 255, 0.5);
+  background-color: rgba(20, 20, 20, 0.3);
 }
