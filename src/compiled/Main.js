@@ -24,9 +24,10 @@
             });
           });
         });
-        return player.show(function() {
+        player.show(function() {
           return player.changeTrack(player.getRandomTrack());
         });
+        return app.on('progress', player.setProgress);
       });
     });
   });

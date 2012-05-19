@@ -17,9 +17,8 @@ class Euphony
       delay: 20
       callback: (data) =>
         {now, end} = data
-        @onprogess?(now / end)
-        if @player.playing
-          @rain.update(now * 1000)
+        @onprogress?(now / end)
+        @rain.update(now * 1000)
 
   initScene: ->
     @scene = new Scene('#canvas')
@@ -59,13 +58,19 @@ class Euphony
     @player.start()
 
   resume: =>
-    @player.start()
+    @player.currentTime += 1e-6
+    @player.resume()
 
   stop: =>
     @player.stop()
 
   pause: =>
     @player.pause()
+
+  setCurrentTime: (currentTime) =>
+    @player.pause()
+    @player.currentTime = currentTime
+    @player.resume()
 
   on: (eventName, callback) ->
     @["on#{eventName}"] = callback

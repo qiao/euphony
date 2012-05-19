@@ -8,6 +8,8 @@
     PlayerWidget.name = 'PlayerWidget';
 
     function PlayerWidget(container) {
+      this.setProgress = __bind(this.setProgress, this);
+
       this.getRandomTrack = __bind(this.getRandomTrack, this);
 
       this.onchangetrack = __bind(this.onchangetrack, this);
@@ -30,14 +32,16 @@
 
       var _this = this;
       this.$container = $(container);
-      this.$controlsContainer = $('.player-controls', this.container);
-      this.$playlistContainer = $('.player-playlist-container', this.container);
-      this.$playlist = $('.player-playlist', this.container);
-      this.$prevBtn = $('.player-prev', this.container);
-      this.$nextBtn = $('.player-next', this.container);
-      this.$playBtn = $('.player-play', this.container);
-      this.$stopBtn = $('.player-stop', this.container);
-      this.$pauseBtn = $('.player-pause', this.container);
+      this.$controlsContainer = $('.player-controls', this.$container);
+      this.$playlistContainer = $('.player-playlist-container', this.$container);
+      this.$progressContainer = $('.player-progress-container', this.$container);
+      this.$progressBar = $('.player-progress-bar', this.$container);
+      this.$playlist = $('.player-playlist', this.$container);
+      this.$prevBtn = $('.player-prev', this.$container);
+      this.$nextBtn = $('.player-next', this.$container);
+      this.$playBtn = $('.player-play', this.$container);
+      this.$stopBtn = $('.player-stop', this.$container);
+      this.$pauseBtn = $('.player-pause', this.$container);
       this.$prevBtn.click(function() {
         return _this.prev();
       });
@@ -72,7 +76,7 @@
     }
 
     PlayerWidget.prototype.onresize = function() {
-      return this.$playlistContainer.height(this.$container.innerHeight() - this.$controlsContainer.outerHeight()).nanoScroller();
+      return this.$playlistContainer.height(this.$container.innerHeight() - this.$controlsContainer.outerHeight(true) - this.$progressContainer.outerHeight(true)).nanoScroller();
     };
 
     PlayerWidget.prototype.show = function(callback) {
@@ -141,6 +145,10 @@
 
     PlayerWidget.prototype.getRandomTrack = function() {
       return this.playlist[Math.floor(Math.random() * this.playlist.length)];
+    };
+
+    PlayerWidget.prototype.setProgress = function(progress) {
+      return this.$progressBar.width(this.$progressContainer.width() * progress);
     };
 
     return PlayerWidget;

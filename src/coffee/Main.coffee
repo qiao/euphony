@@ -24,3 +24,4 @@ $(document)
                 player.play()
         player.show ->
           player.changeTrack(player.getRandomTrack())
+        app.on('progress', player.setProgress)
