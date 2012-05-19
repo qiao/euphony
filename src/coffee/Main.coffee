@@ -13,11 +13,11 @@ $(document)
       app.getBuiltinMidiIndex (index) ->
         window.player = new PlayerWidget('#player')
         player.setPlaylist(index)
-        player.bind('pause', app.pause)
-        player.bind('resume', app.resume)
-        player.bind('stop', app.stop)
-        player.bind('play', app.play)
-        player.bind 'changetrack', (filename) ->
+        player.on('pause', app.pause)
+        player.on('resume', app.resume)
+        player.on('stop', app.stop)
+        player.on('play', app.play)
+        player.on 'changetrack', (filename) ->
           loader.message 'Loading MIDI', ->
             app.setBuiltinMidi filename, ->
               loader.stop ->

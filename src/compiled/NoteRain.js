@@ -24,7 +24,7 @@
       })();
     }
 
-    NoteRain.prototype.bind = function(eventName, callback) {
+    NoteRain.prototype.on = function(eventName, callback) {
       return this["on" + eventName] = callback;
     };
 

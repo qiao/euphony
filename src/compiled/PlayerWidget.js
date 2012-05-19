@@ -96,7 +96,7 @@
       return this.$playlistContainer.nanoScroller();
     };
 
-    PlayerWidget.prototype.bind = function(eventName, callback) {
+    PlayerWidget.prototype.on = function(eventName, callback) {
       return this["" + eventName + "Callback"] = callback;
     };
 

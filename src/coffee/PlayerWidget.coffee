@@ -51,7 +51,7 @@ class PlayerWidget
       @$playlist.append($('<li>').text(trackName))
     @$playlistContainer.nanoScroller()
 
-  bind: (eventName, callback) ->
+  on: (eventName, callback) ->
     @["#{eventName}Callback"] = callback
 
   onplay: =>

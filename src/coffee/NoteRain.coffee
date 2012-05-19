@@ -14,7 +14,7 @@ class NoteRain
   # bind the callback of an event
   # only supported event is `progress`, the callback will be called with
   # the progress of the mesh-building procedure.
-  bind: (eventName, callback) ->
+  on: (eventName, callback) ->
     @["on#{eventName}"] = callback
 
   # midiData is acquired from MIDI.Player.data
