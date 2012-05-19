@@ -51,9 +51,12 @@ class LoaderWidget
       .height(height)
 
 
-  message: (msg) =>
-    @start() unless @isActive
+  message: (msg, callback) =>
     @text.html(msg) if msg?
+    if @isActive
+      callback?()
+    else
+      @start(callback)
 
   start: (callback) =>
     @overlay.fadeIn =>

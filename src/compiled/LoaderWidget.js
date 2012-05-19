@@ -53,12 +53,14 @@
       return this.overlay.width(width).height(height);
     };
 
-    LoaderWidget.prototype.message = function(msg) {
-      if (!this.isActive) {
-        this.start();
-      }
+    LoaderWidget.prototype.message = function(msg, callback) {
       if (msg != null) {
-        return this.text.html(msg);
+        this.text.html(msg);
+      }
+      if (this.isActive) {
+        return typeof callback === "function" ? callback() : void 0;
+      } else {
+        return this.start(callback);
       }
     };
 
