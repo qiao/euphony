@@ -18,7 +18,9 @@ $(document)
         player.bind('stop', app.stop)
         player.bind('play', app.play)
         player.bind 'changetrack', (filename) ->
+          loader.message('Loading MIDI')
           app.setBuiltinMidi filename, ->
-            player.play()
+            loader.stop ->
+              player.play()
         player.show ->
           player.changeTrack(player.getRandomTrack())

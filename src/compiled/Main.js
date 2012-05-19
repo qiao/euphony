@@ -16,8 +16,11 @@
         player.bind('stop', app.stop);
         player.bind('play', app.play);
         player.bind('changetrack', function(filename) {
+          loader.message('Loading MIDI');
           return app.setBuiltinMidi(filename, function() {
-            return player.play();
+            return loader.stop(function() {
+              return player.play();
+            });
           });
         });
         return player.show(function() {

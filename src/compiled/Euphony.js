@@ -74,28 +74,20 @@
       if (localStorage[filename]) {
         return this.setMidiFile(localStorage[filename], callback);
       }
-      return loader.start(function() {
-        return DOMLoader.sendRequest({
-          url: "tracks/" + filename,
-          progress: function(event) {
-            return loader.message('Loading MIDI File');
-          },
-          callback: function(response) {
-            var midiData;
-            midiData = response.responseText;
-            _this.setMidiFile(response.responseText, callback);
-            return localStorage[filename] = midiData;
-          }
-        });
+      return $.ajax({
+        url: "tracks/" + filename,
+        dataType: 'text',
+        success: function(data) {
+          _this.setMidiFile(data, callback);
+          return localStorage[filename] = data;
+        }
       });
     };
 
     Euphony.prototype.setMidiFile = function(midiFile, callback) {
       var _this = this;
       return this.player.loadFile(midiFile, function() {
-        return loader.stop(function() {
-          return _this.rain.setMidiData(_this.player.data, callback);
-        });
+        return _this.rain.setMidiData(_this.player.data, callback);
       });
     };
 

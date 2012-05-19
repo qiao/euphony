@@ -38,22 +38,17 @@ class Euphony
   setBuiltinMidi: (filename, callback) ->
     if localStorage[filename]
       return @setMidiFile(localStorage[filename], callback)
-    loader.start =>
-      DOMLoader.sendRequest
-        url: "tracks/#{filename}"
-        progress: (event) ->
-          #loader.message('Loading MIDI File ' + Math.round(event.loaded / event.total * 100) + '%')
-          loader.message('Loading MIDI File')
-        callback: (response) =>
-          midiData = response.responseText
-          @setMidiFile(response.responseText,callback)
-          localStorage[filename] = midiData
+    $.ajax
+      url: "tracks/#{filename}"
+      dataType: 'text'
+      success: (data) =>
+        @setMidiFile(data, callback)
+        localStorage[filename] = data
 
   setMidiFile: (midiFile, callback) ->
     # load tracks
     @player.loadFile midiFile, =>
-      loader.stop =>
-        @rain.setMidiData(@player.data, callback)
+      @rain.setMidiData(@player.data, callback)
 
   play: =>
     if @started then @resume() else @start()
