@@ -8,6 +8,8 @@
     PlayerWidget.name = 'PlayerWidget';
 
     function PlayerWidget(container) {
+      this.getRandomTrack = __bind(this.getRandomTrack, this);
+
       this.onchangetrack = __bind(this.onchangetrack, this);
 
       this.onnext = __bind(this.onnext, this);
@@ -22,47 +24,47 @@
 
       this.onplay = __bind(this.onplay, this);
 
-      this.oninit = __bind(this.oninit, this);
+      this.show = __bind(this.show, this);
 
       this.onresize = __bind(this.onresize, this);
 
       var _this = this;
-      this.container = $(container);
-      this.controlsContainer = $('.player-controls', this.container);
-      this.playlistContainer = $('.player-playlist-container', this.container);
-      this.playlist = $('.player-playlist', this.container);
-      this.prevBtn = $('.player-prev', this.container);
-      this.nextBtn = $('.player-next', this.container);
-      this.playBtn = $('.player-play', this.container);
-      this.stopBtn = $('.player-stop', this.container);
-      this.pauseBtn = $('.player-pause', this.container);
-      this.prevBtn.click(function() {
+      this.$container = $(container);
+      this.$controlsContainer = $('.player-controls', this.container);
+      this.$playlistContainer = $('.player-playlist-container', this.container);
+      this.$playlist = $('.player-playlist', this.container);
+      this.$prevBtn = $('.player-prev', this.container);
+      this.$nextBtn = $('.player-next', this.container);
+      this.$playBtn = $('.player-play', this.container);
+      this.$stopBtn = $('.player-stop', this.container);
+      this.$pauseBtn = $('.player-pause', this.container);
+      this.$prevBtn.click(function() {
         return _this.prev();
       });
-      this.nextBtn.click(function() {
+      this.$nextBtn.click(function() {
         return _this.next();
       });
-      this.stopBtn.click(function() {
+      this.$stopBtn.click(function() {
         return _this.stop();
       });
-      this.pauseBtn.click(function() {
+      this.$pauseBtn.click(function() {
         return _this.pause();
       });
-      this.playBtn.click(function() {
+      this.$playBtn.click(function() {
         if (_this.current === 'paused') {
           return _this.resume();
         } else {
           return _this.play();
         }
       });
-      this.playlist.click(function(event) {
+      this.$playlist.click(function(event) {
         var target;
         target = $(event.target);
         if (target.is('li')) {
           return _this.changeTrack(target.text());
         }
       });
-      this.container.on('mousewheel', function(event) {
+      this.$container.on('mousewheel', function(event) {
         return event.stopPropagation();
       });
       this.onresize();
@@ -70,26 +72,28 @@
     }
 
     PlayerWidget.prototype.onresize = function() {
-      return this.playlistContainer.height(this.container.innerHeight() - this.controlsContainer.outerHeight()).nanoScroller();
+      return this.$playlistContainer.height(this.$container.innerHeight() - this.$controlsContainer.outerHeight()).nanoScroller();
     };
 
-    PlayerWidget.prototype.oninit = function() {
-      return this.container.animate({
+    PlayerWidget.prototype.show = function(callback) {
+      return this.$container.animate({
         left: '0px'
       }, {
         duration: 1000,
-        easing: 'easeInOutCubic'
+        easing: 'easeInOutCubic',
+        complete: callback
       });
     };
 
     PlayerWidget.prototype.setPlaylist = function(playlist) {
       var trackName, _i, _len;
-      this.playlist.html('');
+      this.playlist = playlist;
+      this.$playlist.html('');
       for (_i = 0, _len = playlist.length; _i < _len; _i++) {
         trackName = playlist[_i];
-        this.playlist.append($('<li>').text(trackName));
+        this.$playlist.append($('<li>').text(trackName));
       }
-      return this.playlistContainer.nanoScroller();
+      return this.$playlistContainer.nanoScroller();
     };
 
     PlayerWidget.prototype.bind = function(eventName, callback) {
@@ -97,26 +101,26 @@
     };
 
     PlayerWidget.prototype.onplay = function() {
-      this.playBtn.hide();
-      this.pauseBtn.show();
+      this.$playBtn.hide();
+      this.$pauseBtn.show();
       return typeof this.playCallback === "function" ? this.playCallback() : void 0;
     };
 
     PlayerWidget.prototype.onpause = function() {
-      this.pauseBtn.hide();
-      this.playBtn.show();
+      this.$pauseBtn.hide();
+      this.$playBtn.show();
       return typeof this.pauseCallback === "function" ? this.pauseCallback() : void 0;
     };
 
     PlayerWidget.prototype.onresume = function() {
-      this.playBtn.hide();
-      this.pauseBtn.show();
+      this.$playBtn.hide();
+      this.$pauseBtn.show();
       return typeof this.resumeCallback === "function" ? this.resumeCallback() : void 0;
     };
 
     PlayerWidget.prototype.onstop = function() {
-      this.pauseBtn.hide();
-      this.playBtn.show();
+      this.$pauseBtn.hide();
+      this.$playBtn.show();
       return typeof this.stopCallback === "function" ? this.stopCallback() : void 0;
     };
 
@@ -129,10 +133,15 @@
     };
 
     PlayerWidget.prototype.onchangetrack = function(trackName) {
+      this.stop();
       return typeof this.changetrackCallback === "function" ? this.changetrackCallback(trackName) : void 0;
     };
 
     PlayerWidget.prototype.changeTrack = PlayerWidget.prototype.onchangetrack;
+
+    PlayerWidget.prototype.getRandomTrack = function() {
+      return this.playlist[Math.floor(Math.random() * this.playlist.length)];
+    };
 
     return PlayerWidget;
 

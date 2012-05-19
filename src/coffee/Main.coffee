@@ -13,13 +13,12 @@ $(document)
       app.getBuiltinMidiIndex (index) ->
         window.player = new PlayerWidget('#player')
         player.setPlaylist(index)
-        player.init()
         player.bind('pause', app.pause)
         player.bind('resume', app.resume)
         player.bind('stop', app.stop)
         player.bind('play', app.play)
         player.bind 'changetrack', (filename) ->
-          player.stop()
           app.setBuiltinMidi filename, ->
             player.play()
-        player.changeTrack(index[10])
+        player.show ->
+          player.changeTrack(player.getRandomTrack())

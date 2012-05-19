@@ -11,18 +11,18 @@
       return app.getBuiltinMidiIndex(function(index) {
         window.player = new PlayerWidget('#player');
         player.setPlaylist(index);
-        player.init();
         player.bind('pause', app.pause);
         player.bind('resume', app.resume);
         player.bind('stop', app.stop);
         player.bind('play', app.play);
         player.bind('changetrack', function(filename) {
-          player.stop();
           return app.setBuiltinMidi(filename, function() {
             return player.play();
           });
         });
-        return player.changeTrack(index[10]);
+        return player.show(function() {
+          return player.changeTrack(player.getRandomTrack());
+        });
       });
     });
   });
