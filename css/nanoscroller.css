@@ -31,17 +31,11 @@
   -ms-transition        : .2s;
   -o-transition         : .2s;
   transition            : .2s;
-  -moz-border-radius    : 5px;
-  -webkit-border-radius : 5px;  
-  border-radius         : 5px;
 }
 .nano > .pane > .slider {
-  background: rgba(0,0,0,.5);
+  background: rgba(200,200,200,0.15);
   position              : relative;
   margin                : 0 1px;
-  -moz-border-radius    : 3px;
-  -webkit-border-radius : 3px;  
-  border-radius         : 3px;
 }
 .nano:hover > .pane, .pane.active {
   visibility : visible\9; /* Target only IE7 and IE8 with this hack */
