@@ -71,7 +71,7 @@
 
     Euphony.prototype.setBuiltinMidi = function(filename, callback) {
       var _this = this;
-      if (localStorage[filename]) {
+      if (typeof localStorage !== "undefined" && localStorage !== null ? localStorage[filename] : void 0) {
         return this.setMidiFile(localStorage[filename], callback);
       }
       return $.ajax({
@@ -79,7 +79,7 @@
         dataType: 'text',
         success: function(data) {
           _this.setMidiFile(data, callback);
-          return localStorage[filename] = data;
+          return typeof localStorage !== "undefined" && localStorage !== null ? localStorage[filename] = data : void 0;
         }
       });
     };

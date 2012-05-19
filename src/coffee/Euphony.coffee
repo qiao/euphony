@@ -36,14 +36,14 @@ class Euphony
       callback(@midiIndex)
 
   setBuiltinMidi: (filename, callback) ->
-    if localStorage[filename]
+    if localStorage?[filename]
       return @setMidiFile(localStorage[filename], callback)
     $.ajax
       url: "tracks/#{filename}"
       dataType: 'text'
       success: (data) =>
         @setMidiFile(data, callback)
-        localStorage[filename] = data
+        localStorage?[filename] = data
 
   setMidiFile: (midiFile, callback) ->
     # load tracks
