@@ -161,6 +161,8 @@ class PianoKey
     @model.position.copy(position)
 
     @keyUpSpeed = keyUpSpeed
+
+    @originalColor = material.color.getHex()
     @pressedColor = noteToColor(note)
 
     # set original and pressed y coordinate
@@ -169,10 +171,12 @@ class PianoKey
 
   press: ->
     @model.position.y = @pressedY
+    @model.material.color.setHex(@pressedColor)
     @model.material.emissive.setHex(@pressedColor)
     @isPressed = true
 
   release: ->
+    @model.material.color.setHex(@originalColor)
     @model.material.emissive.setHex(0x000000)
     @isPressed = false
 

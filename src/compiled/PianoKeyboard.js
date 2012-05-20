@@ -194,6 +194,7 @@
       this.model = new THREE.Mesh(geometry, material);
       this.model.position.copy(position);
       this.keyUpSpeed = keyUpSpeed;
+      this.originalColor = material.color.getHex();
       this.pressedColor = noteToColor(note);
       this.originalY = position.y;
       this.pressedY = this.originalY - keyDip;
@@ -201,11 +202,13 @@
 
     PianoKey.prototype.press = function() {
       this.model.position.y = this.pressedY;
+      this.model.material.color.setHex(this.pressedColor);
       this.model.material.emissive.setHex(this.pressedColor);
       return this.isPressed = true;
     };
 
     PianoKey.prototype.release = function() {
+      this.model.material.color.setHex(this.originalColor);
       this.model.material.emissive.setHex(0x000000);
       return this.isPressed = false;
     };
