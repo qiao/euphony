@@ -60,7 +60,7 @@
       offset = MIDI.pianoKeyOffset;
       return function(note) {
         if (map[note - offset] == null) {
-          return 0;
+          return 0x000000;
         }
         return parseInt(map[note - offset].hex, 16);
       };
@@ -180,13 +180,13 @@
       _ref = keyInfo[note], keyType = _ref.keyType, keyCenterPosX = _ref.keyCenterPosX;
       if (keyType === Black) {
         geometry = new THREE.CubeGeometry(blackKeyWidth, blackKeyHeight, blackKeyLength);
-        material = new THREE.MeshLambertMaterial({
+        material = new THREE.MeshPhongMaterial({
           color: blackKeyColor
         });
         position = new THREE.Vector3(keyCenterPosX, blackKeyPosY, blackKeyPosZ);
       } else {
         geometry = new THREE.CubeGeometry(whiteKeyWidth, whiteKeyHeight, whiteKeyLength);
-        material = new THREE.MeshLambertMaterial({
+        material = new THREE.MeshPhongMaterial({
           color: whiteKeyColor
         });
         position = new THREE.Vector3(keyCenterPosX, 0, 0);
@@ -201,10 +201,12 @@
 
     PianoKey.prototype.press = function() {
       this.model.position.y = this.pressedY;
+      this.model.material.emissive.setHex(this.pressedColor);
       return this.isPressed = true;
     };
 
     PianoKey.prototype.release = function() {
+      this.model.material.emissive.setHex(0x000000);
       return this.isPressed = false;
     };
 

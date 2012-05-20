@@ -36,7 +36,7 @@ class PianoKeyboardDesign
     map = MusicTheory.Synesthesia.map('August Aeppli (1940)')
     offset = MIDI.pianoKeyOffset
     (note) ->
-      return 0 unless map[note - offset]?
+      return 0x000000 unless map[note - offset]?
       parseInt(map[note - offset].hex, 16)
 
   constructor: ->
@@ -149,11 +149,11 @@ class PianoKey
 
     if keyType is Black
       geometry = new THREE.CubeGeometry(blackKeyWidth, blackKeyHeight, blackKeyLength)
-      material = new THREE.MeshLambertMaterial(color: blackKeyColor)
+      material = new THREE.MeshPhongMaterial(color: blackKeyColor)
       position = new THREE.Vector3(keyCenterPosX, blackKeyPosY, blackKeyPosZ)
     else
       geometry = new THREE.CubeGeometry(whiteKeyWidth, whiteKeyHeight, whiteKeyLength)
-      material = new THREE.MeshLambertMaterial(color: whiteKeyColor)
+      material = new THREE.MeshPhongMaterial(color: whiteKeyColor)
       position = new THREE.Vector3(keyCenterPosX, 0, 0)
 
     # create key mesh
@@ -169,9 +169,11 @@ class PianoKey
 
   press: ->
     @model.position.y = @pressedY
+    @model.material.emissive.setHex(@pressedColor)
     @isPressed = true
 
   release: ->
+    @model.material.emissive.setHex(0x000000)
     @isPressed = false
 
   update: ->
