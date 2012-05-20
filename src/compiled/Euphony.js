@@ -91,7 +91,11 @@
         dataType: 'text',
         success: function(data) {
           _this.setMidiFile(data, callback);
-          return typeof localStorage !== "undefined" && localStorage !== null ? localStorage[filename] = data : void 0;
+          try {
+            return typeof localStorage !== "undefined" && localStorage !== null ? localStorage[filename] = data : void 0;
+          } catch (e) {
+            return typeof console !== "undefined" && console !== null ? console.error('localStorage quota limit reached') : void 0;
+          }
         }
       });
     };

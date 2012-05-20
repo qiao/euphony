@@ -47,7 +47,10 @@ class Euphony
       dataType: 'text'
       success: (data) =>
         @setMidiFile(data, callback)
-        localStorage?[filename] = data
+        try
+          localStorage?[filename] = data
+        catch e
+          console?.error('localStorage quota limit reached')
 
   setMidiFile: (midiFile, callback) ->
     @player.loadFile midiFile, =>
