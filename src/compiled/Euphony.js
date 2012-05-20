@@ -81,18 +81,21 @@
       });
     };
 
-    Euphony.prototype.setBuiltinMidi = function(filename, callback) {
+    Euphony.prototype.setBuiltinMidi = function(id, callback) {
       var _this = this;
-      if (typeof localStorage !== "undefined" && localStorage !== null ? localStorage[filename] : void 0) {
-        return this.setMidiFile(localStorage[filename], callback);
+      if (!((0 <= id && id < this.midiIndex.length))) {
+        return;
+      }
+      if (typeof localStorage !== "undefined" && localStorage !== null ? localStorage[id] : void 0) {
+        return this.setMidiFile(localStorage[id], callback);
       }
       return $.ajax({
-        url: "tracks/" + filename,
+        url: "tracks/" + this.midiIndex[id],
         dataType: 'text',
         success: function(data) {
           _this.setMidiFile(data, callback);
           try {
-            return typeof localStorage !== "undefined" && localStorage !== null ? localStorage[filename] = data : void 0;
+            return typeof localStorage !== "undefined" && localStorage !== null ? localStorage[id] = data : void 0;
           } catch (e) {
             return typeof console !== "undefined" && console !== null ? console.error('localStorage quota limit reached') : void 0;
           }

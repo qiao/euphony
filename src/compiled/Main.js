@@ -17,9 +17,12 @@
         player.on('stop', app.stop);
         player.on('play', app.play);
         player.on('setprogress', app.setProgress);
-        player.on('settrack', function(filename) {
+        player.on('settrack', function(trackId) {
+          if (!((0 <= trackId && trackId < playlist.length))) {
+            return;
+          }
           return loader.message('Loading MIDI', function() {
-            return app.setBuiltinMidi(filename, function() {
+            return app.setBuiltinMidi(trackId, function() {
               return loader.stop(function() {
                 return player.play();
               });
@@ -31,11 +34,11 @@
           var candidates, hash, id;
           hash = window.location.hash.slice(1);
           if (hash) {
-            return player.setTrack(window.decodeURIComponent(hash));
+            return player.setTrack(window.decodeURIComponent(hash) - 1);
           } else {
             candidates = [3, 5, 6, 7, 10, 11, 12, 13, 14, 16, 19, 30];
             id = Math.floor(Math.random() * candidates.length);
-            return player.setTrack(playlist[id]);
+            return player.setTrack(candidates[id]);
           }
         });
       });

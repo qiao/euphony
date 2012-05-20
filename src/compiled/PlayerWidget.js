@@ -44,10 +44,10 @@
       this.$stopBtn = $('.player-stop', this.$container);
       this.$pauseBtn = $('.player-pause', this.$container);
       this.$prevBtn.click(function() {
-        return _this.prev();
+        return _this.onprev();
       });
       this.$nextBtn.click(function() {
-        return _this.next();
+        return _this.onnext();
       });
       this.$stopBtn.click(function() {
         return _this.stop();
@@ -68,10 +68,11 @@
         return typeof _this.setprogressCallback === "function" ? _this.setprogressCallback(progress) : void 0;
       });
       this.$playlist.click(function(event) {
-        var target;
-        target = $(event.target);
-        if (target.is('li')) {
-          return _this.setTrack(target.text());
+        var $list, $target;
+        $target = $(event.target);
+        if ($target.is('li')) {
+          $list = $('li', _this.$playlist);
+          return _this.setTrack($list.index($target));
         }
       });
       this.$container.on('mousewheel', function(event) {
@@ -135,26 +136,33 @@
     };
 
     PlayerWidget.prototype.onprev = function() {
-      return typeof this.prevCallback === "function" ? this.prevCallback() : void 0;
+      if (!(this.currentTrackId > 0)) {
+        return;
+      }
+      this.currentTrackId -= 1;
+      return this.setTrack(this.currentTrackId);
     };
 
     PlayerWidget.prototype.onnext = function() {
-      return typeof this.nextCallback === "function" ? this.nextCallback() : void 0;
+      if (!(this.currentTrackId < this.playlist.length - 1)) {
+        return;
+      }
+      this.currentTrackId += 1;
+      return this.setTrack(this.currentTrackId);
     };
 
-    PlayerWidget.prototype.onsettrack = function(trackName) {
+    PlayerWidget.prototype.onsettrack = function(trackId) {
       var _ref;
       this.stop();
       if ((_ref = this.$currentTrack) != null) {
         _ref.removeClass('player-current-track');
       }
-      this.$currentTrack = this.$playlist.find("li").filter(function(i) {
-        return $(this).text() === trackName;
-      }).addClass('player-current-track');
+      this.$currentTrack = this.$playlist.find("li").eq(trackId).addClass('player-current-track');
       if (typeof this.settrackCallback === "function") {
-        this.settrackCallback(trackName);
+        this.settrackCallback(trackId);
       }
-      return window.location.hash = window.encodeURIComponent(trackName);
+      this.currentTrackId = trackId;
+      return window.location.hash = window.encodeURIComponent(trackId + 1);
     };
 
     PlayerWidget.prototype.setTrack = PlayerWidget.prototype.onsettrack;

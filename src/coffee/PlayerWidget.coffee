@@ -16,8 +16,8 @@ class PlayerWidget
     @$stopBtn  = $('.player-stop', @$container)
     @$pauseBtn = $('.player-pause', @$container)
 
-    @$prevBtn.click  => @prev()
-    @$nextBtn.click  => @next()
+    @$prevBtn.click  => @onprev()
+    @$nextBtn.click  => @onnext()
     @$stopBtn.click  => @stop()
     @$pauseBtn.click => @pause()
     @$playBtn.click =>
@@ -28,9 +28,10 @@ class PlayerWidget
       @setprogressCallback?(progress)
 
     @$playlist.click (event) =>
-      target = $(event.target)
-      if target.is('li')
-        @setTrack(target.text())
+      $target = $(event.target)
+      if $target.is('li')
+        $list = $('li', @$playlist)
+        @setTrack($list.index($target))
 
     @$container.on 'mousewheel', (event) ->
       event.stopPropagation()
@@ -87,20 +88,25 @@ class PlayerWidget
     @stopCallback?()
 
   onprev: =>
-    @prevCallback?()
+    return unless @currentTrackId > 0
+    @currentTrackId -= 1
+    @setTrack(@currentTrackId)
 
   onnext: =>
-    @nextCallback?()
+    return unless @currentTrackId < @playlist.length - 1
+    @currentTrackId += 1
+    @setTrack(@currentTrackId)
 
-  onsettrack: (trackName) =>
+  onsettrack: (trackId) =>
     @stop()
     @$currentTrack?.removeClass('player-current-track')
     @$currentTrack = @$playlist
       .find("li")
-      .filter((i) -> $(this).text() is trackName)
+      .eq(trackId)
       .addClass('player-current-track')
-    @settrackCallback?(trackName)
-    window.location.hash = window.encodeURIComponent(trackName)
+    @settrackCallback?(trackId)
+    @currentTrackId = trackId
+    window.location.hash = window.encodeURIComponent(trackId + 1)
 
   setTrack: @::onsettrack
 

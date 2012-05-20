@@ -39,16 +39,17 @@ class Euphony
       @midiIndex = index
       callback(@midiIndex)
 
-  setBuiltinMidi: (filename, callback) ->
-    if localStorage?[filename]
-      return @setMidiFile(localStorage[filename], callback)
+  setBuiltinMidi: (id, callback) ->
+    return unless 0 <= id < @midiIndex.length
+    if localStorage?[id]
+      return @setMidiFile(localStorage[id], callback)
     $.ajax
-      url: "tracks/#{filename}"
+      url: "tracks/#{@midiIndex[id]}"
       dataType: 'text'
       success: (data) =>
         @setMidiFile(data, callback)
         try
-          localStorage?[filename] = data
+          localStorage?[id] = data
         catch e
           console?.error('localStorage quota limit reached')
 
