@@ -75,7 +75,9 @@ class NoteRain
     # the sleep tasks will be inserted into the mesh-building procedure
     # in order to not to block the rendering of the browser UI
     sleepTask = (done) ->
-      setTimeout(done, 0)
+      setTimeout (->
+        done(null)
+      ), 0
 
     # tasks to build the meshes
     # all the tasks are asynchronous
@@ -122,7 +124,7 @@ class NoteRain
             mesh = new THREE.Mesh(geometry, material)
             mesh.position.set(x, y, z)
             @model.add(mesh)
-          done()
+          done(null)
 
     # use the `async` library to execute the tasks in series
     async.series tasks, ->

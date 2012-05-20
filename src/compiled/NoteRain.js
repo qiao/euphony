@@ -87,7 +87,9 @@
         return groups;
       };
       sleepTask = function(done) {
-        return setTimeout(done, 0);
+        return setTimeout((function() {
+          return done(null);
+        }), 0);
       };
       tasks = [];
       SIZE_OF_EACH_GROUP = 100;
@@ -120,7 +122,7 @@
               mesh.position.set(x, y, z);
               _this.model.add(mesh);
             }
-            return done();
+            return done(null);
           };
         })(group));
       }
