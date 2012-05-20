@@ -5,6 +5,7 @@
     return false;
   }).on('ready', function() {
     window.loader = new LoaderWidget();
+    loader.message('Downloading');
     window.app = new Euphony();
     app.initScene();
     return app.initMidi(function() {

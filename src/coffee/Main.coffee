@@ -5,6 +5,7 @@ $(document)
 
     # global loader to show progress
     window.loader = new LoaderWidget()
+    loader.message('Downloading')
 
     #start app
     window.app = new Euphony()
