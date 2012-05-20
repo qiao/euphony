@@ -94,6 +94,10 @@ class PlayerWidget
 
   onsettrack: (trackName) =>
     @stop()
+    @$currentTrack?.removeClass('player-current-track')
+    @$currentTrack = @$playlist
+      .find("li:contains('#{trackName}')")
+      .addClass('player-current-track')
     @settrackCallback?(trackName)
     window.location.hash = window.encodeURIComponent(trackName)
 
