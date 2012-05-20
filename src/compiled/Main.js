@@ -9,9 +9,9 @@
     window.app = new Euphony();
     app.initScene();
     return app.initMidi(function() {
-      return app.getBuiltinMidiIndex(function(index) {
+      return app.getBuiltinMidiIndex(function(playlist) {
         window.player = new PlayerWidget('#player');
-        player.setPlaylist(index);
+        player.setPlaylist(playlist);
         player.on('pause', app.pause);
         player.on('resume', app.resume);
         player.on('stop', app.stop);
@@ -28,12 +28,14 @@
         });
         app.on('progress', player.displayProgress);
         return player.show(function() {
-          var hash;
+          var candidates, hash, id;
           hash = window.location.hash.slice(1);
           if (hash) {
             return player.setTrack(window.decodeURIComponent(hash));
           } else {
-            return player.setTrack(player.getRandomTrack());
+            candidates = [3, 5, 6, 7, 10, 11, 12, 13, 14, 16, 19, 30];
+            id = Math.floor(Math.random() * candidates.length);
+            return player.setTrack(playlist[id]);
           }
         });
       });

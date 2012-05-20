@@ -11,9 +11,9 @@ $(document)
     window.app = new Euphony()
     app.initScene()
     app.initMidi ->
-      app.getBuiltinMidiIndex (index) ->
+      app.getBuiltinMidiIndex (playlist) ->
         window.player = new PlayerWidget('#player')
-        player.setPlaylist(index)
+        player.setPlaylist(playlist)
         player.on('pause', app.pause)
         player.on('resume', app.resume)
         player.on('stop', app.stop)
@@ -31,4 +31,6 @@ $(document)
           if hash
             player.setTrack(window.decodeURIComponent(hash))
           else
-            player.setTrack(player.getRandomTrack())
+            candidates = [3, 5, 6, 7, 10, 11, 12, 13, 14, 16, 19, 30]
+            id = Math.floor(Math.random() * candidates.length)
+            player.setTrack(playlist[id])
