@@ -31,7 +31,6 @@ dist:
 		lib/async.min.js \
 		src/compiled/PianoKeyboard.js \
 		src/compiled/NoteRain.js \
-		src/compiled/ParticleSystem.js \
 		src/compiled/Scene.js \
 		src/compiled/LoaderWidget.js \
 		src/compiled/PlayerWidget.js \
