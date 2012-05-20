@@ -148,7 +148,9 @@
       if ((_ref = this.$currentTrack) != null) {
         _ref.removeClass('player-current-track');
       }
-      this.$currentTrack = this.$playlist.find("li:contains('" + trackName + "')").addClass('player-current-track');
+      this.$currentTrack = this.$playlist.find("li").filter(function(i) {
+        return $(this).text() === trackName;
+      }).addClass('player-current-track');
       if (typeof this.settrackCallback === "function") {
         this.settrackCallback(trackName);
       }
