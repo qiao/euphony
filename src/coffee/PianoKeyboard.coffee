@@ -21,6 +21,8 @@ class PianoKeyboardDesign
   blackKeyLength        : 1.00
   blackKeyShiftCDE      : 0.0216
   blackKeyShiftFGAB     : 0.0340
+  blackKeyPosY          : 0.052
+  blackKeyPosZ          : -0.24
   noteDropPosZ4WhiteKey : 0.25
   noteDropPosZ4BlackKey : 0.75
   whiteKeyColor         : 0xffffff
@@ -28,6 +30,14 @@ class PianoKeyboardDesign
   keyDip                : 0.08
   keyUpSpeed            : 0.03
   keyInfo               : [] # an array holding each key's type and position
+
+  # function to convert a note to the corresponding color(synesthesia)
+  noteToColor: do ->
+    map = MusicTheory.Synesthesia.map('August Aeppli (1940)')
+    offset = MIDI.pianoKeyOffset
+    (note) ->
+      return 0 unless map[note - offset]?
+      parseInt(map[note - offset].hex, 16)
 
   constructor: ->
     @keyInfo[i] = {} for i in [0...128]
@@ -120,33 +130,42 @@ class PianoKeyboardDesign
 
 # model of a single piano key
 # usage:
-#   key = new PianoKey
-#     design: new PianoKeyboardDesign
-#     keyType: PianoKeyboardDesign.KeyType.Black
-#     position: new THREE.Vector3(0, 0, 0)
+#   key = new PianoKey(desing, note)
 #   # key.model is an instance of THREE.Mesh and can be added into scenes
 #   key.press()
 #   key.release()
 #   setInterval((-> key.update()), 1000 / 60)
 class PianoKey
-  constructor: ({design, keyType, position}) ->
-    if keyType is design.KeyType.Black
-      {blackKeyWidth, blackKeyHeight, blackKeyLength, blackKeyColor} = design
+  constructor: (design, note) ->
+    {
+      blackKeyWidth, blackKeyHeight, blackKeyLength, blackKeyColor,
+      whiteKeyWidth, whiteKeyHeight, whiteKeyLength, whiteKeyColor,
+      blackKeyPosY, blackKeyPosZ, keyDip, keyInfo,
+      noteToColor, keyUpSpeed, KeyType
+    } = design
+    {Black} = KeyType
+
+    {keyType, keyCenterPosX} = keyInfo[note]
+
+    if keyType is Black
       geometry = new THREE.CubeGeometry(blackKeyWidth, blackKeyHeight, blackKeyLength)
       material = new THREE.MeshLambertMaterial(color: blackKeyColor)
+      position = new THREE.Vector3(keyCenterPosX, blackKeyPosY, blackKeyPosZ)
     else
-      {whiteKeyWidth, whiteKeyHeight, whiteKeyLength, whiteKeyColor} = design
       geometry = new THREE.CubeGeometry(whiteKeyWidth, whiteKeyHeight, whiteKeyLength)
       material = new THREE.MeshLambertMaterial(color: whiteKeyColor)
+      position = new THREE.Vector3(keyCenterPosX, 0, 0)
+
     # create key mesh
     @model = new THREE.Mesh(geometry, material)
     @model.position.copy(position)
 
-    @keyUpSpeed = design.keyUpSpeed
+    @keyUpSpeed = keyUpSpeed
+    @pressedColor = noteToColor(note)
 
     # set original and pressed y coordinate
     @originalY = position.y
-    @pressedY = @originalY - design.keyDip
+    @pressedY = @originalY - keyDip
 
   press: ->
     @model.position.y = @pressedY
@@ -169,33 +188,18 @@ class PianoKey
 #   keyboard.press(30)   # press the key of note 30(G1)
 #   keyboard.release(60) # release the key of note 60(C4)
 class PianoKeyboard
-  constructor: (design) ->
-    {Black} = design.KeyType
-
-    model = new THREE.Object3D()
-    keys = []
-    blackKeyY = (design.blackKeyHeight - design.whiteKeyHeight) / 2 + 0.001
-    blackKeyZ = (design.blackKeyLength - design.whiteKeyLength) / 2 + 0.001
+  constructor: (design, noteToColor) ->
+    @model = new THREE.Object3D()
+    @keys = []
 
     # create piano keys
-    for {keyType, keyCenterPosX}, i in design.keyInfo
-      if keyType is Black
-        pos = new THREE.Vector3(keyCenterPosX, blackKeyY, blackKeyZ)
-      else
-        pos = new THREE.Vector3(keyCenterPosX, 0, 0)
-      key = new PianoKey
-        design: design
-        keyType: keyType
-        position: pos
-      keys.push(key)
+    for note in [0...design.keyInfo.length]
+      key = new PianoKey(design, note)
+      @keys.push(key)
+      if 20 < note < 109 # strip to 88 keys
+        @model.add(key.model)
 
-      if 20 < i < 109 # strip to 88 keys
-        model.add(key.model)
-
-    model.y -= design.whiteKeyHeight / 2
-
-    @keys  = keys
-    @model = model
+    @model.y -= design.whiteKeyHeight / 2
 
   press: (note) ->
     @keys[note].press()

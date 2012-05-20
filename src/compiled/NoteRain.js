@@ -14,14 +14,6 @@
       this.update = __bind(this.update, this);
 
       this.model = new THREE.Object3D();
-      this.noteToColor = (function() {
-        var map, offset;
-        map = MusicTheory.Synesthesia.map('August Aeppli (1940)');
-        offset = MIDI.pianoKeyOffset;
-        return function(note) {
-          return parseInt(map[note - offset].hex, 16);
-        };
-      })();
     }
 
     NoteRain.prototype.on = function(eventName, callback) {
@@ -71,9 +63,9 @@
     };
 
     NoteRain.prototype._buildNoteMeshes = function(noteInfos, callback) {
-      var Black, KeyType, SIZE_OF_EACH_GROUP, blackKeyHeight, blackKeyWidth, group, groups, keyInfo, sleepTask, splitToGroups, tasks, _i, _len, _ref,
+      var Black, KeyType, SIZE_OF_EACH_GROUP, blackKeyHeight, blackKeyWidth, group, groups, keyInfo, noteToColor, sleepTask, splitToGroups, tasks, _i, _len, _ref,
         _this = this;
-      _ref = this.pianoDesign, blackKeyWidth = _ref.blackKeyWidth, blackKeyHeight = _ref.blackKeyHeight, keyInfo = _ref.keyInfo, KeyType = _ref.KeyType;
+      _ref = this.pianoDesign, blackKeyWidth = _ref.blackKeyWidth, blackKeyHeight = _ref.blackKeyHeight, keyInfo = _ref.keyInfo, KeyType = _ref.KeyType, noteToColor = _ref.noteToColor;
       Black = KeyType.Black;
       splitToGroups = function(items, sizeOfEachGroup) {
         var groups, i, numGroups, start, _i;
@@ -110,7 +102,7 @@
               if (keyInfo[noteNumber].keyType === Black) {
                 y += blackKeyHeight / 2;
               }
-              color = _this.noteToColor(noteNumber);
+              color = noteToColor(noteNumber);
               geometry = new THREE.CubeGeometry(blackKeyWidth, length, blackKeyWidth);
               material = new THREE.MeshPhongMaterial({
                 color: color,

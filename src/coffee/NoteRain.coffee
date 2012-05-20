@@ -4,12 +4,6 @@ class NoteRain
 
   constructor: (@pianoDesign) ->
     @model = new THREE.Object3D()
-    # function to convert a note to the corresponding color(synesthesia)
-    @noteToColor = do ->
-      map = MusicTheory.Synesthesia.map('August Aeppli (1940)')
-      offset = MIDI.pianoKeyOffset
-      (note) ->
-        parseInt(map[note - offset].hex, 16)
 
   # bind the callback of an event
   # only supported event is `progress`, the callback will be called with
@@ -59,7 +53,7 @@ class NoteRain
   # given a list of note info, build their meshes
   # the callback is called on finishing this task
   _buildNoteMeshes: (noteInfos, callback) ->
-    {blackKeyWidth, blackKeyHeight, keyInfo, KeyType} = @pianoDesign
+    {blackKeyWidth, blackKeyHeight, keyInfo, KeyType, noteToColor} = @pianoDesign
     {Black} = KeyType
 
     # function to split an array into groups
@@ -114,7 +108,7 @@ class NoteRain
             if keyInfo[noteNumber].keyType is Black
               y += blackKeyHeight / 2
 
-            color = @noteToColor(noteNumber)
+            color = noteToColor(noteNumber)
             geometry = new THREE.CubeGeometry(blackKeyWidth, length, blackKeyWidth)
             material = new THREE.MeshPhongMaterial
               color: color

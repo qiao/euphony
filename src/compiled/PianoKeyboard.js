@@ -36,6 +36,10 @@
 
     PianoKeyboardDesign.prototype.blackKeyShiftFGAB = 0.0340;
 
+    PianoKeyboardDesign.prototype.blackKeyPosY = 0.052;
+
+    PianoKeyboardDesign.prototype.blackKeyPosZ = -0.24;
+
     PianoKeyboardDesign.prototype.noteDropPosZ4WhiteKey = 0.25;
 
     PianoKeyboardDesign.prototype.noteDropPosZ4BlackKey = 0.75;
@@ -49,6 +53,18 @@
     PianoKeyboardDesign.prototype.keyUpSpeed = 0.03;
 
     PianoKeyboardDesign.prototype.keyInfo = [];
+
+    PianoKeyboardDesign.prototype.noteToColor = (function() {
+      var map, offset;
+      map = MusicTheory.Synesthesia.map('August Aeppli (1940)');
+      offset = MIDI.pianoKeyOffset;
+      return function(note) {
+        if (map[note - offset] == null) {
+          return 0;
+        }
+        return parseInt(map[note - offset].hex, 16);
+      };
+    })();
 
     function PianoKeyboardDesign() {
       var i, _i;
@@ -157,27 +173,30 @@
 
     PianoKey.name = 'PianoKey';
 
-    function PianoKey(_arg) {
-      var blackKeyColor, blackKeyHeight, blackKeyLength, blackKeyWidth, design, geometry, keyType, material, position, whiteKeyColor, whiteKeyHeight, whiteKeyLength, whiteKeyWidth;
-      design = _arg.design, keyType = _arg.keyType, position = _arg.position;
-      if (keyType === design.KeyType.Black) {
-        blackKeyWidth = design.blackKeyWidth, blackKeyHeight = design.blackKeyHeight, blackKeyLength = design.blackKeyLength, blackKeyColor = design.blackKeyColor;
+    function PianoKey(design, note) {
+      var Black, KeyType, blackKeyColor, blackKeyHeight, blackKeyLength, blackKeyPosY, blackKeyPosZ, blackKeyWidth, geometry, keyCenterPosX, keyDip, keyInfo, keyType, keyUpSpeed, material, noteToColor, position, whiteKeyColor, whiteKeyHeight, whiteKeyLength, whiteKeyWidth, _ref;
+      blackKeyWidth = design.blackKeyWidth, blackKeyHeight = design.blackKeyHeight, blackKeyLength = design.blackKeyLength, blackKeyColor = design.blackKeyColor, whiteKeyWidth = design.whiteKeyWidth, whiteKeyHeight = design.whiteKeyHeight, whiteKeyLength = design.whiteKeyLength, whiteKeyColor = design.whiteKeyColor, blackKeyPosY = design.blackKeyPosY, blackKeyPosZ = design.blackKeyPosZ, keyDip = design.keyDip, keyInfo = design.keyInfo, noteToColor = design.noteToColor, keyUpSpeed = design.keyUpSpeed, KeyType = design.KeyType;
+      Black = KeyType.Black;
+      _ref = keyInfo[note], keyType = _ref.keyType, keyCenterPosX = _ref.keyCenterPosX;
+      if (keyType === Black) {
         geometry = new THREE.CubeGeometry(blackKeyWidth, blackKeyHeight, blackKeyLength);
         material = new THREE.MeshLambertMaterial({
           color: blackKeyColor
         });
+        position = new THREE.Vector3(keyCenterPosX, blackKeyPosY, blackKeyPosZ);
       } else {
-        whiteKeyWidth = design.whiteKeyWidth, whiteKeyHeight = design.whiteKeyHeight, whiteKeyLength = design.whiteKeyLength, whiteKeyColor = design.whiteKeyColor;
         geometry = new THREE.CubeGeometry(whiteKeyWidth, whiteKeyHeight, whiteKeyLength);
         material = new THREE.MeshLambertMaterial({
           color: whiteKeyColor
         });
+        position = new THREE.Vector3(keyCenterPosX, 0, 0);
       }
       this.model = new THREE.Mesh(geometry, material);
       this.model.position.copy(position);
-      this.keyUpSpeed = design.keyUpSpeed;
+      this.keyUpSpeed = keyUpSpeed;
+      this.pressedColor = noteToColor(note);
       this.originalY = position.y;
-      this.pressedY = this.originalY - design.keyDip;
+      this.pressedY = this.originalY - keyDip;
     }
 
     PianoKey.prototype.press = function() {
@@ -205,36 +224,20 @@
 
     PianoKeyboard.name = 'PianoKeyboard';
 
-    function PianoKeyboard(design) {
+    function PianoKeyboard(design, noteToColor) {
       this.update = __bind(this.update, this);
 
-      var Black, blackKeyY, blackKeyZ, i, key, keyCenterPosX, keyType, keys, model, pos, _i, _len, _ref, _ref1;
-      Black = design.KeyType.Black;
-      model = new THREE.Object3D();
-      keys = [];
-      blackKeyY = (design.blackKeyHeight - design.whiteKeyHeight) / 2 + 0.001;
-      blackKeyZ = (design.blackKeyLength - design.whiteKeyLength) / 2 + 0.001;
-      _ref = design.keyInfo;
-      for (i = _i = 0, _len = _ref.length; _i < _len; i = ++_i) {
-        _ref1 = _ref[i], keyType = _ref1.keyType, keyCenterPosX = _ref1.keyCenterPosX;
-        if (keyType === Black) {
-          pos = new THREE.Vector3(keyCenterPosX, blackKeyY, blackKeyZ);
-        } else {
-          pos = new THREE.Vector3(keyCenterPosX, 0, 0);
-        }
-        key = new PianoKey({
-          design: design,
-          keyType: keyType,
-          position: pos
-        });
-        keys.push(key);
-        if ((20 < i && i < 109)) {
-          model.add(key.model);
+      var key, note, _i, _ref;
+      this.model = new THREE.Object3D();
+      this.keys = [];
+      for (note = _i = 0, _ref = design.keyInfo.length; 0 <= _ref ? _i < _ref : _i > _ref; note = 0 <= _ref ? ++_i : --_i) {
+        key = new PianoKey(design, note);
+        this.keys.push(key);
+        if ((20 < note && note < 109)) {
+          this.model.add(key.model);
         }
       }
-      model.y -= design.whiteKeyHeight / 2;
-      this.keys = keys;
-      this.model = model;
+      this.model.y -= design.whiteKeyHeight / 2;
     }
 
     PianoKeyboard.prototype.press = function(note) {
