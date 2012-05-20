@@ -59,16 +59,20 @@ class Euphony
 
   start: =>
     @player.start()
+    @playing = true
 
   resume: =>
     @player.currentTime += 1e-6
     @player.resume()
+    @playing = true
 
   stop: =>
     @player.stop()
+    @playing = false
 
   pause: =>
     @player.pause()
+    @playing = false
 
   getEndTime: =>
     @player.endTime
@@ -76,7 +80,7 @@ class Euphony
   setCurrentTime: (currentTime) =>
     @player.pause()
     @player.currentTime = currentTime
-    @player.resume()
+    @player.resume() if @playing
 
   setProgress: (progress) =>
     currentTime = @player.endTime * progress

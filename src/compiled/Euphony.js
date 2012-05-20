@@ -112,20 +112,24 @@
     };
 
     Euphony.prototype.start = function() {
-      return this.player.start();
+      this.player.start();
+      return this.playing = true;
     };
 
     Euphony.prototype.resume = function() {
       this.player.currentTime += 1e-6;
-      return this.player.resume();
+      this.player.resume();
+      return this.playing = true;
     };
 
     Euphony.prototype.stop = function() {
-      return this.player.stop();
+      this.player.stop();
+      return this.playing = false;
     };
 
     Euphony.prototype.pause = function() {
-      return this.player.pause();
+      this.player.pause();
+      return this.playing = false;
     };
 
     Euphony.prototype.getEndTime = function() {
@@ -135,7 +139,9 @@
     Euphony.prototype.setCurrentTime = function(currentTime) {
       this.player.pause();
       this.player.currentTime = currentTime;
-      return this.player.resume();
+      if (this.playing) {
+        return this.player.resume();
+      }
     };
 
     Euphony.prototype.setProgress = function(progress) {
