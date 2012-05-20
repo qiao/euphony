@@ -95,6 +95,7 @@ class PlayerWidget
   onsettrack: (trackName) =>
     @stop()
     @settrackCallback?(trackName)
+    window.location.hash = window.encodeURIComponent(trackName)
 
   setTrack: @::onsettrack
 

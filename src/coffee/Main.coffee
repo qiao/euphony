@@ -26,4 +26,8 @@ $(document)
         app.on('progress', player.displayProgress)
 
         player.show ->
-          player.setTrack(player.getRandomTrack())
+          hash = window.location.hash.slice(1)
+          if hash
+            player.setTrack(window.decodeURIComponent(hash))
+          else
+            player.setTrack(player.getRandomTrack())

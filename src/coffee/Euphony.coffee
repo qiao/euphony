@@ -50,7 +50,6 @@ class Euphony
         localStorage?[filename] = data
 
   setMidiFile: (midiFile, callback) ->
-    # load tracks
     @player.loadFile midiFile, =>
       @rain.setMidiData(@player.data, callback)
 
@@ -62,7 +61,7 @@ class Euphony
     @playing = true
 
   resume: =>
-    @player.currentTime += 1e-6
+    @player.currentTime += 1e-6 # bugfix for MIDI.js
     @player.resume()
     @playing = true
 

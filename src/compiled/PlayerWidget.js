@@ -144,7 +144,10 @@
 
     PlayerWidget.prototype.onsettrack = function(trackName) {
       this.stop();
-      return typeof this.settrackCallback === "function" ? this.settrackCallback(trackName) : void 0;
+      if (typeof this.settrackCallback === "function") {
+        this.settrackCallback(trackName);
+      }
+      return window.location.hash = window.encodeURIComponent(trackName);
     };
 
     PlayerWidget.prototype.setTrack = PlayerWidget.prototype.onsettrack;

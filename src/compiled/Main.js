@@ -27,7 +27,13 @@
         });
         app.on('progress', player.displayProgress);
         return player.show(function() {
-          return player.setTrack(player.getRandomTrack());
+          var hash;
+          hash = window.location.hash.slice(1);
+          if (hash) {
+            return player.setTrack(window.decodeURIComponent(hash));
+          } else {
+            return player.setTrack(player.getRandomTrack());
+          }
         });
       });
     });
