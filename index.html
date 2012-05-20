@@ -5,7 +5,12 @@
     <title>Euphony</title>
 
     <link href="./dist/application.css" rel="stylesheet" />
-    <script src="./dist/application.js" type="text/javascript"></script>
+    <script src="./lib/Detector.js" type="text/javascript"></script>
+    <script type="text/javascript">
+      if (!Detector.webgl) {
+        window.location = './notsupported.html';
+      }
+    </script>
 
   </head>
   <body>
@@ -36,6 +41,8 @@
     <footer id="about">
       Source code available on <a target="_blank" href="https://github.com/qiao/euphony">Github</a>
     </footer>
+
+    <script src="./dist/application.js" type="text/javascript"></script>
 
   </body>
 </html>
