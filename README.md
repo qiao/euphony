@@ -9,15 +9,15 @@ Please visit http://qiao.github.com/euphony to start playing. (Chrome only)
 
 Thanks to the authors and contributors of the following libraries, without whom this project would not have been possible:
 
-* [three.js](https://github.com/mrdoob/three.js) - JavaScript 3D library.
-* [MIDI.js](http://mudcu.be/midi-js/) - Sequencing in JavaScript.
-* [jasmid](https://github.com/gasman/jasmid) - A MIDI file reader and synthesiser in Javascript 
-* [base642binary.js](http://blog.danguer.com/2011/10/24/base64-binary-decoding-in-javascript/) - Cleans up XML base64-requests for Web Audio API
-* [async.js](https://github.com/caolan/async) - Async utilities for node and the browser 
+* [three.js](https://github.com/mrdoob/three.js) - JavaScript 3D library
+* [MIDI.js](http://mudcu.be/midi-js/) - Sequencing in JavaScript
+* [jasmid](https://github.com/gasman/jasmid) - A MIDI file reader and synthesiser in JavaScript 
+* [base642binary.js](http://blog.danguer.com/2011/10/24/base64-binary-decoding-in-javascript/) - Base64 binary decoding in JavaScript
+* [async.js](https://github.com/caolan/async) - Async utilities
 * [spin.js](https://github.com/fgnass/spin.js) - A spinning activity indicator
 * [javascript-state-machine](https://github.com/jakesgordon/javascript-state-machine) - A finite state machine javascript micro framework 
 * [jQuery](http://jquery.com) - Duh
-* [jQuery Easing Plugin](http://gsgd.co.uk/sandbox/jquery/easing/) - A jQuery plugin from GSGD to give advanced easing options.
+* [jQuery Easing Plugin](http://gsgd.co.uk/sandbox/jquery/easing/) - A jQuery plugin from GSGD to give advanced easing options
 * [nanoScrollerJS](https://github.com/jamesflorentino/nanoScrollerJS) - A jQuery plugin that offers Mac OS X Lion-styled scrollbars
 
 License
