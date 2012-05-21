@@ -28,7 +28,14 @@
         });
         app.on('progress', player.displayProgress);
         return player.show(function() {
-          return player.setTrackFromHash();
+          var candidates, id;
+          if (window.location.hash) {
+            return player.setTrackFromHash();
+          } else {
+            candidates = [3, 5, 6, 7, 10, 11, 12, 13, 14, 16, 19, 30];
+            id = Math.floor(Math.random() * candidates.length);
+            return player.setTrack(candidates[id]);
+          }
         });
       });
     });

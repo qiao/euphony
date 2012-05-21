@@ -14,6 +14,8 @@
 
       this.setTrackFromHash = __bind(this.setTrackFromHash, this);
 
+      this.setTrack = __bind(this.setTrack, this);
+
       this.ontrackchange = __bind(this.ontrackchange, this);
 
       this.onnext = __bind(this.onnext, this);
@@ -167,21 +169,18 @@
       if (typeof this.trackchangeCallback === "function") {
         this.trackchangeCallback(trackId);
       }
-      this.currentTrackId = trackId;
+      return this.currentTrackId = trackId;
+    };
+
+    PlayerWidget.prototype.setTrack = function(trackId) {
       return window.location.hash = trackId + 1;
     };
 
-    PlayerWidget.prototype.setTrack = PlayerWidget.prototype.ontrackchange;
-
     PlayerWidget.prototype.setTrackFromHash = function() {
-      var candidates, hash, id;
+      var hash;
       hash = window.location.hash.slice(1);
       if (hash) {
-        return player.setTrack(parseInt(hash, 10) - 1);
-      } else {
-        candidates = [3, 5, 6, 7, 10, 11, 12, 13, 14, 16, 19, 30];
-        id = Math.floor(Math.random() * candidates.length);
-        return player.setTrack(candidates[id]);
+        return this.ontrackchange(parseInt(hash, 10) - 1);
       }
     };
 

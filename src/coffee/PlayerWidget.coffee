@@ -39,7 +39,7 @@ class PlayerWidget
     @updateSize()
 
     $(window).resize(@updateSize)
-    $(window).on('hashchange',@setTrackFromHash)
+    $(window).on('hashchange', @setTrackFromHash)
 
   updateSize: =>
     @$playlistContainer
@@ -109,18 +109,13 @@ class PlayerWidget
       .addClass('player-current-track')
     @trackchangeCallback?(trackId)
     @currentTrackId = trackId
-    window.location.hash = trackId + 1
 
-  setTrack: @::ontrackchange
+  setTrack: (trackId) =>
+    window.location.hash = trackId + 1
 
   setTrackFromHash: =>
     hash = window.location.hash.slice(1)
-    if hash
-      player.setTrack(parseInt(hash, 10) - 1)
-    else
-      candidates = [3, 5, 6, 7, 10, 11, 12, 13, 14, 16, 19, 30]
-      id = Math.floor(Math.random() * candidates.length)
-      player.setTrack(candidates[id])
+    @ontrackchange(parseInt(hash, 10) - 1) if hash
 
   getRandomTrack: =>
     @playlist[Math.floor(Math.random() * @playlist.length)]
