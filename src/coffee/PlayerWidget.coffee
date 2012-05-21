@@ -5,7 +5,7 @@ class PlayerWidget
     @$controlsContainer  = $('.player-controls', @$container)
     @$playlistContainer  = $('.player-playlist-container', @$container)
     @$progressContainer  = $('.player-progress-container', @$container)
-    @$filedragContainer  = $('.player-filedrag', @$container)
+    @$filedropContainer  = $('.player-filedrop', @$container)
 
     @$progressBar        = $('.player-progress-bar', @$container)
     @$progressText       = $('.player-progress-text', @$container)
@@ -34,6 +34,21 @@ class PlayerWidget
         $list = $('li', @$playlist)
         @setTrack($list.index($target))
 
+    filedrop = @$filedropContainer[0]
+    filedrop.ondragenter = ->
+      $(filedrop).addClass('hover')
+    filedrop.ondragleave = ->
+      $(filedrop).removeClass('hover')
+    filedrop.ondrop = (event) =>
+      $(filedrop).removeClass('hover')
+      event.stopPropagation()
+      event.preventDefault()
+      file = event.dataTransfer.files[0]
+      reader = new FileReader()
+      reader.onload = (e) =>
+        @filedropCallback?(e.target.result)
+      reader.readAsDataURL(file)
+
     @$container.on 'mousewheel', (event) ->
       event.stopPropagation()
 
@@ -48,7 +63,7 @@ class PlayerWidget
         @$container.innerHeight() -
         @$controlsContainer.outerHeight(true) -
         @$progressContainer.outerHeight(true) -
-        @$filedragContainer.outerHeight(true)
+        @$filedropContainer.outerHeight(true)
       )
       .nanoScroller()
 

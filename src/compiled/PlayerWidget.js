@@ -34,12 +34,13 @@
 
       this.updateSize = __bind(this.updateSize, this);
 
-      var _this = this;
+      var filedrop,
+        _this = this;
       this.$container = $(container);
       this.$controlsContainer = $('.player-controls', this.$container);
       this.$playlistContainer = $('.player-playlist-container', this.$container);
       this.$progressContainer = $('.player-progress-container', this.$container);
-      this.$filedragContainer = $('.player-filedrag', this.$container);
+      this.$filedropContainer = $('.player-filedrop', this.$container);
       this.$progressBar = $('.player-progress-bar', this.$container);
       this.$progressText = $('.player-progress-text', this.$container);
       this.$playlist = $('.player-playlist', this.$container);
@@ -80,6 +81,25 @@
           return _this.setTrack($list.index($target));
         }
       });
+      filedrop = this.$filedropContainer[0];
+      filedrop.ondragenter = function() {
+        return $(filedrop).addClass('hover');
+      };
+      filedrop.ondragleave = function() {
+        return $(filedrop).removeClass('hover');
+      };
+      filedrop.ondrop = function(event) {
+        var file, reader;
+        $(filedrop).removeClass('hover');
+        event.stopPropagation();
+        event.preventDefault();
+        file = event.dataTransfer.files[0];
+        reader = new FileReader();
+        reader.onload = function(e) {
+          return typeof _this.filedropCallback === "function" ? _this.filedropCallback(e.target.result) : void 0;
+        };
+        return reader.readAsDataURL(file);
+      };
       this.$container.on('mousewheel', function(event) {
         return event.stopPropagation();
       });
@@ -89,7 +109,7 @@
     }
 
     PlayerWidget.prototype.updateSize = function() {
-      return this.$playlistContainer.height(this.$container.innerHeight() - this.$controlsContainer.outerHeight(true) - this.$progressContainer.outerHeight(true) - this.$filedragContainer.outerHeight(true)).nanoScroller();
+      return this.$playlistContainer.height(this.$container.innerHeight() - this.$controlsContainer.outerHeight(true) - this.$progressContainer.outerHeight(true) - this.$filedropContainer.outerHeight(true)).nanoScroller();
     };
 
     PlayerWidget.prototype.show = function(callback) {

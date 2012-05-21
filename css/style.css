@@ -120,12 +120,16 @@ a:hover {
   background-color: rgba(200, 200, 200, 0.2) !important;
 }
 
-.player-filedrag {
+.player-filedrop {
   height: 50px;
   border: 1px solid #171717;
 }
 
-.player-filedrag-text {
+.hover {
+  background-color: rgba(200, 200, 200, 0.2) !important;
+}
+
+.player-filedrop-text {
   height: 12px;
   line-height: 11px;
   font-size: 11px;

@@ -5,6 +5,8 @@
     return false;
   }).on('mousewheel', function() {
     return false;
+  }).on('drop', function() {
+    return false;
   }).on('ready', function() {
     window.loader = new LoaderWidget();
     loader.message('Downloading');
@@ -22,6 +24,16 @@
         player.on('trackchange', function(trackId) {
           return loader.message('Loading MIDI', function() {
             return app.loadBuiltinMidi(trackId, function() {
+              return loader.stop(function() {
+                return player.play();
+              });
+            });
+          });
+        });
+        player.on('filedrop', function(midiFile) {
+          player.stop();
+          return loader.message('Loading MIDI', function() {
+            return app.loadMidiFile(midiFile, function() {
               return loader.stop(function() {
                 return player.play();
               });

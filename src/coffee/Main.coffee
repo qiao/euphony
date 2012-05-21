@@ -3,6 +3,8 @@ $(document)
     false
   .on 'mousewheel', ->
     false
+  .on 'drop', ->
+    false
   .on 'ready', ->
 
     # global loader to show progress
@@ -24,6 +26,12 @@ $(document)
         player.on 'trackchange', (trackId) ->
           loader.message 'Loading MIDI', ->
             app.loadBuiltinMidi trackId, ->
+              loader.stop ->
+                player.play()
+        player.on 'filedrop', (midiFile) ->
+          player.stop()
+          loader.message 'Loading MIDI', ->
+            app.loadMidiFile midiFile, ->
               loader.stop ->
                 player.play()
         app.on('progress', player.displayProgress)
