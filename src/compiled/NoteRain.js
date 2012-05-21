@@ -39,14 +39,17 @@
     };
 
     NoteRain.prototype._getNoteInfos = function(midiData) {
-      var currentTime, duration, event, interval, noteInfos, noteNumber, noteTimes, startTime, subtype, _i, _len, _ref, _ref1;
+      var channel, currentTime, duration, event, interval, noteInfos, noteNumber, noteTimes, startTime, subtype, _i, _len, _ref, _ref1;
       currentTime = 0;
       noteInfos = [];
       noteTimes = [];
       for (_i = 0, _len = midiData.length; _i < _len; _i++) {
         _ref = midiData[_i], (_ref1 = _ref[0], event = _ref1.event), interval = _ref[1];
         currentTime += interval;
-        subtype = event.subtype, noteNumber = event.noteNumber;
+        subtype = event.subtype, noteNumber = event.noteNumber, channel = event.channel;
+        if (channel === 9) {
+          continue;
+        }
         if (subtype === 'noteOn') {
           noteTimes[noteNumber] = currentTime;
         } else if (subtype === 'noteOff') {

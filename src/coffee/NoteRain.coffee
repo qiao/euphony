@@ -32,7 +32,11 @@ class NoteRain
 
     for [{event}, interval] in midiData
       currentTime += interval
-      {subtype, noteNumber} = event
+      {subtype, noteNumber, channel} = event
+
+      # In General MIDI, channel 10 is reserved for percussion instruments only.
+      # It doesn't make any sense to convert it into piano notes. So just skip it.
+      continue if channel is 9 # off by 1
 
       if subtype is 'noteOn'
         # if note is on, record its start time

@@ -67,7 +67,10 @@
     };
 
     Euphony.prototype.initMidi = function(callback) {
-      return MIDI.loadPlugin(callback);
+      return MIDI.loadPlugin(function() {
+        MIDI.channels[9].mute = true;
+        return typeof callback === "function" ? callback() : void 0;
+      });
     };
 
     Euphony.prototype.getBuiltinMidiIndex = function(callback) {

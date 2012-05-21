@@ -31,7 +31,11 @@ class Euphony
       @keyboard.update()
 
   initMidi: (callback) ->
-    MIDI.loadPlugin(callback)
+    MIDI.loadPlugin ->
+      # mute channel 10, which is reserved for percussion instruments only.
+      # the channel index is off by one
+      MIDI.channels[9].mute = true
+      callback?()
 
   getBuiltinMidiIndex: (callback) ->
     return callback(@midiIndex) if @midiIndex
