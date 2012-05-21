@@ -39,6 +39,7 @@
       this.$controlsContainer = $('.player-controls', this.$container);
       this.$playlistContainer = $('.player-playlist-container', this.$container);
       this.$progressContainer = $('.player-progress-container', this.$container);
+      this.$filedragContainer = $('.player-filedrag', this.$container);
       this.$progressBar = $('.player-progress-bar', this.$container);
       this.$progressText = $('.player-progress-text', this.$container);
       this.$playlist = $('.player-playlist', this.$container);
@@ -88,7 +89,7 @@
     }
 
     PlayerWidget.prototype.updateSize = function() {
-      return this.$playlistContainer.height(this.$container.innerHeight() - this.$controlsContainer.outerHeight(true) - this.$progressContainer.outerHeight(true)).nanoScroller();
+      return this.$playlistContainer.height(this.$container.innerHeight() - this.$controlsContainer.outerHeight(true) - this.$progressContainer.outerHeight(true) - this.$filedragContainer.outerHeight(true)).nanoScroller();
     };
 
     PlayerWidget.prototype.show = function(callback) {

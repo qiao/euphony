@@ -32,7 +32,7 @@ class LoaderWidget
     @text = $('<div>')
       .css
         color: '#ddd'
-        'font-size': '0.9em'
+        'font-size': '12px'
         cursor: 'default'
       .appendTo(@box)
 

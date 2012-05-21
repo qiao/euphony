@@ -35,7 +35,7 @@
       this.canvas = $('<div>').height(100).appendTo(this.box);
       this.text = $('<div>').css({
         color: '#ddd',
-        'font-size': '0.9em',
+        'font-size': '12px',
         cursor: 'default'
       }).appendTo(this.box);
       this.onresize();

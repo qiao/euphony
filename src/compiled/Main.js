@@ -3,12 +3,14 @@
 
   $(document).on('selectstart', function() {
     return false;
+  }).on('mousewheel', function() {
+    return false;
   }).on('ready', function() {
     window.loader = new LoaderWidget();
     loader.message('Downloading');
     window.app = new Euphony();
-    app.initScene();
     return app.initMidi(function() {
+      app.initScene();
       return app.loadBuiltinPlaylist(function(playlist) {
         window.player = new PlayerWidget('#player');
         player.setPlaylist(playlist);

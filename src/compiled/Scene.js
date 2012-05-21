@@ -41,6 +41,7 @@
       controls.autoRotate = false;
       camera.position.copy(controls.center).addSelf(new THREE.Vector3(2, 6, 9));
       $(window).resize(this.onresize);
+      this.$container = $container;
       this.camera = camera;
       this.scene = scene;
       this.renderer = renderer;
@@ -49,7 +50,7 @@
 
     Scene.prototype.onresize = function() {
       var height, width, _ref;
-      _ref = [$(window).width(), $(window).height()], width = _ref[0], height = _ref[1];
+      _ref = [this.$container.width(), this.$container.height()], width = _ref[0], height = _ref[1];
       this.camera.aspect = width / height;
       this.camera.updateProjectionMatrix();
       return this.renderer.setSize(width, height);

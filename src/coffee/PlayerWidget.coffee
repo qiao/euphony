@@ -5,6 +5,7 @@ class PlayerWidget
     @$controlsContainer  = $('.player-controls', @$container)
     @$playlistContainer  = $('.player-playlist-container', @$container)
     @$progressContainer  = $('.player-progress-container', @$container)
+    @$filedragContainer  = $('.player-filedrag', @$container)
 
     @$progressBar        = $('.player-progress-bar', @$container)
     @$progressText       = $('.player-progress-text', @$container)
@@ -46,7 +47,8 @@ class PlayerWidget
       .height(
         @$container.innerHeight() -
         @$controlsContainer.outerHeight(true) -
-        @$progressContainer.outerHeight(true)
+        @$progressContainer.outerHeight(true) -
+        @$filedragContainer.outerHeight(true)
       )
       .nanoScroller()
 

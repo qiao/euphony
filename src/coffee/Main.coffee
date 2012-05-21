@@ -1,6 +1,8 @@
 $(document)
   .on 'selectstart', ->
     false
+  .on 'mousewheel', ->
+    false
   .on 'ready', ->
 
     # global loader to show progress
@@ -9,8 +11,8 @@ $(document)
 
     #start app
     window.app = new Euphony()
-    app.initScene()
     app.initMidi ->
+      app.initScene()
       app.loadBuiltinPlaylist (playlist) ->
         window.player = new PlayerWidget('#player')
         player.setPlaylist(playlist)

@@ -1,9 +1,9 @@
 /** initial setup **/
 .nano {
   position : relative;
+  overflow : hidden;
   width    : 100%;
   height   : 100%;
-  overflow : hidden;
 }
 .nano .content {
   position      : absolute;
@@ -20,7 +20,7 @@
 .nano > .pane {
   background : rgba(0,0,0,.25);
   position   : absolute;
-  width      : 10px;
+  width      : 9px;
   right      : 0;
   top        : 0;
   bottom     : 0;

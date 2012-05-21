@@ -41,13 +41,14 @@ class Scene
     $(window).resize(@onresize)
 
     # set instance variables
+    @$container = $container
     @camera = camera
     @scene = scene
     @renderer = renderer
     @controls = controls
 
   onresize: =>
-    [width, height] = [$(window).width(), $(window).height()]
+    [width, height] = [@$container.width(), @$container.height()]
     @camera.aspect = width / height
     @camera.updateProjectionMatrix()
     @renderer.setSize(width, height)
