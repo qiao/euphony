@@ -3,7 +3,7 @@ Euphony
 
 Euphony is a web-based MIDI player and visualizer.
 
-Plese visit http://qiao.github.com/euphony to start playing. (Chrome only)
+Please visit http://qiao.github.com/euphony to start playing. (Chrome only)
 
 ![](http://i.imgur.com/gl1Ac.png)
 
