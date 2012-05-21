@@ -140,8 +140,7 @@ class PianoKey
     {
       blackKeyWidth, blackKeyHeight, blackKeyLength, blackKeyColor,
       whiteKeyWidth, whiteKeyHeight, whiteKeyLength, whiteKeyColor,
-      blackKeyPosY, blackKeyPosZ, keyDip, keyInfo,
-      noteToColor, keyUpSpeed, KeyType
+      blackKeyPosY, blackKeyPosZ, keyDip, keyInfo, keyUpSpeed, KeyType
     } = design
     {Black} = KeyType
 
@@ -162,22 +161,15 @@ class PianoKey
 
     @keyUpSpeed = keyUpSpeed
 
-    @originalColor = material.color.getHex()
-    @pressedColor = noteToColor(note)
-
     # set original and pressed y coordinate
     @originalY = position.y
     @pressedY = @originalY - keyDip
 
   press: ->
     @model.position.y = @pressedY
-    @model.material.color.setHex(@pressedColor)
-    @model.material.emissive.setHex(@pressedColor)
     @isPressed = true
 
   release: ->
-    @model.material.color.setHex(@originalColor)
-    @model.material.emissive.setHex(0x000000)
     @isPressed = false
 
   update: ->

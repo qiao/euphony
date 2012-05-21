@@ -174,8 +174,8 @@
     PianoKey.name = 'PianoKey';
 
     function PianoKey(design, note) {
-      var Black, KeyType, blackKeyColor, blackKeyHeight, blackKeyLength, blackKeyPosY, blackKeyPosZ, blackKeyWidth, geometry, keyCenterPosX, keyDip, keyInfo, keyType, keyUpSpeed, material, noteToColor, position, whiteKeyColor, whiteKeyHeight, whiteKeyLength, whiteKeyWidth, _ref;
-      blackKeyWidth = design.blackKeyWidth, blackKeyHeight = design.blackKeyHeight, blackKeyLength = design.blackKeyLength, blackKeyColor = design.blackKeyColor, whiteKeyWidth = design.whiteKeyWidth, whiteKeyHeight = design.whiteKeyHeight, whiteKeyLength = design.whiteKeyLength, whiteKeyColor = design.whiteKeyColor, blackKeyPosY = design.blackKeyPosY, blackKeyPosZ = design.blackKeyPosZ, keyDip = design.keyDip, keyInfo = design.keyInfo, noteToColor = design.noteToColor, keyUpSpeed = design.keyUpSpeed, KeyType = design.KeyType;
+      var Black, KeyType, blackKeyColor, blackKeyHeight, blackKeyLength, blackKeyPosY, blackKeyPosZ, blackKeyWidth, geometry, keyCenterPosX, keyDip, keyInfo, keyType, keyUpSpeed, material, position, whiteKeyColor, whiteKeyHeight, whiteKeyLength, whiteKeyWidth, _ref;
+      blackKeyWidth = design.blackKeyWidth, blackKeyHeight = design.blackKeyHeight, blackKeyLength = design.blackKeyLength, blackKeyColor = design.blackKeyColor, whiteKeyWidth = design.whiteKeyWidth, whiteKeyHeight = design.whiteKeyHeight, whiteKeyLength = design.whiteKeyLength, whiteKeyColor = design.whiteKeyColor, blackKeyPosY = design.blackKeyPosY, blackKeyPosZ = design.blackKeyPosZ, keyDip = design.keyDip, keyInfo = design.keyInfo, keyUpSpeed = design.keyUpSpeed, KeyType = design.KeyType;
       Black = KeyType.Black;
       _ref = keyInfo[note], keyType = _ref.keyType, keyCenterPosX = _ref.keyCenterPosX;
       if (keyType === Black) {
@@ -194,22 +194,16 @@
       this.model = new THREE.Mesh(geometry, material);
       this.model.position.copy(position);
       this.keyUpSpeed = keyUpSpeed;
-      this.originalColor = material.color.getHex();
-      this.pressedColor = noteToColor(note);
       this.originalY = position.y;
       this.pressedY = this.originalY - keyDip;
     }
 
     PianoKey.prototype.press = function() {
       this.model.position.y = this.pressedY;
-      this.model.material.color.setHex(this.pressedColor);
-      this.model.material.emissive.setHex(this.pressedColor);
       return this.isPressed = true;
     };
 
     PianoKey.prototype.release = function() {
-      this.model.material.color.setHex(this.originalColor);
-      this.model.material.emissive.setHex(0x000000);
       return this.isPressed = false;
     };
 
