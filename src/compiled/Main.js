@@ -9,20 +9,20 @@
     window.app = new Euphony();
     app.initScene();
     return app.initMidi(function() {
-      return app.getBuiltinMidiIndex(function(playlist) {
+      return app.loadBuiltinPlaylist(function(playlist) {
         window.player = new PlayerWidget('#player');
         player.setPlaylist(playlist);
         player.on('pause', app.pause);
         player.on('resume', app.resume);
         player.on('stop', app.stop);
-        player.on('play', app.play);
+        player.on('play', app.start);
         player.on('setprogress', app.setProgress);
         player.on('settrack', function(trackId) {
           if (!((0 <= trackId && trackId < playlist.length))) {
             return;
           }
           return loader.message('Loading MIDI', function() {
-            return app.setBuiltinMidi(trackId, function() {
+            return app.loadBuiltinMidi(trackId, function() {
               return loader.stop(function() {
                 return player.play();
               });
@@ -34,7 +34,7 @@
           var candidates, hash, id;
           hash = window.location.hash.slice(1);
           if (hash) {
-            return player.setTrack(window.decodeURIComponent(hash) - 1);
+            return player.setTrack(parseInt(hash, 10) - 1);
           } else {
             candidates = [3, 5, 6, 7, 10, 11, 12, 13, 14, 16, 19, 30];
             id = Math.floor(Math.random() * candidates.length);

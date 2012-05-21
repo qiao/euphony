@@ -1,4 +1,7 @@
+# The Euphony class provides interfaces to play MIDI files and do 3D visualization.
+# The controller and playlist on the left of the screen is not part of it.
 class Euphony
+
   constructor: ->
     @design = new PianoKeyboardDesign()
     @keyboard = new PianoKeyboard(@design)
@@ -37,32 +40,35 @@ class Euphony
       MIDI.channels[9].mute = true
       callback?()
 
-  getBuiltinMidiIndex: (callback) ->
-    return callback(@midiIndex) if @midiIndex
-    $.getJSON 'tracks/index.json', (index) =>
-      @midiIndex = index
-      callback(@midiIndex)
+  loadBuiltinPlaylist: (callback) ->
+    return callback(@playlist) if @playlist
+    $.getJSON 'tracks/index.json', (@playlist) =>
+      callback(@playlist)
 
-  setBuiltinMidi: (id, callback) ->
-    return unless 0 <= id < @midiIndex.length
+  loadBuiltinMidi: (id, callback) ->
+    return unless 0 <= id < @playlist.length
+
+    # try to load the MIDI file from localStorage
     if localStorage?[id]
-      return @setMidiFile(localStorage[id], callback)
+      return @loadMidiFile(localStorage[id], callback)
+
+    # if the file is not available in the localStorage
+    # then issue an AJAX request to get it from remote server
+    # and try to save the file into localStorage
     $.ajax
-      url: "tracks/#{@midiIndex[id]}"
+      url: "tracks/#{@playlist[id]}"
       dataType: 'text'
       success: (data) =>
-        @setMidiFile(data, callback)
+        @loadMidiFile(data, callback)
         try
           localStorage?[id] = data
         catch e
           console?.error('localStorage quota limit reached')
 
-  setMidiFile: (midiFile, callback) ->
+  # load a base64 encoded or binary XML MIDI file
+  loadMidiFile: (midiFile, callback) ->
     @player.loadFile midiFile, =>
       @rain.setMidiData(@player.data, callback)
-
-  play: =>
-    if @started then @resume() else @start()
 
   start: =>
     @player.start()
@@ -96,4 +102,5 @@ class Euphony
   on: (eventName, callback) ->
     @["on#{eventName}"] = callback
 
+# exports to global
 @Euphony = Euphony

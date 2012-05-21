@@ -22,8 +22,6 @@
 
       this.start = __bind(this.start, this);
 
-      this.play = __bind(this.play, this);
-
       var _this = this;
       this.design = new PianoKeyboardDesign();
       this.keyboard = new PianoKeyboard(this.design);
@@ -73,30 +71,30 @@
       });
     };
 
-    Euphony.prototype.getBuiltinMidiIndex = function(callback) {
+    Euphony.prototype.loadBuiltinPlaylist = function(callback) {
       var _this = this;
-      if (this.midiIndex) {
-        return callback(this.midiIndex);
+      if (this.playlist) {
+        return callback(this.playlist);
       }
-      return $.getJSON('tracks/index.json', function(index) {
-        _this.midiIndex = index;
-        return callback(_this.midiIndex);
+      return $.getJSON('tracks/index.json', function(playlist) {
+        _this.playlist = playlist;
+        return callback(_this.playlist);
       });
     };
 
-    Euphony.prototype.setBuiltinMidi = function(id, callback) {
+    Euphony.prototype.loadBuiltinMidi = function(id, callback) {
       var _this = this;
-      if (!((0 <= id && id < this.midiIndex.length))) {
+      if (!((0 <= id && id < this.playlist.length))) {
         return;
       }
       if (typeof localStorage !== "undefined" && localStorage !== null ? localStorage[id] : void 0) {
-        return this.setMidiFile(localStorage[id], callback);
+        return this.loadMidiFile(localStorage[id], callback);
       }
       return $.ajax({
-        url: "tracks/" + this.midiIndex[id],
+        url: "tracks/" + this.playlist[id],
         dataType: 'text',
         success: function(data) {
-          _this.setMidiFile(data, callback);
+          _this.loadMidiFile(data, callback);
           try {
             return typeof localStorage !== "undefined" && localStorage !== null ? localStorage[id] = data : void 0;
           } catch (e) {
@@ -106,19 +104,11 @@
       });
     };
 
-    Euphony.prototype.setMidiFile = function(midiFile, callback) {
+    Euphony.prototype.loadMidiFile = function(midiFile, callback) {
       var _this = this;
       return this.player.loadFile(midiFile, function() {
         return _this.rain.setMidiData(_this.player.data, callback);
       });
-    };
-
-    Euphony.prototype.play = function() {
-      if (this.started) {
-        return this.resume();
-      } else {
-        return this.start();
-      }
     };
 
     Euphony.prototype.start = function() {
