@@ -25,7 +25,7 @@ class PlayerWidget
       if @current is 'paused' then @resume() else @play()
 
     @$progressContainer.click (event) =>
-      progress = event.clientX / @$progressContainer.width()
+      progress = (event.clientX - @$progressContainer.offset().left) / @$progressContainer.width()
       @progressCallback?(progress)
 
     @$playlist.click (event) =>

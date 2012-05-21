@@ -69,7 +69,7 @@
       });
       this.$progressContainer.click(function(event) {
         var progress;
-        progress = event.clientX / _this.$progressContainer.width();
+        progress = (event.clientX - _this.$progressContainer.offset().left) / _this.$progressContainer.width();
         return typeof _this.progressCallback === "function" ? _this.progressCallback(progress) : void 0;
       });
       this.$playlist.click(function(event) {
