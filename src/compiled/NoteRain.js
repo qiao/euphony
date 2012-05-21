@@ -16,10 +16,6 @@
       this.model = new THREE.Object3D();
     }
 
-    NoteRain.prototype.on = function(eventName, callback) {
-      return this["on" + eventName] = callback;
-    };
-
     NoteRain.prototype.setMidiData = function(midiData, callback) {
       var noteInfos;
       this.clear();
