@@ -187,7 +187,8 @@
       } else {
         geometry = new THREE.CubeGeometry(whiteKeyWidth, whiteKeyHeight, whiteKeyLength);
         material = new THREE.MeshPhongMaterial({
-          color: whiteKeyColor
+          color: whiteKeyColor,
+          emissive: 0x111111
         });
         position = new THREE.Vector3(keyCenterPosX, 0, 0);
       }

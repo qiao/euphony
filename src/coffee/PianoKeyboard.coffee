@@ -152,7 +152,7 @@ class PianoKey
       position = new THREE.Vector3(keyCenterPosX, blackKeyPosY, blackKeyPosZ)
     else
       geometry = new THREE.CubeGeometry(whiteKeyWidth, whiteKeyHeight, whiteKeyLength)
-      material = new THREE.MeshPhongMaterial(color: whiteKeyColor)
+      material = new THREE.MeshPhongMaterial(color: whiteKeyColor, emissive: 0x111111)
       position = new THREE.Vector3(keyCenterPosX, 0, 0)
 
     # create key mesh
