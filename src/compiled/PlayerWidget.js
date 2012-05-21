@@ -12,7 +12,9 @@
 
       this.getRandomTrack = __bind(this.getRandomTrack, this);
 
-      this.onsettrack = __bind(this.onsettrack, this);
+      this.setTrackFromHash = __bind(this.setTrackFromHash, this);
+
+      this.ontrackchange = __bind(this.ontrackchange, this);
 
       this.onnext = __bind(this.onnext, this);
 
@@ -28,7 +30,7 @@
 
       this.show = __bind(this.show, this);
 
-      this.onresize = __bind(this.onresize, this);
+      this.updateSize = __bind(this.updateSize, this);
 
       var _this = this;
       this.$container = $(container);
@@ -65,7 +67,7 @@
       this.$progressContainer.click(function(event) {
         var progress;
         progress = event.clientX / _this.$progressContainer.width();
-        return typeof _this.setprogressCallback === "function" ? _this.setprogressCallback(progress) : void 0;
+        return typeof _this.progressCallback === "function" ? _this.progressCallback(progress) : void 0;
       });
       this.$playlist.click(function(event) {
         var $list, $target;
@@ -78,11 +80,12 @@
       this.$container.on('mousewheel', function(event) {
         return event.stopPropagation();
       });
-      this.onresize();
-      $(window).resize(this.onresize);
+      this.updateSize();
+      $(window).resize(this.updateSize);
+      $(window).on('hashchange', this.setTrackFromHash);
     }
 
-    PlayerWidget.prototype.onresize = function() {
+    PlayerWidget.prototype.updateSize = function() {
       return this.$playlistContainer.height(this.$container.innerHeight() - this.$controlsContainer.outerHeight(true) - this.$progressContainer.outerHeight(true)).nanoScroller();
     };
 
@@ -151,21 +154,36 @@
       return this.setTrack(this.currentTrackId);
     };
 
-    PlayerWidget.prototype.onsettrack = function(trackId) {
+    PlayerWidget.prototype.ontrackchange = function(trackId) {
       var _ref;
+      if (!((0 <= trackId && trackId < this.playlist.length))) {
+        return;
+      }
       this.stop();
       if ((_ref = this.$currentTrack) != null) {
         _ref.removeClass('player-current-track');
       }
       this.$currentTrack = this.$playlist.find("li").eq(trackId).addClass('player-current-track');
-      if (typeof this.settrackCallback === "function") {
-        this.settrackCallback(trackId);
+      if (typeof this.trackchangeCallback === "function") {
+        this.trackchangeCallback(trackId);
       }
       this.currentTrackId = trackId;
-      return window.location.hash = window.encodeURIComponent(trackId + 1);
+      return window.location.hash = trackId + 1;
     };
 
-    PlayerWidget.prototype.setTrack = PlayerWidget.prototype.onsettrack;
+    PlayerWidget.prototype.setTrack = PlayerWidget.prototype.ontrackchange;
+
+    PlayerWidget.prototype.setTrackFromHash = function() {
+      var candidates, hash, id;
+      hash = window.location.hash.slice(1);
+      if (hash) {
+        return player.setTrack(parseInt(hash, 10) - 1);
+      } else {
+        candidates = [3, 5, 6, 7, 10, 11, 12, 13, 14, 16, 19, 30];
+        id = Math.floor(Math.random() * candidates.length);
+        return player.setTrack(candidates[id]);
+      }
+    };
 
     PlayerWidget.prototype.getRandomTrack = function() {
       return this.playlist[Math.floor(Math.random() * this.playlist.length)];

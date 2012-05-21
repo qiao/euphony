@@ -25,7 +25,7 @@ class PlayerWidget
 
     @$progressContainer.click (event) =>
       progress = event.clientX / @$progressContainer.width()
-      @setprogressCallback?(progress)
+      @progressCallback?(progress)
 
     @$playlist.click (event) =>
       $target = $(event.target)
@@ -36,10 +36,12 @@ class PlayerWidget
     @$container.on 'mousewheel', (event) ->
       event.stopPropagation()
 
-    @onresize()
-    $(window).resize(@onresize)
+    @updateSize()
 
-  onresize: =>
+    $(window).resize(@updateSize)
+    $(window).on('hashchange',@setTrackFromHash)
+
+  updateSize: =>
     @$playlistContainer
       .height(
         @$container.innerHeight() -
@@ -97,18 +99,28 @@ class PlayerWidget
     @currentTrackId += 1
     @setTrack(@currentTrackId)
 
-  onsettrack: (trackId) =>
+  ontrackchange: (trackId) =>
+    return unless 0 <= trackId < @playlist.length
     @stop()
     @$currentTrack?.removeClass('player-current-track')
     @$currentTrack = @$playlist
       .find("li")
       .eq(trackId)
       .addClass('player-current-track')
-    @settrackCallback?(trackId)
+    @trackchangeCallback?(trackId)
     @currentTrackId = trackId
-    window.location.hash = window.encodeURIComponent(trackId + 1)
+    window.location.hash = trackId + 1
 
-  setTrack: @::onsettrack
+  setTrack: @::ontrackchange
+
+  setTrackFromHash: =>
+    hash = window.location.hash.slice(1)
+    if hash
+      player.setTrack(parseInt(hash, 10) - 1)
+    else
+      candidates = [3, 5, 6, 7, 10, 11, 12, 13, 14, 16, 19, 30]
+      id = Math.floor(Math.random() * candidates.length)
+      player.setTrack(candidates[id])
 
   getRandomTrack: =>
     @playlist[Math.floor(Math.random() * @playlist.length)]

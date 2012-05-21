@@ -18,9 +18,8 @@ $(document)
         player.on('resume', app.resume)
         player.on('stop', app.stop)
         player.on('play', app.start)
-        player.on('setprogress', app.setProgress)
-        player.on 'settrack', (trackId) ->
-          return unless 0 <= trackId < playlist.length
+        player.on('progress', app.setProgress)
+        player.on 'trackchange', (trackId) ->
           loader.message 'Loading MIDI', ->
             app.loadBuiltinMidi trackId, ->
               loader.stop ->
@@ -28,10 +27,4 @@ $(document)
         app.on('progress', player.displayProgress)
 
         player.show ->
-          hash = window.location.hash.slice(1)
-          if hash
-            player.setTrack(parseInt(hash, 10) - 1)
-          else
-            candidates = [3, 5, 6, 7, 10, 11, 12, 13, 14, 16, 19, 30]
-            id = Math.floor(Math.random() * candidates.length)
-            player.setTrack(candidates[id])
+          player.setTrackFromHash()
