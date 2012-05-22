@@ -37,7 +37,7 @@ build:
 		src/compiled/Euphony.js \
 		src/compiled/Main.js \
 		> build/application.js
-	@uglifyjs -o dist/application.js dist/application.js
+	@uglifyjs -o build/application.js build/application.js
 
 
 watch:
