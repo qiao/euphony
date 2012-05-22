@@ -68,13 +68,33 @@ class PlayerWidget
       .nanoScroller()
 
   show: (callback) =>
+    return if @visible or @animating
+    @visible = true
+    @animating = true
     @$container
       .animate {
         left: '0px'
       }, {
-        duration: 1000
+        duration: 500
         easing: 'easeInOutCubic'
-        complete: callback
+        complete: =>
+          @animating = false
+          callback?()
+      }
+
+  hide: (callback) =>
+    return if !@visible or @animating
+    @visible = false
+    @animating = true
+    @$container
+      .animate {
+        left: "#{-@$container.width()}px"
+      }, {
+        duration: 500
+        easing: 'easeInOutCubic'
+        complete: =>
+          @animating = false
+          callback?()
       }
 
   setPlaylist: (@playlist) ->

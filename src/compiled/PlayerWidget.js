@@ -30,6 +30,8 @@
 
       this.onplay = __bind(this.onplay, this);
 
+      this.hide = __bind(this.hide, this);
+
       this.show = __bind(this.show, this);
 
       this.updateSize = __bind(this.updateSize, this);
@@ -113,12 +115,40 @@
     };
 
     PlayerWidget.prototype.show = function(callback) {
+      var _this = this;
+      if (this.visible || this.animating) {
+        return;
+      }
+      this.visible = true;
+      this.animating = true;
       return this.$container.animate({
         left: '0px'
       }, {
-        duration: 1000,
+        duration: 500,
         easing: 'easeInOutCubic',
-        complete: callback
+        complete: function() {
+          _this.animating = false;
+          return typeof callback === "function" ? callback() : void 0;
+        }
+      });
+    };
+
+    PlayerWidget.prototype.hide = function(callback) {
+      var _this = this;
+      if (!this.visible || this.animating) {
+        return;
+      }
+      this.visible = false;
+      this.animating = true;
+      return this.$container.animate({
+        left: "" + (-this.$container.width()) + "px"
+      }, {
+        duration: 500,
+        easing: 'easeInOutCubic',
+        complete: function() {
+          _this.animating = false;
+          return typeof callback === "function" ? callback() : void 0;
+        }
       });
     };
 

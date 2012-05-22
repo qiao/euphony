@@ -43,3 +43,18 @@ $(document)
             candidates = [3, 5, 6, 7, 10, 11, 12, 13, 14, 16, 19, 30]
             id = Math.floor(Math.random() * candidates.length)
             player.setTrack(candidates[id])
+
+        setTimeout (->
+          player.hide()
+          onmousemove = (event) ->
+            if event.pageX < 400
+              player.show()
+            else
+              player.hide()
+           $(document)
+             .on('mousemove', onmousemove)
+             .on 'mousedown', ->
+               $(this).off 'mousemove', onmousemove
+             .on 'mouseup', ->
+               $(this).on 'mousemove', onmousemove
+        ), 5000

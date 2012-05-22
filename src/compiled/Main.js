@@ -41,7 +41,7 @@
           });
         });
         app.on('progress', player.displayProgress);
-        return player.show(function() {
+        player.show(function() {
           var candidates, id;
           if (window.location.hash) {
             return player.setTrackFromHash();
@@ -51,6 +51,22 @@
             return player.setTrack(candidates[id]);
           }
         });
+        return setTimeout((function() {
+          var onmousemove;
+          player.hide();
+          onmousemove = function(event) {
+            if (event.pageX < 400) {
+              return player.show();
+            } else {
+              return player.hide();
+            }
+          };
+          return $(document).on('mousemove', onmousemove).on('mousedown', function() {
+            return $(this).off('mousemove', onmousemove);
+          }).on('mouseup', function() {
+            return $(this).on('mousemove', onmousemove);
+          });
+        }), 5000);
       });
     });
   });
