@@ -1,12 +1,12 @@
 all: $(shell find src/coffee -name "*.coffee" -type f)
 	coffee -o src/compiled src/coffee
 
-dist:
+build:
 	@cat \
 		css/font-awesome.css \
 		css/nanoscroller.css \
 		css/style.css \
-		> dist/application.css
+		> build/application.css
 	@cat \
 		lib/MIDI.js/VersionControl.Base64.js \
 		lib/MIDI.js/lib/base64binary.js \
@@ -36,7 +36,7 @@ dist:
 		src/compiled/PlayerWidget.js \
 		src/compiled/Euphony.js \
 		src/compiled/Main.js \
-		> dist/application.js
+		> build/application.js
 	@uglifyjs -o dist/application.js dist/application.js
 
 
@@ -46,4 +46,4 @@ watch:
 server:
 	python -m SimpleHTTPServer
 
-.PHONY: dist watch server
+.PHONY: build watch server
