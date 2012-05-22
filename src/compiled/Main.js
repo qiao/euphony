@@ -5,8 +5,6 @@
     return false;
   }).on('mousewheel', function() {
     return false;
-  }).on('drop', function() {
-    return false;
   }).on('ready', function() {
     window.loader = new LoaderWidget();
     loader.message('Downloading');
@@ -14,6 +12,7 @@
     return app.initMidi(function() {
       app.initScene();
       return app.loadBuiltinPlaylist(function(playlist) {
+        var _this = this;
         window.player = new PlayerWidget('#player');
         player.setPlaylist(playlist);
         player.on('pause', app.pause);
@@ -51,22 +50,29 @@
             return player.setTrack(candidates[id]);
           }
         });
-        return setTimeout((function() {
-          var onmousemove;
+        setTimeout((function() {
           player.hide();
-          onmousemove = function(event) {
-            if (event.pageX < 400) {
-              return player.show();
-            } else {
-              return player.hide();
-            }
-          };
-          return $(document).on('mousemove', onmousemove).on('mousedown', function() {
-            return $(this).off('mousemove', onmousemove);
-          }).on('mouseup', function() {
-            return $(this).on('mousemove', onmousemove);
-          });
+          return player.autoHide();
         }), 5000);
+        return document.ondrop = function(event) {
+          var file, reader;
+          event.preventDefault();
+          file = event.dataTransfer.files[0];
+          reader = new FileReader();
+          reader.onload = function(e) {
+            var midiFile;
+            midiFile = e.target.result;
+            player.stop();
+            return loader.message('Loading MIDI', function() {
+              return app.loadMidiFile(midiFile, function() {
+                return loader.stop(function() {
+                  return player.play();
+                });
+              });
+            });
+          };
+          return reader.readAsDataURL(file);
+        };
       });
     });
   });

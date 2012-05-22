@@ -16,12 +16,9 @@ ul, ol {
 
 a {
   color: #bbb;
-  text-decoration: none;
-  font-weight: bold;
 }
 a:hover {
   color: #ddd;
-  text-decoration: underline;
 }
 
 #canvas {
@@ -120,11 +117,6 @@ a:hover {
   background-color: rgba(200, 200, 200, 0.2) !important;
 }
 
-.player-filedrop {
-  height: 50px;
-  border: 1px solid #171717;
-}
-
 .hover {
   background-color: rgba(200, 200, 200, 0.2) !important;
 }
@@ -148,4 +140,5 @@ a:hover {
   font-size: 11px;
   color: #aaa;
   cursor: default;
+  text-align: right;
 }

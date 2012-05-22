@@ -36,13 +36,13 @@
 
       this.updateSize = __bind(this.updateSize, this);
 
-      var filedrop,
-        _this = this;
+      this.autoHide = __bind(this.autoHide, this);
+
+      var _this = this;
       this.$container = $(container);
       this.$controlsContainer = $('.player-controls', this.$container);
       this.$playlistContainer = $('.player-playlist-container', this.$container);
       this.$progressContainer = $('.player-progress-container', this.$container);
-      this.$filedropContainer = $('.player-filedrop', this.$container);
       this.$progressBar = $('.player-progress-bar', this.$container);
       this.$progressText = $('.player-progress-text', this.$container);
       this.$playlist = $('.player-playlist', this.$container);
@@ -83,25 +83,6 @@
           return _this.setTrack($list.index($target));
         }
       });
-      filedrop = this.$filedropContainer[0];
-      filedrop.ondragenter = function() {
-        return $(filedrop).addClass('hover');
-      };
-      filedrop.ondragleave = function() {
-        return $(filedrop).removeClass('hover');
-      };
-      filedrop.ondrop = function(event) {
-        var file, reader;
-        $(filedrop).removeClass('hover');
-        event.stopPropagation();
-        event.preventDefault();
-        file = event.dataTransfer.files[0];
-        reader = new FileReader();
-        reader.onload = function(e) {
-          return typeof _this.filedropCallback === "function" ? _this.filedropCallback(e.target.result) : void 0;
-        };
-        return reader.readAsDataURL(file);
-      };
       this.$container.on('mousewheel', function(event) {
         return event.stopPropagation();
       });
@@ -110,8 +91,25 @@
       $(window).on('hashchange', this.setTrackFromHash);
     }
 
+    PlayerWidget.prototype.autoHide = function() {
+      var onmousemove,
+        _this = this;
+      onmousemove = function(event) {
+        if (event.pageX < 400) {
+          return _this.show();
+        } else {
+          return _this.hide();
+        }
+      };
+      return $(document).on('mousemove', onmousemove).on('mousedown', function() {
+        return $(this).off('mousemove', onmousemove);
+      }).on('mouseup', function() {
+        return $(this).on('mousemove', onmousemove);
+      });
+    };
+
     PlayerWidget.prototype.updateSize = function() {
-      return this.$playlistContainer.height(this.$container.innerHeight() - this.$controlsContainer.outerHeight(true) - this.$progressContainer.outerHeight(true) - this.$filedropContainer.outerHeight(true)).nanoScroller();
+      return this.$playlistContainer.height(this.$container.innerHeight() - this.$controlsContainer.outerHeight(true) - this.$progressContainer.outerHeight(true) - 15).nanoScroller();
     };
 
     PlayerWidget.prototype.show = function(callback) {

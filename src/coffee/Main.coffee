@@ -3,8 +3,6 @@ $(document)
     false
   .on 'mousewheel', ->
     false
-  .on 'drop', ->
-    false
   .on 'ready', ->
 
     # global loader to show progress
@@ -46,15 +44,19 @@ $(document)
 
         setTimeout (->
           player.hide()
-          onmousemove = (event) ->
-            if event.pageX < 400
-              player.show()
-            else
-              player.hide()
-           $(document)
-             .on('mousemove', onmousemove)
-             .on 'mousedown', ->
-               $(this).off 'mousemove', onmousemove
-             .on 'mouseup', ->
-               $(this).on 'mousemove', onmousemove
+          player.autoHide()
         ), 5000
+
+        # drag and drop MIDI files to play
+        document.ondrop = (event) =>
+          event.preventDefault()
+          file = event.dataTransfer.files[0]
+          reader = new FileReader()
+          reader.onload = (e) =>
+            midiFile = e.target.result
+            player.stop()
+            loader.message 'Loading MIDI', ->
+              app.loadMidiFile midiFile, ->
+                loader.stop ->
+                  player.play()
+          reader.readAsDataURL(file)

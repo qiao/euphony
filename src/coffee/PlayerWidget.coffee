@@ -5,7 +5,6 @@ class PlayerWidget
     @$controlsContainer  = $('.player-controls', @$container)
     @$playlistContainer  = $('.player-playlist-container', @$container)
     @$progressContainer  = $('.player-progress-container', @$container)
-    @$filedropContainer  = $('.player-filedrop', @$container)
 
     @$progressBar        = $('.player-progress-bar', @$container)
     @$progressText       = $('.player-progress-text', @$container)
@@ -24,38 +23,40 @@ class PlayerWidget
     @$playBtn.click =>
       if @current is 'paused' then @resume() else @play()
 
+    # invoke callback on progress bar click
     @$progressContainer.click (event) =>
       progress = (event.clientX - @$progressContainer.offset().left) / @$progressContainer.width()
       @progressCallback?(progress)
 
+    # set track on playlist click
     @$playlist.click (event) =>
       $target = $(event.target)
       if $target.is('li')
         $list = $('li', @$playlist)
         @setTrack($list.index($target))
 
-    filedrop = @$filedropContainer[0]
-    filedrop.ondragenter = ->
-      $(filedrop).addClass('hover')
-    filedrop.ondragleave = ->
-      $(filedrop).removeClass('hover')
-    filedrop.ondrop = (event) =>
-      $(filedrop).removeClass('hover')
-      event.stopPropagation()
-      event.preventDefault()
-      file = event.dataTransfer.files[0]
-      reader = new FileReader()
-      reader.onload = (e) =>
-        @filedropCallback?(e.target.result)
-      reader.readAsDataURL(file)
-
     @$container.on 'mousewheel', (event) ->
       event.stopPropagation()
 
+    # update size
     @updateSize()
-
     $(window).resize(@updateSize)
+
+    # set track on url hash change
     $(window).on('hashchange', @setTrackFromHash)
+
+  autoHide: =>
+    onmousemove = (event) =>
+      if event.pageX < 400
+        @show()
+      else
+        @hide()
+    $(document)
+      .on('mousemove', onmousemove)
+      .on 'mousedown', ->
+        $(this).off 'mousemove', onmousemove
+      .on 'mouseup', ->
+        $(this).on 'mousemove', onmousemove
 
   updateSize: =>
     @$playlistContainer
@@ -63,7 +64,7 @@ class PlayerWidget
         @$container.innerHeight() -
         @$controlsContainer.outerHeight(true) -
         @$progressContainer.outerHeight(true) -
-        @$filedropContainer.outerHeight(true)
+        15
       )
       .nanoScroller()
 
