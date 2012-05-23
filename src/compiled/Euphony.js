@@ -26,6 +26,7 @@
       this.design = new PianoKeyboardDesign();
       this.keyboard = new PianoKeyboard(this.design);
       this.rain = new NoteRain(this.design);
+      this.particles = new NoteParticles(this.design);
       this.player = MIDI.Player;
       this.player.addListener(function(data) {
         var NOTE_OFF, NOTE_ON, message, note;
@@ -33,7 +34,8 @@
         NOTE_ON = 144;
         note = data.note, message = data.message;
         if (message === NOTE_ON) {
-          return _this.keyboard.press(note);
+          _this.keyboard.press(note);
+          return _this.particles.createParticles(note);
         } else if (message === NOTE_OFF) {
           return _this.keyboard.release(note);
         }
@@ -59,8 +61,10 @@
       this.scene = new Scene('#canvas');
       this.scene.add(this.keyboard.model);
       this.scene.add(this.rain.model);
+      this.scene.add(this.particles.model);
       return this.scene.animate(function() {
-        return _this.keyboard.update();
+        _this.keyboard.update();
+        return _this.particles.update();
       });
     };
 
