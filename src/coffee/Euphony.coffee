@@ -6,6 +6,7 @@ class Euphony
     @design = new PianoKeyboardDesign()
     @keyboard = new PianoKeyboard(@design)
     @rain = new NoteRain(@design)
+    @particles = new NoteParticles(@design)
 
     @player = MIDI.Player
     @player.addListener (data) =>
@@ -14,6 +15,7 @@ class Euphony
       {note, message} = data
       if message is NOTE_ON
         @keyboard.press(note)
+        @particles.createParticles(note)
       else if message is NOTE_OFF
         @keyboard.release(note)
     @player.setAnimation
@@ -30,8 +32,10 @@ class Euphony
     @scene = new Scene('#canvas')
     @scene.add(@keyboard.model)
     @scene.add(@rain.model)
+    @scene.add(@particles.model)
     @scene.animate =>
       @keyboard.update()
+      @particles.update()
 
   initMidi: (callback) ->
     MIDI.loadPlugin ->
