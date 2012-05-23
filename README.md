@@ -7,7 +7,9 @@ Please visit http://qiao.github.com/euphony to start playing. (Chrome only)
 
 ![](http://i.imgur.com/gl1Ac.png)
 
-Thanks to the authors and contributors of the following libraries, without whom this project would not have been possible:
+Thanks to the authors and contributors of the following projects, without whom this project would not have been possible:
+
+Libraries:
 
 * [three.js](https://github.com/mrdoob/three.js) - JavaScript 3D library
 * [MIDI.js](http://mudcu.be/midi-js/) - Sequencing in JavaScript
@@ -19,6 +21,18 @@ Thanks to the authors and contributors of the following libraries, without whom 
 * [jQuery](http://jquery.com) - Duh
 * [jQuery Easing Plugin](http://gsgd.co.uk/sandbox/jquery/easing/) - A jQuery plugin from GSGD to give advanced easing options
 * [nanoScrollerJS](https://github.com/jamesflorentino/nanoScrollerJS) - A jQuery plugin that offers Mac OS X Lion-styled scrollbars
+
+Iconfont:
+
+* [Font Awesome](http://fortawesome.github.com/Font-Awesome/) - The iconic font designed for use with Twitter Bootstrap
+
+Soundfont:
+
+* [PersonalCopy](http://www.personalcopy.com/) - High quality soundfonts
+
+Also:
+
+* [MIDITrail](http://en.sourceforge.jp/projects/miditrail/) - A MIDI player which provides 3D visualization of MIDI datasets. (This is the project that Euphony mimics. And its source code is the most beautiful one that I have ever read).
 
 License
 -------
