@@ -24,15 +24,15 @@ Libraries:
 
 Iconfont:
 
-[Font Awesome](http://fortawesome.github.com/Font-Awesome/) - The iconic font designed for use with Twitter Bootstrap
+* [Font Awesome](http://fortawesome.github.com/Font-Awesome/) - The iconic font designed for use with Twitter Bootstrap
 
 Soundfont:
 
-[PersonalCopy](http://www.personalcopy.com/) - High quality soundfonts
+* [PersonalCopy](http://www.personalcopy.com/) - High quality soundfonts
 
 Also:
 
-[MIDITrail](http://en.sourceforge.jp/projects/miditrail/) - A MIDI player which provides 3D visualization of MIDI datasets. (This is the project that Euphony mimics. And its source code is the most beautiful one that I have ever read).
+* [MIDITrail](http://en.sourceforge.jp/projects/miditrail/) - A MIDI player which provides 3D visualization of MIDI datasets. (This is the project that Euphony mimics. And its source code is the most beautiful one that I have ever read).
 
 License
 -------
