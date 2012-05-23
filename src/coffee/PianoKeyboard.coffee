@@ -17,11 +17,11 @@ class PianoKeyboardDesign
   whiteKeyHeight        : 0.22
   whiteKeyLength        : 1.50
   blackKeyWidth         : 0.10
-  blackKeyHeight        : 0.32
+  blackKeyHeight        : 0.24
   blackKeyLength        : 1.00
   blackKeyShiftCDE      : 0.0216
   blackKeyShiftFGAB     : 0.0340
-  blackKeyPosY          : 0.052
+  blackKeyPosY          : 0.10
   blackKeyPosZ          : -0.24
   noteDropPosZ4WhiteKey : 0.25
   noteDropPosZ4BlackKey : 0.75

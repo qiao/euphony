@@ -28,7 +28,7 @@
 
     PianoKeyboardDesign.prototype.blackKeyWidth = 0.10;
 
-    PianoKeyboardDesign.prototype.blackKeyHeight = 0.32;
+    PianoKeyboardDesign.prototype.blackKeyHeight = 0.24;
 
     PianoKeyboardDesign.prototype.blackKeyLength = 1.00;
 
@@ -36,7 +36,7 @@
 
     PianoKeyboardDesign.prototype.blackKeyShiftFGAB = 0.0340;
 
-    PianoKeyboardDesign.prototype.blackKeyPosY = 0.052;
+    PianoKeyboardDesign.prototype.blackKeyPosY = 0.10;
 
     PianoKeyboardDesign.prototype.blackKeyPosZ = -0.24;
 
