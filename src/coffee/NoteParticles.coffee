@@ -17,7 +17,7 @@ class NoteParticles
         map: @_generateTexture(color)
         blending: THREE.AdditiveBlending
         transparent: true
-        depthTest: false
+        depthWrite: false
         color: color
 
   _generateTexture: (hexColor) ->
@@ -62,20 +62,25 @@ class NoteParticles
         particleSystem.geometry.verticesNeedUpdate = true
 
   createParticles: (note) =>
-    {keyInfo} = @pianoDesign
+    {keyInfo, KeyType} = @pianoDesign
+    {Black} = KeyType
 
-    posX = keyInfo[note].keyCenterPosX
+    {keyCenterPosX, keyType} = keyInfo[note]
+
+    posX = keyCenterPosX
+    posY = if keyType is Black then 0.18 else 0.13
+    posZ = -0.2
 
     geometry = new THREE.Geometry()
     for i in [0...@count]
       particle = new THREE.Vector3(
         posX,
-        0.1,
-        0,
+        posY,
+        posZ,
       )
       particle.velocity = new THREE.Vector3(
         (Math.random() - 0.5) * 0.04,
-        (Math.random()) * 0.005,
+        (Math.random() - 0.3) * 0.01,
         (Math.random() - 0.5) * 0.04
       )
       geometry.vertices.push(particle)
@@ -85,7 +90,7 @@ class NoteParticles
     particleSystem = new THREE.ParticleSystem(geometry, material)
     particleSystem.age = 0
     particleSystem.transparent = true
-    particleSystem.opacity = 0.5
+    particleSystem.opacity = 0.8
 
     @model.add(particleSystem)
 
