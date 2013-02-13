@@ -26,13 +26,9 @@
   <body>
     <script src="./lib/Detector.js" type="text/javascript"></script>
     <script type="text/javascript">
-      var message;
-      if (!Detector.chrome) {
-        message = Detector.getNotChromeMessage();
-      } else if (!Detector.webgl) {
-        message = Detector.getWebGLErrorMessage();
+      if (!Detector.webgl) {
+        document.body.appendChild(Detector.getWebGLErrorMessage());
       }
-      document.body.appendChild(message);
     </script>
   </body>
 </html>
