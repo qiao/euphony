@@ -3,6 +3,10 @@ $(document)
     false
   .on 'mousewheel', ->
     false
+  .on 'dragover', ->
+    false
+  .on 'dragenter', ->
+    false
   .on 'ready', ->
 
     # global loader to show progress
@@ -48,11 +52,19 @@ $(document)
         ), 5000
 
         # drag and drop MIDI files to play
-        document.ondrop = (event) =>
+        $(document).on 'drop', (event) ->
+          event or= window.event
           event.preventDefault()
-          file = event.dataTransfer.files[0]
+          event.stopPropagation()
+
+          # jquery wraps the original event
+          event = e.originalEvent or e
+
+          files = event.files or event.dataTransfer.files
+          file = files[0]
+
           reader = new FileReader()
-          reader.onload = (e) =>
+          reader.onload = (e) ->
             midiFile = e.target.result
             player.stop()
             loader.message 'Loading MIDI', ->
