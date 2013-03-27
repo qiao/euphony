@@ -62,7 +62,7 @@
           event || (event = window.event);
           event.preventDefault();
           event.stopPropagation();
-          event = e.originalEvent || e;
+          event = event.originalEvent || event;
           files = event.files || event.dataTransfer.files;
           file = files[0];
           reader = new FileReader();
