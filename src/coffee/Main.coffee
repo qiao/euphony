@@ -58,7 +58,7 @@ $(document)
           event.stopPropagation()
 
           # jquery wraps the original event
-          event = e.originalEvent or e
+          event = event.originalEvent or event
 
           files = event.files or event.dataTransfer.files
           file = files[0]
