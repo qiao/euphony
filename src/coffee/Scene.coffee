@@ -36,7 +36,7 @@ class Scene
     controls.center.set(8.73, 0, 0)
     controls.autoRotateSpeed = 1.0
     controls.autoRotate = false
-    camera.position.copy(controls.center).addSelf(new THREE.Vector3(2, 6, 9))
+    camera.position.copy(controls.center).add(new THREE.Vector3(2, 6, 9))
 
     $(window).resize(@onresize)
 

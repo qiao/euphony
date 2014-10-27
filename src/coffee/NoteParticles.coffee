@@ -12,7 +12,7 @@ class NoteParticles
 
     for note in [0...keyInfo.length]
       color = noteToColor(note)
-      @materials[note] = new THREE.ParticleBasicMaterial
+      @materials[note] = new THREE.PointCloudMaterial
         size: @size
         map: @_generateTexture(color)
         blending: THREE.AdditiveBlending
@@ -35,7 +35,7 @@ class NoteParticles
       width / 2, height / 2, 0,
       width / 2, height / 2, width / 2
     )
-    gradient.addColorStop(0, (new THREE.Color(hexColor)).getContextStyle())
+    gradient.addColorStop(0, (new THREE.Color(hexColor)).getStyle())
     gradient.addColorStop(1, 'rgba(0, 0, 0, 0)')
 
     context.fillStyle = gradient
@@ -58,7 +58,7 @@ class NoteParticles
         @model.remove(particleSystem)
       else
         for particle in particleSystem.geometry.vertices
-          particle.addSelf(particle.velocity)
+          particle.add(particle.velocity)
         particleSystem.geometry.verticesNeedUpdate = true
 
   createParticles: (note) =>
@@ -87,7 +87,7 @@ class NoteParticles
 
     material = @materials[note]
 
-    particleSystem = new THREE.ParticleSystem(geometry, material)
+    particleSystem = new THREE.PointCloud(geometry, material)
     particleSystem.age = 0
     particleSystem.transparent = true
     particleSystem.opacity = 0.8

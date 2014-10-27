@@ -107,7 +107,7 @@ class NoteRain
               y += blackKeyHeight / 2
 
             color = noteToColor(noteNumber)
-            geometry = new THREE.CubeGeometry(blackKeyWidth, length, blackKeyWidth)
+            geometry = new THREE.BoxGeometry(blackKeyWidth, length, blackKeyWidth)
             material = new THREE.MeshPhongMaterial
               color: color
               emissive: color

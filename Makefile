@@ -26,6 +26,7 @@ build:
 		lib/jquery.easing.js \
 		lib/jquery.nanoscroller.min.js \
 		lib/Three.js \
+		lib/OrbitControls.js \
 		lib/state-machine.min.js \
 		lib/spin.min.js \
 		lib/async.min.js \
